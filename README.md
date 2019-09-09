@@ -1,1 +1,1 @@
-# capstone_study
+# GTeam
