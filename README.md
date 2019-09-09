@@ -1,3 +1,2 @@
-# GTeam
-# Hello HI F
-# TEST HI
+# GTeam (Good-Team)
+# Hello, World!
