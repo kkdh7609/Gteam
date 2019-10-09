@@ -34,7 +34,7 @@ class _MyAppState extends State<MyApp>{
   }
 
   void _goHome(){
-    print("go home");
+    print("go home!!");
     setState(() {
       if (_authenticated == true) {
         _screen = _settings;
