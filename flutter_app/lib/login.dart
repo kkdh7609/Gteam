@@ -15,6 +15,11 @@ class login extends StatelessWidget{
   String get username => _user.text;
   String get password => _pass.text;
 
+  void clear(){
+    _user.clear();
+    _pass.clear();
+  }
+
   @override
   Widget build(BuildContext context){
     return new Column(

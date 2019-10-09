@@ -28,6 +28,7 @@ class _MyAppState extends State<MyApp>{
       _setAuthenticated(true);
       _screen = _settings;
     }
+    _login.clear();
   }
 
   void _goHome(){
