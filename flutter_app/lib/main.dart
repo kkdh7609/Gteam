@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gteams/settings.dart';
 import 'package:gteams/login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() => runApp(MyApp());
 
@@ -24,10 +25,11 @@ class _MyAppState extends State<MyApp>{
 
   void onSubmit(){
     print('Login with: ' + _login.username + ' ' + _login.password);
-    if(_login.username == 'user' && _login.password =='password'){
-      _setAuthenticated(true);
-      _screen = _settings;
-    }
+    // if(_login.username == 'user' && _login.password =='password'){
+    //  _setAuthenticated(true);
+    //  _screen = _settings;
+    // }
+    _login.signIn();
     _login.clear();
   }
 
