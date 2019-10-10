@@ -78,7 +78,7 @@ class _RootPageState extends State<RootPage>{
         break;
       case AuthStatus.LOGGED_IN:
         if (_userId.length > 0 && _userId != null){
-          return new settings();
+          return new settings(onSignedOut: _onSignedOut,);
         }
         else return _buildWaitingScreen();
         break;

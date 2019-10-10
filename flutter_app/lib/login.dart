@@ -72,6 +72,9 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>{
       }
 
     }
+    setState((){
+      _isLoading = false;
+    });
   }
 
   @override
