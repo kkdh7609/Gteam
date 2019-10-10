@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter/foundation.dart";
 import "package:gteams/authentication.dart";
+import "package:gteams/signup.dart";
 
 class LoginSignUpPage extends StatefulWidget{
   LoginSignUpPage({this.auth, this.onSignedIn});
@@ -193,7 +194,11 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>{
           :
           new Text("Have an account? Sign in",
           style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300)),
-    );
+    onPressed: (){Navigator.push(
+        context, MaterialPageRoute(builder: (context)=>SignUp())
+        );
+      }
+      );
   }
 
   Widget _showPrimaryButton(){
