@@ -1,22 +1,22 @@
 import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter/foundation.dart";
-import "package:gteams/authentication.dart";
-import "package:gteams/signup.dart";
+import "package:gteams/login_auth.dart";
+import "package:gteams/sign_up.dart";
 
-class LoginSignUpPage extends StatefulWidget{
-  LoginSignUpPage({this.auth, this.onSignedIn});
+class LoginPage extends StatefulWidget {
+  LoginPage({this.auth, this.onSignedIn});
 
   final BaseAuth auth;
   final VoidCallback onSignedIn;
 
   @override
-  State<StatefulWidget> createState() => new _LoginSignUpPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
 enum FormMode {LOGIN, SIGNUP}
 
-class _LoginSignUpPageState extends State<LoginSignUpPage>{
+class _LoginPageState extends State<LoginPage> {
   final _formKey = new GlobalKey<FormState>();
 
   String _email;
@@ -29,6 +29,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>{
 
   bool _validateAndSave(){
     final form = _formKey.currentState;
+
     if(form.validate()){
       form.save();
       return true;
@@ -86,138 +87,278 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>{
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     _isIos = Theme.of(context).platform == TargetPlatform.iOS;
+
     return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("Flutter login demo"),
-      ),
-      body: Stack(
-        children: <Widget>[
-          _showBody(),
-          _showCircularProgress(),
-        ],
-      )
-    );
-  }
-
-  Widget _showCircularProgress(){
-    if (_isLoading) {
-      return Center(child: CircularProgressIndicator());
-    }
-    return Container(height: 0.0, width: 0.0);
-  }
-
-  Widget _showBody(){
-    return new Container(
-      padding: EdgeInsets.all(16.0),
-      child: new Form(
-        key: _formKey,
-        child: new ListView(
-          shrinkWrap: true,
-          children: <Widget>[
-            _showEmailInput(),
-            _showPasswordInput(),
-            _showPrimaryButton(),
-            _showSecondaryButton(),
-            _showErrorMessage(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _showErrorMessage(){
-    if (_errorMessage.length > 0 && _errorMessage != null){
-      return new Text(
-        _errorMessage,
-        style: TextStyle(
-          fontSize: 13.0,
-          color: Colors.red,
-          height: 1.0,
-          fontWeight: FontWeight.w300),
-        );
-    }
-    else{
-      return new Container(
-        height: 0.0,
-      );
-    }
-  }
-
-  Widget _showEmailInput(){
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 0.0),
-      child: new TextFormField(
-        maxLines: 1,
-        keyboardType: TextInputType.emailAddress,
-        autofocus: false,
-        decoration: new InputDecoration(
-          hintText: "Email",
-          icon: new Icon(
-            Icons.mail,
-            color: Colors.grey
+        resizeToAvoidBottomPadding: false,
+        body: SingleChildScrollView(
+          child: new Form(
+            key: _formKey,
+            child : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _showTitle(),
+                _showTextFieldTitle("Email"),
+                _showEmailTextField(),
+                _showTextFieldTitle("Password"),
+                _showPasswordTextField(),
+                SizedBox(height: 10.0),
+                _showFindPassword(),
+                _showLoginButton(),
+                _showGoogleLoginButton(),
+                SizedBox(height : 30.0),
+                _showRegisterSentence()
+              ],
+            )
           )
         ),
-        validator: (value) => value.isEmpty ? "Email can\'t be empty" : null,
-        onSaved: (value) => _email = value.trim(),
+    );
+  }
+
+  Widget _showTitle(){
+    return Container(
+      child: Stack(
+          children: <Widget>[
+            Container(
+                padding: EdgeInsets.fromLTRB(15.0, 70.0, 0.0, 0.0),
+                child: Text('G-TEAM Login', style: TextStyle(fontSize: 50.0, fontWeight: FontWeight.bold, color: Colors.black))
+            ),
+            Container(
+                padding: EdgeInsets.fromLTRB(130.0, 130.0, 0.0, 35.0),
+                child: Text('Make your team with G-TEAM', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black))
+            ),
+          ]
       ),
     );
   }
 
-  Widget _showPasswordInput(){
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
-      child: new TextFormField(
-        maxLines: 1,
-        obscureText: true,
-        autofocus: false,
-        decoration: new InputDecoration(
-            hintText: "Password",
-            icon: new Icon(
-                Icons.lock,
-                color: Colors.grey
-            )
-        ),
-        validator: (value) => value.isEmpty ? "Email can\'t be empty" : null,
-        onSaved: (value) => _password = value.trim(),
+  Widget _showTextFieldTitle(String title){
+    return  Padding(
+      padding: const EdgeInsets.only(left: 40.0),
+      child: Text(
+        title,
+        style: TextStyle(color: Colors.grey, fontSize: 16.0),
       ),
     );
   }
 
-  Widget _showSecondaryButton(){
-    return new FlatButton(
-      child: _formMode == FormMode.LOGIN
-          ?
-          new Text("Create an account",
-          style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300))
-          :
-          new Text("Have an account? Sign in",
-          style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300)),
-    onPressed: (){Navigator.push(
-        context, MaterialPageRoute(builder: (context)=>SignUp())
-        );
-      }
-      );
+  Widget _showEmailTextField(){
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.grey.withOpacity(0.5),
+          width: 1.0,
+        ),
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      margin:
+      const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+      child: Row(
+        children: <Widget>[
+          new Padding(
+            padding:
+            EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+            child: Icon(
+              Icons.email,
+              color: Colors.grey,
+            ),
+          ),
+          Container(
+            height: 30.0,
+            width: 1.0,
+            color: Colors.grey.withOpacity(0.5),
+            margin: const EdgeInsets.only(left: 00.0, right: 10.0),
+          ),
+          new Expanded(
+            child: new TextFormField(
+              maxLines: 1,
+              keyboardType: TextInputType.emailAddress,
+              autofocus: false,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Enter your email',
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+              validator: (value) { return value.isEmpty ? "Email can\'t be empty" : null; },
+              onSaved: (value) { _email = value; },
+            ),
+          )
+        ],
+      ),
+    );
   }
 
-  Widget _showPrimaryButton(){
-    return new Padding(
-      padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
-      child: SizedBox(
-        height: 40.0,
-        child: new RaisedButton(
-          elevation: 5.0,
-          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-          color: Colors.blue,
-          child: _formMode == FormMode.LOGIN
-              ?
-              new Text("Login", style: new TextStyle(fontSize: 20.0, color: Colors.white))
-              :
-              new Text("Create account", style: new TextStyle(fontSize: 20.0, color: Colors.white)),
-          onPressed: _validateAndSubmit,
+  Widget _showPasswordTextField(){
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.grey.withOpacity(0.5),
+          width: 1.0,
         ),
-      )
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      margin:
+      const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+      child: Row(
+        children: <Widget>[
+          new Padding(
+            padding:
+            EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+            child: Icon(
+              Icons.lock_open,
+              color: Colors.grey,
+            ),
+          ),
+          Container(
+            height: 30.0,
+            width: 1.0,
+            color: Colors.grey.withOpacity(0.5),
+            margin: const EdgeInsets.only(left: 00.0, right: 10.0),
+          ),
+          new Expanded(
+            child: TextFormField(
+              maxLines: 1,
+              obscureText: true,
+              autofocus: false,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Enter your password',
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+              validator: (value) => value.isEmpty ? "Email can\'t be empty" : null,
+              onSaved: (value) => _password = value.trim(),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _showFindPassword(){
+    return Container(
+      alignment: Alignment(1.0, 1.0),
+      padding: EdgeInsets.only(top: 15.0, right: 30.0),
+      child: InkWell(
+          child: Text('Forgot Password', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontFamily: 'Montserrat', decoration: TextDecoration.underline))
+      ),
+    );
+  }
+
+  Widget _showLoginButton(){
+    return Container(
+      margin: const EdgeInsets.only(top: 20.0),
+      padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: FlatButton(
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(30.0)),
+              splashColor: Colors.blue,
+              color: Colors.blue,
+              child: new Row(
+                children: <Widget>[
+                  new Padding(
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: Text(
+                      "LOGIN",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  new Expanded(
+                    child: Container(),
+                  ),
+                  new Transform.translate(
+                    offset: Offset(15.0, 0.0),
+                    child: new Container(
+                      padding: const EdgeInsets.all(5.0),
+                      child: FlatButton(
+                        shape: new RoundedRectangleBorder(
+                            borderRadius:
+                            new BorderRadius.circular(28.0)),
+                        splashColor: Colors.white,
+                        color: Colors.white,
+                        child: Icon(
+                          Icons.arrow_forward,
+                          color: Colors.blue,
+                        ),
+                        onPressed: _validateAndSubmit,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              onPressed: _validateAndSubmit,
+              //onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpPage())); },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _showGoogleLoginButton(){
+    return Container(
+      margin: const EdgeInsets.only(top: 20.0),
+      padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: FlatButton(
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(30.0)),
+              splashColor: Color(0xff3B5998),
+              color: Color(0xff3B5998),
+              child: new Row(
+                children: <Widget>[
+                  new Padding(
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: Text(
+                      "LOGIN WITH GOOGLE",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  new Expanded(
+                    child: Container(),
+                  ),
+                  new Transform.translate(
+                    offset: Offset(15.0, 0.0),
+                    child: new Container(
+                      padding: const EdgeInsets.all(5.0),
+                      child: FlatButton(
+                        shape: new RoundedRectangleBorder(
+                            borderRadius:
+                            new BorderRadius.circular(28.0)),
+                        splashColor: Colors.white,
+                        color: Colors.white,
+                        child: ImageIcon(
+                            AssetImage('assets/google.png'), color: Color(0xff3B5998)),
+                        onPressed: () => {},
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              onPressed: () => {},
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _showRegisterSentence(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text('Don\'t have an account ?', style: TextStyle(fontFamily: 'Montserrat')),
+        SizedBox(width: 5.0),
+        InkWell(
+            onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpPage())); },
+            child: Text('Register', style: TextStyle(color: Colors.blueAccent, fontFamily: 'Montserrat', fontWeight: FontWeight.bold, decoration: TextDecoration.underline))
+        )
+      ],
     );
   }
 }

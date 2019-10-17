@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gteams/login.dart';
-import 'package:gteams/authentication.dart';
+import 'package:gteams/login_auth.dart';
 import 'package:gteams/settings.dart';
+import 'package:gteams/login.dart';
 
 class RootPage extends StatefulWidget{
   RootPage({this.auth});
@@ -32,7 +32,6 @@ class _RootPageState extends State<RootPage>{
         }
         authStatus = AuthStatus.NOT_LOGGED_IN;
         // user?.uid == null ? AuthStatus.NOT_LOGGED_IN : AuthStatus.LOGGED_IN;
-
       });
     });
   }
@@ -70,18 +69,21 @@ class _RootPageState extends State<RootPage>{
       case AuthStatus.NOT_DETERMINED:
         return _buildWaitingScreen();
         break;
+
       case AuthStatus.NOT_LOGGED_IN:
-        return new LoginSignUpPage(
+        return new LoginPage(
           auth: widget.auth,
           onSignedIn: _onLoggedIn,
         );
         break;
+
       case AuthStatus.LOGGED_IN:
         if (_userId.length > 0 && _userId != null){
-          return new settings(onSignedOut: _onSignedOut,);
+          return new SettingPage(onSignedOut: _onSignedOut,);
         }
         else return _buildWaitingScreen();
         break;
+
       default:
         return _buildWaitingScreen();
     }

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:gteams/authentication.dart';
+import 'package:gteams/login_auth.dart';
 import 'package:gteams/root_page.dart';
 
-class settings extends StatefulWidget{
-  settings({Key key, this.onSignedOut}) : super(key: key);
+class SettingPage extends StatefulWidget{
+  SettingPage({Key key, this.onSignedOut}) : super(key: key);
 
   final VoidCallback onSignedOut;
 
   @override
-  State<StatefulWidget> createState() => new _sett();
+  State<StatefulWidget> createState() => new _SettingPageState();
 }
 
-class _sett extends State<settings>{
+class _SettingPageState extends State<SettingPage>{
   @override
   Widget build(BuildContext context){
     return new Scaffold(
@@ -20,14 +20,12 @@ class _sett extends State<settings>{
         new IconButton(
           icon: new Icon(Icons.arrow_back),
           onPressed: (){
-    widget.onSignedOut();
-    new RootPage(auth: new Auth());
-    }
-            )
-            ]),
+            widget.onSignedOut();
+            new RootPage(auth: new Auth());
+          }
+        )
+      ]),
       body: Text("setting")
     );
   }
-
-
 }
