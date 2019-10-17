@@ -122,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
           children: <Widget>[
             Container(
                 padding: EdgeInsets.fromLTRB(15.0, 70.0, 0.0, 0.0),
-                child: Text('G-TEAM Loginsssss', style: TextStyle(fontSize: 50.0, fontWeight: FontWeight.bold, color: Colors.black))
+                child: Text('G-TEAM Logins', style: TextStyle(fontSize: 50.0, fontWeight: FontWeight.bold, color: Colors.black))
             ),
             Container(
                 padding: EdgeInsets.fromLTRB(130.0, 130.0, 0.0, 35.0),
