@@ -14,7 +14,7 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-enum FormMode {LOGIN, SIGNUP}
+enum FormMode {LOGIN, GOOGLE, SIGNUP}
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = new GlobalKey<FormState>();
@@ -49,15 +49,20 @@ class _LoginPageState extends State<LoginPage> {
           userId = await widget.auth.signIn(_email, _password);
           print("Signed in: $userId");
         }
+        else if(_formMode == FormMode.GOOGLE){
+          userId = await widget.auth.signInWithGoogle();
+          print("Signed in: $userId");
+        }
         else{
-          userId = await widget.auth.signIn(_email, _password);
+          userId = await widget.auth.signUp(_email, _password);
           print("Signed up user: $userId");
         }
         setState((){
           _isLoading = false;
         });
 
-        if (userId.length > 0 && userId != null && _formMode == FormMode.LOGIN){
+        if (userId.length > 0 && userId != null && (_formMode == FormMode.LOGIN || _formMode == FormMode.GOOGLE )){
+          print("check on signed in");
           widget.onSignedIn();
         }
       } catch (e){
@@ -91,28 +96,28 @@ class _LoginPageState extends State<LoginPage> {
     _isIos = Theme.of(context).platform == TargetPlatform.iOS;
 
     return new Scaffold(
-        resizeToAvoidBottomPadding: false,
-        body: SingleChildScrollView(
+      resizeToAvoidBottomPadding: false,
+      body: SingleChildScrollView(
           child: new Form(
-            key: _formKey,
-            child : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _showTitle(),
-                _showTextFieldTitle("Email"),
-                _showEmailTextField(),
-                _showTextFieldTitle("Password"),
-                _showPasswordTextField(),
-                SizedBox(height: 10.0),
-                _showFindPassword(),
-                _showLoginButton(),
-                _showGoogleLoginButton(),
-                SizedBox(height : 30.0),
-                _showRegisterSentence()
-              ],
-            )
+              key: _formKey,
+              child : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  _showTitle(),
+                  _showTextFieldTitle("Emailss"),
+                  _showEmailTextField(),
+                  _showTextFieldTitle("Password"),
+                  _showPasswordTextField(),
+                  SizedBox(height: 10.0),
+                  _showFindPassword(),
+                  _showLoginButton(),
+                  _showGoogleLoginButton(),
+                  SizedBox(height : 30.0),
+                  _showRegisterSentence()
+                ],
+              )
           )
-        ),
+      ),
     );
   }
 
@@ -122,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
           children: <Widget>[
             Container(
                 padding: EdgeInsets.fromLTRB(15.0, 70.0, 0.0, 0.0),
-                child: Text('G-TEAM Loginss', style: TextStyle(fontSize: 50.0, fontWeight: FontWeight.bold, color: Colors.black))
+                child: Text('G-TEAM Login', style: TextStyle(fontSize: 50.0, fontWeight: FontWeight.bold, color: Colors.black))
             ),
             Container(
                 padding: EdgeInsets.fromLTRB(130.0, 130.0, 0.0, 35.0),
@@ -180,7 +185,12 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: 'Enter your email',
                 hintStyle: TextStyle(color: Colors.grey),
               ),
-              validator: (value) { return value.isEmpty ? "Email can\'t be empty" : null; },
+              validator: (value) {
+                if(_formMode==FormMode.LOGIN)
+                  return value.isEmpty ? "Email can\'t be empty" : null;
+                else if(_formMode==FormMode.GOOGLE)
+                  return null;
+              },
               onSaved: (value) { _email = value; },
             ),
           )
@@ -226,7 +236,12 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: 'Enter your password',
                 hintStyle: TextStyle(color: Colors.grey),
               ),
-              validator: (value) => value.isEmpty ? "Email can\'t be empty" : null,
+              validator: (value) {
+                if(_formMode==FormMode.LOGIN)
+                  return value.isEmpty ? "Password can\'t be empty" : null;
+                else if(_formMode==FormMode.GOOGLE)
+                  return null;
+              },
               onSaved: (value) => _password = value.trim(),
             ),
           )
@@ -283,7 +298,10 @@ class _LoginPageState extends State<LoginPage> {
                           Icons.arrow_forward,
                           color: Colors.blue,
                         ),
-                        onPressed: _validateAndSubmit,
+                        onPressed: () {
+                          _formMode = FormMode.LOGIN;
+                          _validateAndSubmit();
+                        },
                       ),
                     ),
                   )
@@ -334,7 +352,10 @@ class _LoginPageState extends State<LoginPage> {
                         color: Colors.white,
                         child: ImageIcon(
                             AssetImage('assets/google.png'), color: Color(0xff3B5998)),
-                        onPressed: () => {},
+                        onPressed: () {
+                          _formMode = FormMode.GOOGLE;
+                          _validateAndSubmit();
+                        },
                       ),
                     ),
                   )
