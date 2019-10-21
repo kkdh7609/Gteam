@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
 import "package:gteams/login.dart";
+import 'package:gteams/services/user_mangement.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -8,27 +10,35 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final _formKey = new GlobalKey<FormState>();
+
+  String _email;
+  String _password;
+  String _name;
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       resizeToAvoidBottomPadding: false,
       body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _showTitle(),
-              _showTextFieldTitle("Name"),
-              _showNameTextField(),
-              _showTextFieldTitle("Email"),
-              _showEmailTextField(),
-              _showTextFieldTitle("Password"),
-              _showPasswordTextField(),
-              SizedBox(height: 10.0),
-              _showCreateAccountButton(),
-              _showBackButton(),
-              SizedBox(height : 30.0),
-            ],
+          child: new Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _showTitle(),
+                _showTextFieldTitle("Name"),
+                _showNameTextField(),
+                _showTextFieldTitle("Email"),
+                _showEmailTextField(),
+                _showTextFieldTitle("Password"),
+                _showPasswordTextField(),
+                SizedBox(height: 10.0),
+                _showCreateAccountButton(),
+                _showBackButton(),
+                SizedBox(height : 30.0),
+              ],
+            )
           )
       ),
     );
@@ -82,12 +92,16 @@ class _SignUpPageState extends State<SignUpPage> {
             margin: const EdgeInsets.only(left: 00.0, right: 10.0)
           ),
           new Expanded(
-            child: TextField(
+            child: new TextFormField(
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: "Enter your name",
                 hintStyle: TextStyle(color: Colors.grey),
               ),
+              validator: (value) {
+                return value.isEmpty ? "Name can\'t be empty" : null;
+              },
+              onSaved: (value) { _name = value; },
             ),
           )
         ],
@@ -120,12 +134,21 @@ class _SignUpPageState extends State<SignUpPage> {
               margin: const EdgeInsets.only(left: 00.0, right: 10.0)
           ),
           new Expanded(
-            child: TextField(
+            child: new TextFormField(
+              maxLines: 1,
+              keyboardType: TextInputType.emailAddress,
+              autofocus: false,
               decoration: InputDecoration(
                 border: InputBorder.none,
-                hintText: "Enter your email",
+                hintText: 'Enter your email..',
                 hintStyle: TextStyle(color: Colors.grey),
               ),
+              validator: (value) {
+                return value.isEmpty ? "eEmail can\'t be empty" : null;
+              },
+              onSaved: (value) {
+                print(value);
+                _email = value;},
             ),
           )
         ],
@@ -158,12 +181,17 @@ class _SignUpPageState extends State<SignUpPage> {
               margin: const EdgeInsets.only(left: 00.0, right: 10.0)
           ),
           new Expanded(
-            child: TextField(
+            child: new TextFormField(
+              obscureText: true,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: "Enter your password",
                 hintStyle: TextStyle(color: Colors.grey),
               ),
+              validator: (value) {
+                return value.isEmpty ? "password can\'t be empty" : null;
+              },
+              onSaved: (value) { _password = value; },
             ),
           )
         ],
@@ -206,13 +234,26 @@ class _SignUpPageState extends State<SignUpPage> {
                         splashColor: Colors.white,
                         color: Colors.white,
                         child: Icon(Icons.redo, color: Colors.blue),
-                        onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage())); },
+                        onPressed: () { Navigator.pop(context); },
                       ),
                     ),
                   )
                 ],
               ),
-              onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage())); },
+              onPressed: () {
+                if(_formKey.currentState.validate())
+                  _formKey.currentState.save();
+                FirebaseAuth.instance
+                    .createUserWithEmailAndPassword(
+                    email: _email, password: _password)
+                    .then((user) {
+                      //To_Do add firestore..
+                      //UserManagement().storeNewUser(_email, context,_name);
+                }).catchError((e) {
+                  print(e);
+                });
+                print(_email);
+                Navigator.pop(context); },
             ),
           ),
         ],
@@ -255,13 +296,13 @@ class _SignUpPageState extends State<SignUpPage> {
                         splashColor: Colors.white,
                         color: Colors.white,
                         child: Icon(Icons.undo, color: Color(0xff3B5998)),
-                        onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage())); },
+                        onPressed: () { Navigator.pop(context); },
                       ),
                     ),
                   )
                 ],
               ),
-              onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage())); },
+              onPressed: () { Navigator.pop(context); },
             ),
           ),
         ],
