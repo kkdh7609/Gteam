@@ -3,6 +3,7 @@ import "package:flutter/widgets.dart";
 import "package:flutter/foundation.dart";
 import "package:gteams/login/login_auth.dart";
 import "package:gteams/signup/sign_up.dart";
+import 'package:gteams/validator/login_validator.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({this.auth, this.onSignedIn});
@@ -26,16 +27,23 @@ class _LoginPageState extends State<LoginPage> {
   FormMode _formMode = FormMode.LOGIN;
   bool _isIos;
   bool _isLoading;
+  bool _isAvailable;      // for checking if we can act now
+  String _success = "";
 
   bool _validateAndSave(){
     final form = _formKey.currentState;
 
-    if(form.validate()){
+    if(_formMode == FormMode.LOGIN && form.validate()){
       form.save();
+      return true;
+    }
+
+    if(_formMode == FormMode.GOOGLE){
       return true;
     }
     return false;
   }
+
 
   void _validateAndSubmit() async{
     setState((){
@@ -58,6 +66,7 @@ class _LoginPageState extends State<LoginPage> {
           print("Signed up user: $userId");
         }
         setState((){
+          _success = "success";
           _isLoading = false;
         });
 
@@ -69,6 +78,7 @@ class _LoginPageState extends State<LoginPage> {
         print('Error: $e');
         setState((){
           _isLoading = false;
+          _success = "";
           if (_isIos){
             _errorMessage = e.details;
           }
@@ -177,20 +187,16 @@ class _LoginPageState extends State<LoginPage> {
           ),
           new Expanded(
             child: new TextFormField(
+              key: new Key('email'),
               maxLines: 1,
-              keyboardType: TextInputType.emailAddress,
               autofocus: false,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: 'Enter your email',
                 hintStyle: TextStyle(color: Colors.grey),
+                // errorStyle: TextStyle(color: Colors.red),       // we can change error message style using this
               ),
-              validator: (value) {
-                if(_formMode==FormMode.LOGIN)
-                  return value.isEmpty ? "Email can\'t be empty" : null;
-                else if(_formMode==FormMode.GOOGLE)
-                  return null;
-              },
+              validator: ValidationMixin.validateEmail,
               onSaved: (value) { _email = value; },
             ),
           )
@@ -228,6 +234,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           new Expanded(
             child: TextFormField(
+              key: new Key('pw'),
               maxLines: 1,
               obscureText: true,
               autofocus: false,
@@ -236,12 +243,7 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: 'Enter your password',
                 hintStyle: TextStyle(color: Colors.grey),
               ),
-              validator: (value) {
-                if(_formMode==FormMode.LOGIN)
-                  return value.isEmpty ? "Password can\'t be empty" : null;
-                else if(_formMode==FormMode.GOOGLE)
-                  return null;
-              },
+              validator: ValidationMixin.validatePW,
               onSaved: (value) => _password = value.trim(),
             ),
           )
@@ -268,6 +270,7 @@ class _LoginPageState extends State<LoginPage> {
         children: <Widget>[
           new Expanded(
             child: FlatButton(
+              key: new Key('login_btn'),
               shape: new RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(30.0)),
               splashColor: Colors.blue,
@@ -289,6 +292,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: new Container(
                       padding: const EdgeInsets.all(5.0),
                       child: FlatButton(
+                        key: new Key('round_login_btn'),
                         shape: new RoundedRectangleBorder(
                             borderRadius:
                             new BorderRadius.circular(28.0)),
@@ -307,7 +311,10 @@ class _LoginPageState extends State<LoginPage> {
                   )
                 ],
               ),
-              onPressed: _validateAndSubmit,
+              onPressed: (){
+                _formMode = FormMode.LOGIN;
+                _validateAndSubmit();
+              },
               //onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpPage())); },
             ),
           ),
@@ -361,7 +368,10 @@ class _LoginPageState extends State<LoginPage> {
                   )
                 ],
               ),
-              onPressed: () => {},
+              onPressed: (){
+                _formMode = FormMode.GOOGLE;
+                _validateAndSubmit();
+              },
             ),
           ),
         ],
