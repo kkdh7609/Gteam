@@ -26,6 +26,7 @@ class _LoginPageState extends State<LoginPage> {
   FormMode _formMode = FormMode.LOGIN;
   bool _isIos;
   bool _isLoading;
+  bool isAdmin=false;
 
   bool _validateAndSave(){
     final form = _formKey.currentState;
@@ -113,7 +114,8 @@ class _LoginPageState extends State<LoginPage> {
                   _showLoginButton(),
                   _showGoogleLoginButton(),
                   SizedBox(height : 30.0),
-                  _showRegisterSentence()
+                  _showRegisterSentence('일반 사용자 회원가입',true),
+                  _showRegisterSentence('시설 관리자 회원가입?',false)
                 ],
               )
           )
@@ -369,14 +371,15 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _showRegisterSentence(){
+  Widget _showRegisterSentence(String show_text,bool isUser){
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Text('Don\'t have an account ?', style: TextStyle(fontFamily: 'Montserrat')),
+
+        Text(show_text, style: TextStyle(fontFamily: 'Montserrat')),
         SizedBox(width: 5.0),
         InkWell(
-            onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpPage())); },
+            onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpPage(isUser))); },
             child: Text('Register', style: TextStyle(color: Colors.blueAccent, fontFamily: 'Montserrat', fontWeight: FontWeight.bold, decoration: TextDecoration.underline))
         )
       ],

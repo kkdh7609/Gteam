@@ -5,43 +5,79 @@ import "package:gteams/login.dart";
 import 'package:gteams/services/user_mangement.dart';
 
 class SignUpPage extends StatefulWidget {
+  bool _isUser;
+  SignUpPage(bool isAdmin){
+    this._isUser=isAdmin;
+  }
   @override
-  _SignUpPageState createState() => _SignUpPageState();
+  _SignUpPageState createState() => _SignUpPageState(_isUser);
 }
 
 class _SignUpPageState extends State<SignUpPage> {
   final _formKey = new GlobalKey<FormState>();
-
+  bool _isUser;
+  _SignUpPageState(bool isAdmin){
+    this._isUser=isAdmin;
+  }
   String _email;
   String _password;
   String _name;
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      resizeToAvoidBottomPadding: false,
-      body: SingleChildScrollView(
-          child: new Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _showTitle(),
-                _showTextFieldTitle("Name"),
-                _showNameTextField(),
-                _showTextFieldTitle("Email"),
-                _showEmailTextField(),
-                _showTextFieldTitle("Password"),
-                _showPasswordTextField(),
-                SizedBox(height: 10.0),
-                _showCreateAccountButton(),
-                _showBackButton(),
-                SizedBox(height : 30.0),
-              ],
+    if(_isUser){ // Check User or Admin
+      return new Scaffold(
+        resizeToAvoidBottomPadding: false,
+        body: SingleChildScrollView(
+            child: new Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    _showTitle(),
+                    _showTextFieldTitle("Name"),
+                    _showNameTextField(),
+                    _showTextFieldTitle("Email"),
+                    _showEmailTextField(),
+                    _showTextFieldTitle("Password"),
+                    _showPasswordTextField(),
+                    SizedBox(height: 10.0),
+                    _showCreateAccountButton(),
+                    _showBackButton(),
+                    SizedBox(height : 30.0),
+                  ],
+                )
             )
-          )
-      ),
-    );
+        ),
+      );
+    }else{
+      return new Scaffold(
+        resizeToAvoidBottomPadding: false,
+        body: SingleChildScrollView(
+            child: new Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    _showTitle(),
+                    _showTextFieldTitle("Name"),
+                    _showNameTextField(),
+                    _showTextFieldTitle("Email"),
+                    _showEmailTextField(),
+                    _showTextFieldTitle("Password"),
+                    _showPasswordTextField(),
+                    _showTextFieldTitle("사업자번호"),
+                    _showPasswordTextField(),
+                    SizedBox(height: 10.0),
+                    _showCreateAccountButton(),
+                    _showBackButton(),
+                    SizedBox(height : 30.0),
+                  ],
+                )
+            )
+        ),
+      );
+    }
   }
 
   Widget _showTitle(){
@@ -234,7 +270,20 @@ class _SignUpPageState extends State<SignUpPage> {
                         splashColor: Colors.white,
                         color: Colors.white,
                         child: Icon(Icons.redo, color: Colors.blue),
-                        onPressed: () { Navigator.pop(context); },
+                        onPressed: () {
+                          if(_formKey.currentState.validate())
+                            _formKey.currentState.save();
+                          FirebaseAuth.instance
+                              .createUserWithEmailAndPassword(
+                              email: _email, password: _password)
+                              .then((user) {
+                            //To_Do add firestore..
+                            UserManagement().storeNewUser(_email, context,_name,_isUser);
+                          }).catchError((e) {
+                            print(e);
+                          });
+                          print(_email);
+                          Navigator.pop(context); },
                       ),
                     ),
                   )
@@ -248,7 +297,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     email: _email, password: _password)
                     .then((user) {
                       //To_Do add firestore..
-                      //UserManagement().storeNewUser(_email, context,_name);
+                      UserManagement().storeNewUser(_email, context,_name,_isUser);
                 }).catchError((e) {
                   print(e);
                 });

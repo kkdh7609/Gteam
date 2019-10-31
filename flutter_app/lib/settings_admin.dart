@@ -3,16 +3,16 @@ import 'package:gteams/game_create.dart';
 import 'package:gteams/login_auth.dart';
 import 'package:gteams/root_page.dart';
 
-class SettingPage extends StatefulWidget{
-  SettingPage({Key key, this.onSignedOut}) : super(key: key);
+class SettingAdminPage extends StatefulWidget{
+  SettingAdminPage({Key key, this.onSignedOut}) : super(key: key);
 
   final VoidCallback onSignedOut;
 
   @override
-  State<StatefulWidget> createState() => new _SettingPageState();
+  State<StatefulWidget> createState() => new _SettingAdminPageState();
 }
 
-class _SettingPageState extends State<SettingPage>{
+class _SettingAdminPageState extends State<SettingAdminPage>{
   final _formKey = new GlobalKey<FormState>();
 
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class _SettingPageState extends State<SettingPage>{
                     new Padding(
                       padding: const EdgeInsets.only(left: 20.0),
                       child: Text(
-                        "Go to the game create Page",
+                        "Admin page",
                         style: TextStyle(fontSize : 17.0, color: Colors.white),
                       ),
                     ),
