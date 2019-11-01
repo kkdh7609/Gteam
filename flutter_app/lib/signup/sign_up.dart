@@ -1,13 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
-import "package:gteams/login/login.dart";
+import 'package:gteams/login/login_auth.dart';
 import 'package:gteams/services/user_mangement.dart';
 
 class SignUpPage extends StatefulWidget {
+
+  BaseAuth _auth;
   bool _isUser;
-  SignUpPage(bool isAdmin){
+  SignUpPage(bool isAdmin, BaseAuth auth){
     this._isUser=isAdmin;
+    this._auth=auth;
   }
   @override
   _SignUpPageState createState() => _SignUpPageState(_isUser);
@@ -22,6 +25,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String _email;
   String _password;
   String _name;
+  String userId = "";
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +54,7 @@ class _SignUpPageState extends State<SignUpPage> {
             )
         ),
       );
-    }else{
+    }else{ // IF admin show admin signUp page
       return new Scaffold(
         resizeToAvoidBottomPadding: false,
         body: SingleChildScrollView(
@@ -66,6 +70,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     _showEmailTextField(),
                     _showTextFieldTitle("Password"),
                     _showPasswordTextField(),
+                    //ToDo: Edit 사업자 번호 TextField..
                     _showTextFieldTitle("사업자번호"),
                     _showPasswordTextField(),
                     SizedBox(height: 10.0),
@@ -273,16 +278,13 @@ class _SignUpPageState extends State<SignUpPage> {
                         onPressed: () {
                           if(_formKey.currentState.validate())
                             _formKey.currentState.save();
-                          FirebaseAuth.instance
-                              .createUserWithEmailAndPassword(
-                              email: _email, password: _password)
-                              .then((user) {
-                            //To_Do add firestore..
+                          widget._auth.signUp(_email, _password).then((user){
+                            userId=user.toString();
+                            print("Signed Up: $userId");
                             UserManagement().storeNewUser(_email, context,_name,_isUser);
-                          }).catchError((e) {
+                          }).catchError((e){
                             print(e);
                           });
-                          print(_email);
                           Navigator.pop(context); },
                       ),
                     ),
@@ -296,9 +298,8 @@ class _SignUpPageState extends State<SignUpPage> {
                     .createUserWithEmailAndPassword(
                     email: _email, password: _password)
                     .then((user) {
-                      //To_Do add firestore..
-                      UserManagement().storeNewUser(_email, context,_name,_isUser);
-                }).catchError((e) {
+                      UserManagement().storeNewUser(_email, context,_name,_isUser); // Add new user info at 'user' collection
+                 }).catchError((e) {
                   print(e);
                 });
                 print(_email);

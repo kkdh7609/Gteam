@@ -4,6 +4,7 @@ import "package:flutter/foundation.dart";
 import "package:gteams/login/login_auth.dart";
 import "package:gteams/signup/sign_up.dart";
 import 'package:gteams/validator/login_validator.dart';
+import 'package:gteams/root_page.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({this.auth, this.onSignedIn});
@@ -50,6 +51,7 @@ class _LoginPageState extends State<LoginPage> {
         if(_formMode == FormMode.LOGIN){
           userId = await widget.auth.signIn(_email, _password);
           print("Signed in: $userId");
+
         }
         else if(_formMode == FormMode.GOOGLE){
           userId = await widget.auth.signInWithGoogle();
@@ -310,8 +312,10 @@ class _LoginPageState extends State<LoginPage> {
                   )
                 ],
               ),
-              onPressed: _validateAndSubmit,
-              //onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpPage())); },
+              onPressed:(){
+                _formMode = FormMode.LOGIN;
+                _validateAndSubmit();
+              },
             ),
           ),
         ],
@@ -380,10 +384,11 @@ class _LoginPageState extends State<LoginPage> {
         Text(show_text, style: TextStyle(fontFamily: 'Montserrat')),
         SizedBox(width: 5.0),
         InkWell(
-            onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpPage(isUser))); },
+            onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpPage(isUser,widget.auth))); },
             child: Text('Register', style: TextStyle(color: Colors.blueAccent, fontFamily: 'Montserrat', fontWeight: FontWeight.bold, decoration: TextDecoration.underline))
         )
       ],
     );
   }
+  
 }
