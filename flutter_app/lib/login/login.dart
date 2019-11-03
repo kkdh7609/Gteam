@@ -104,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   _showTitle(),
-                  _showTextFieldTitle("Emailss"),
+                  _showTextFieldTitle("Email"),
                   _showEmailTextField(),
                   _showTextFieldTitle("Password"),
                   _showPasswordTextField(),
@@ -157,8 +157,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         borderRadius: BorderRadius.circular(20.0),
       ),
-      margin:
-      const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+      margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
       child: Row(
         children: <Widget>[
           new Padding(

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gteams/login/login_auth.dart';
 import 'package:gteams/root_page.dart';
+import "package:gteams/signup/sign_up.dart";
+import "package:gteams/game/game_create.dart";
+import "package:gteams/game/map_test.dart";
 
 class SettingPage extends StatefulWidget{
   SettingPage({Key key, this.onSignedOut}) : super(key: key);
@@ -25,7 +28,24 @@ class _SettingPageState extends State<SettingPage>{
           }
         )
       ]),
-      body: Text("setting")
+      body: Center(
+        child: TempButton()
+      )
+    );
+  }
+}
+
+class TempButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      child: Container(
+        padding: EdgeInsets.all(12.0),
+        child: Text('게임 생성'),
+      ),
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>GameCreatePage()));
+      },
     );
   }
 }
