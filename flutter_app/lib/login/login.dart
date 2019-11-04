@@ -4,8 +4,8 @@ import "package:flutter/foundation.dart";
 import "package:gteams/login/login_auth.dart";
 import "package:gteams/signup/sign_up.dart";
 import 'package:gteams/validator/login_validator.dart';
+import 'package:gteams/game_join/game_join.dart';
 import 'package:gteams/root_page.dart';
-
 
 class LoginPage extends StatefulWidget {
   LoginPage({this.auth, this.onSignedIn});
@@ -267,6 +267,7 @@ class _LoginPageState extends State<LoginPage> {
       alignment: Alignment(1.0, 1.0),
       padding: EdgeInsets.only(top: 15.0, right: 30.0),
       child: InkWell(
+          onTap: () { },
           child: Text('Forgot Password', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontFamily: 'Montserrat', decoration: TextDecoration.underline))
       ),
     );
@@ -398,6 +399,11 @@ class _LoginPageState extends State<LoginPage> {
         InkWell(
             onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpPage(isUser,widget.auth))); },
             child: Text('Register', style: TextStyle(color: Colors.blueAccent, fontFamily: 'Montserrat', fontWeight: FontWeight.bold, decoration: TextDecoration.underline))
+        ),
+        SizedBox(width: 5.0),
+        InkWell(
+            onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>GameJoinPage())); },
+            child: Text('Game_Join', style: TextStyle(color: Colors.blueAccent, fontFamily: 'Montserrat', fontWeight: FontWeight.bold, decoration: TextDecoration.underline))
         )
       ],
     );
