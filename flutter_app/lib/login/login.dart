@@ -6,6 +6,7 @@ import "package:gteams/signup/sign_up.dart";
 import 'package:gteams/validator/login_validator.dart';
 import 'package:gteams/root_page.dart';
 
+
 class LoginPage extends StatefulWidget {
   LoginPage({this.auth, this.onSignedIn});
 
@@ -29,12 +30,26 @@ class _LoginPageState extends State<LoginPage> {
   bool _isIos;
   bool _isLoading;
   bool isAdmin=false;
+  bool _isAvailable;      // for checking if we can act now
+  String _success = "";
 
   bool _validateAndSave(){
     final form = _formKey.currentState;
 
+ /* unsolved conflict 
     if(form.validate()){
       form.save();
+      return true;
+    }
+    return false;
+  }
+*/
+    if(_formMode == FormMode.LOGIN && form.validate()){
+      form.save();
+      return true;
+    }
+
+    if(_formMode == FormMode.GOOGLE){
       return true;
     }
     return false;
@@ -51,7 +66,6 @@ class _LoginPageState extends State<LoginPage> {
         if(_formMode == FormMode.LOGIN){
           userId = await widget.auth.signIn(_email, _password);
           print("Signed in: $userId");
-
         }
         else if(_formMode == FormMode.GOOGLE){
           userId = await widget.auth.signInWithGoogle();
@@ -62,6 +76,7 @@ class _LoginPageState extends State<LoginPage> {
           print("Signed up user: $userId");
         }
         setState((){
+          _success = "success";
           _isLoading = false;
         });
 
@@ -73,6 +88,7 @@ class _LoginPageState extends State<LoginPage> {
         print('Error: $e');
         setState((){
           _isLoading = false;
+          _success = "";
           if (_isIos){
             _errorMessage = e.details;
           }
@@ -182,20 +198,16 @@ class _LoginPageState extends State<LoginPage> {
           ),
           new Expanded(
             child: new TextFormField(
+              key: new Key('email'),
               maxLines: 1,
-              keyboardType: TextInputType.emailAddress,
               autofocus: false,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: 'Enter your email',
                 hintStyle: TextStyle(color: Colors.grey),
+                // errorStyle: TextStyle(color: Colors.red),       // we can change error message style using this
               ),
-              validator: (value) {
-                if(_formMode==FormMode.LOGIN)
-                  return value.isEmpty ? "Email can\'t be empty" : null;
-                else if(_formMode==FormMode.GOOGLE)
-                  return null;
-              },
+              validator: ValidationMixin.validateEmail,
               onSaved: (value) { _email = value; },
             ),
           )
@@ -233,6 +245,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           new Expanded(
             child: TextFormField(
+              key: new Key('pw'),
               maxLines: 1,
               obscureText: true,
               autofocus: false,
@@ -241,12 +254,7 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: 'Enter your password',
                 hintStyle: TextStyle(color: Colors.grey),
               ),
-              validator: (value) {
-                if(_formMode==FormMode.LOGIN)
-                  return value.isEmpty ? "Password can\'t be empty" : null;
-                else if(_formMode==FormMode.GOOGLE)
-                  return null;
-              },
+              validator: ValidationMixin.validatePW,
               onSaved: (value) => _password = value.trim(),
             ),
           )
@@ -273,6 +281,7 @@ class _LoginPageState extends State<LoginPage> {
         children: <Widget>[
           new Expanded(
             child: FlatButton(
+              key: new Key('login_btn'),
               shape: new RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(30.0)),
               splashColor: Colors.blue,
@@ -294,6 +303,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: new Container(
                       padding: const EdgeInsets.all(5.0),
                       child: FlatButton(
+                        key: new Key('round_login_btn'),
                         shape: new RoundedRectangleBorder(
                             borderRadius:
                             new BorderRadius.circular(28.0)),
@@ -368,7 +378,10 @@ class _LoginPageState extends State<LoginPage> {
                   )
                 ],
               ),
-              onPressed: () => {},
+              onPressed: (){
+                _formMode = FormMode.GOOGLE;
+                _validateAndSubmit();
+              },
             ),
           ),
         ],
@@ -390,5 +403,5 @@ class _LoginPageState extends State<LoginPage> {
       ],
     );
   }
-  
 }
+
