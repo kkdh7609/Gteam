@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gteams/game/map_test.dart';
+import 'package:gteams/map/google_map.dart';
 import 'dart:async';
 
 class GameCreatePage extends StatefulWidget {
@@ -21,6 +21,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
   int _groupSize;
   int _gameLevel;
   Gender _selectedGender = null;
+  String _loc_name = "Selecte Location";
 
   int _curStep = 0;
 
@@ -77,6 +78,10 @@ class _GameCreatePageState extends State<GameCreatePage> {
         _endTimeText = _endTime.toString().split("(")[1].split(")")[0];
       });
     }
+  }
+
+  void _change_loc_name(String new_name){
+    _loc_name = new_name;
   }
 
   @override
@@ -385,9 +390,9 @@ class _GameCreatePageState extends State<GameCreatePage> {
             margin: const EdgeInsets.only(right: 10.0),
           ),
           FlatButton(
-            child: Text('Select Location'),
+            child: Text(_loc_name),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTest()));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTest(onSelected: _change_loc_name)));
             },
           )
         ],

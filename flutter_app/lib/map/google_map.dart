@@ -2,21 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 
+typedef selectFunc = void Function(String);
 class MapTest extends StatefulWidget {
+  MapTest({this.onSelected});
+
+  final selectFunc onSelected;
   @override
   _MapTestState createState() => _MapTestState();
 }
 
 class _MapTestState extends State<MapTest> {
   Completer<GoogleMapController> _controller = Completer();
-  static const LatLng _center = const LatLng(37.52487, 126.92723);
+  static const LatLng _center = const LatLng(37.26222, 127.02889);
   final Set<Marker> _markers = {};
   LatLng _lastMapPosition = _center;
   MapType _currentMapType = MapType.normal;
 
   static final CameraPosition _position1 = CameraPosition(
     bearing: 192.833,
-    target: LatLng(37.52487, 126.92723),
+    target: LatLng(37.26222, 127.02889),
     tilt: 59.440,
     zoom: 11.0,
   );
@@ -41,14 +45,21 @@ class _MapTestState extends State<MapTest> {
   }
 
   _onAddMarkerButtonPressed(){
+    String now_loc = _lastMapPosition.toString();
+    String title = "This is a title";
     setState(() {
       _markers.add(Marker(
-        markerId: MarkerId(_lastMapPosition.toString()),
+        markerId: MarkerId(now_loc),
         position: _lastMapPosition,
         infoWindow: InfoWindow(
-          title: "This is a title",
+          title: title,
           snippet: "This is snippet",
         ),
+        onTap: (){
+          print(now_loc);
+          widget.onSelected(title);
+          Navigator.pop(context);
+        },
         icon: BitmapDescriptor.defaultMarker,
       ));
     });
