@@ -67,6 +67,20 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  gender_selector:
+    dependency: "direct main"
+    description:
+      name: gender_selector
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.6"
+  google_maps_flutter:
+    dependency: "direct main"
+    description:
+      name: google_maps_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.0"
   google_sign_in:
     dependency: "direct main"
     description:
