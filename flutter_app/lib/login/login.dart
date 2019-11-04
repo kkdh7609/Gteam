@@ -5,6 +5,7 @@ import "package:gteams/login/login_auth.dart";
 import "package:gteams/signup/sign_up.dart";
 import 'package:gteams/validator/login_validator.dart';
 import 'package:gteams/game_join/game_join.dart';
+import 'package:gteams/root_page.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({this.auth, this.onSignedIn});
@@ -28,12 +29,21 @@ class _LoginPageState extends State<LoginPage> {
   FormMode _formMode = FormMode.LOGIN;
   bool _isIos;
   bool _isLoading;
+  bool isAdmin=false;
   bool _isAvailable;      // for checking if we can act now
   String _success = "";
 
   bool _validateAndSave(){
     final form = _formKey.currentState;
 
+ /* unsolved conflict 
+    if(form.validate()){
+      form.save();
+      return true;
+    }
+    return false;
+  }
+*/
     if(_formMode == FormMode.LOGIN && form.validate()){
       form.save();
       return true;
@@ -44,7 +54,6 @@ class _LoginPageState extends State<LoginPage> {
     }
     return false;
   }
-
 
   void _validateAndSubmit() async{
     setState((){
@@ -115,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   _showTitle(),
-                  _showTextFieldTitle("Emailss"),
+                  _showTextFieldTitle("Email"),
                   _showEmailTextField(),
                   _showTextFieldTitle("Password"),
                   _showPasswordTextField(),
@@ -124,7 +133,8 @@ class _LoginPageState extends State<LoginPage> {
                   _showLoginButton(),
                   _showGoogleLoginButton(),
                   SizedBox(height : 30.0),
-                  _showRegisterSentence()
+                  _showRegisterSentence('일반 사용자 회원가입',true),
+                  _showRegisterSentence('시설 관리자 회원가입?',false)
                 ],
               )
           )
@@ -168,8 +178,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         borderRadius: BorderRadius.circular(20.0),
       ),
-      margin:
-      const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+      margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
       child: Row(
         children: <Widget>[
           new Padding(
@@ -313,11 +322,10 @@ class _LoginPageState extends State<LoginPage> {
                   )
                 ],
               ),
-              onPressed: (){
+              onPressed:(){
                 _formMode = FormMode.LOGIN;
                 _validateAndSubmit();
               },
-              //onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpPage())); },
             ),
           ),
         ],
@@ -381,14 +389,15 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _showRegisterSentence(){
+  Widget _showRegisterSentence(String show_text,bool isUser){
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Text('Don\'t have an account ?', style: TextStyle(fontFamily: 'Montserrat')),
+
+        Text(show_text, style: TextStyle(fontFamily: 'Montserrat')),
         SizedBox(width: 5.0),
         InkWell(
-            onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpPage())); },
+            onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpPage(isUser,widget.auth))); },
             child: Text('Register', style: TextStyle(color: Colors.blueAccent, fontFamily: 'Montserrat', fontWeight: FontWeight.bold, decoration: TextDecoration.underline))
         ),
         SizedBox(width: 5.0),
@@ -400,3 +409,4 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+

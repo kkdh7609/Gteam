@@ -1,0 +1,587 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:gteams/map/google_map.dart';
+import 'dart:async';
+
+class GameCreatePage extends StatefulWidget {
+  @override
+  _GameCreatePageState createState() => _GameCreatePageState();
+}
+
+enum Gender { MALE, FEMALE, ALL }
+
+class _GameCreatePageState extends State<GameCreatePage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  String _gameName;
+  String _selectedSports = null;
+  String _dateText = "Select Date";
+  String _startTimeText = "Start Time";
+  String _endTimeText = "End Time";
+  int _groupSize;
+  int _gameLevel;
+  Gender _selectedGender = null;
+  String _loc_name = "Selecte Location";
+
+  int _curStep = 0;
+
+  List<DropdownMenuItem<String>> _sportsList = [];
+  List<String> _sports = ["Football", "Baseball", "Basketball"];
+
+  DateTime _date = DateTime.now();
+  TimeOfDay _startTime = TimeOfDay.now();
+  TimeOfDay _endTime = TimeOfDay.now();
+
+  void loadData() {
+    _sportsList = [];
+    _sportsList = _sports.map((val) => DropdownMenuItem<String>(
+              child: Text(val),
+              value: val,
+            )).toList();
+
+  }
+
+  Future<Null> _selectDate(BuildContext context) async {
+    final DateTime _pickedDate = await showDatePicker(
+        context: context,
+        initialDate: _date,
+        firstDate: DateTime.now().subtract(Duration(days: 1)),
+        lastDate: _date.add(Duration(days: 100)));
+
+    if (_pickedDate != null && _pickedDate != _date) {
+      setState(() {
+        _date = _pickedDate;
+        _dateText = _date.toString().split(" ")[0];
+      });
+    }
+  }
+
+  Future<Null> _selectStart(BuildContext context) async {
+    final TimeOfDay _pickedStart =
+        await showTimePicker(context: context, initialTime: _startTime);
+
+    if (_pickedStart != null && _pickedStart != _startTime) {
+      setState(() {
+        _startTime = _pickedStart;
+        _startTimeText = _startTime.toString().split("(")[1].split(")")[0];
+      });
+    }
+  }
+
+  Future<Null> _selectEnd(BuildContext context) async {
+    final TimeOfDay _pickedEnd =
+        await showTimePicker(context: context, initialTime: _endTime);
+
+    if (_pickedEnd != null && _pickedEnd != _endTime) {
+      setState(() {
+        _endTime = _pickedEnd;
+        _endTimeText = _endTime.toString().split("(")[1].split(")")[0];
+      });
+    }
+  }
+
+  void _change_loc_name(String new_name){
+    _loc_name = new_name;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    loadData();
+    List<Step> steps = [
+      Step(
+        title: const Text("What",
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
+          ),
+        ),
+        isActive: true,
+        state: StepState.indexed,
+        content: _game_type(),
+      ),
+      Step(
+          title: const Text("When",
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+            ),
+          ),
+          isActive: true,
+          state: StepState.indexed,
+          content: Column(
+            children: <Widget>[_game_date(), _game_time()],
+          )),
+      Step(
+          title: const Text("Where",
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+            ),
+          ),
+          isActive: true,
+          state: StepState.indexed,
+          content: _game_location()),
+      Step(
+          title: const Text("Extra",
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+            ),
+          ),
+          isActive: true,
+          state: StepState.indexed,
+          content: Column(
+            children: <Widget>[
+              _game_gender(),
+              _game_member_number(),
+              _game_level()
+            ],
+          ))
+    ];
+
+    return Scaffold(
+        appBar: AppBar(title: Text("Game Create"), centerTitle: true,),
+        body: Container(
+            child: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+//                        _game_appBar(),
+                        _game_title("게임 이름"),
+                        _game_name(),
+                        Stepper(
+                          steps: steps,
+                          type: StepperType.vertical,
+                      currentStep: this._curStep,
+                      onStepContinue: () {
+                        setState(() {
+                          if (this._curStep < steps.length - 1) {
+                            this._curStep = this._curStep + 1;
+                          } else {
+                            this._curStep = 0;
+                          }
+                        });
+                      },
+                      onStepCancel: () {
+                        setState(() {
+                          if (this._curStep > 0) {
+                            this._curStep = this._curStep - 1;
+                          } else {
+                            this._curStep = 0;
+                          }
+                        });
+                      },
+                      onStepTapped: (step) {
+                        setState(() {
+                          this._curStep = step;
+                        });
+                      },
+                    ),
+                    _game_create()
+                  ],
+                )
+                )
+            )
+        )
+    );
+  }
+
+  Widget _game_appBar() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              offset: Offset(0, 2),
+              blurRadius: 4.0),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.only(
+            top: MediaQuery.of(context).padding.top, left: 8, right: 8),
+        child: Row(
+          children: <Widget>[
+            Container(
+              alignment: Alignment.centerLeft,
+              width: AppBar().preferredSize.height + 40,
+              height: AppBar().preferredSize.height,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(32.0),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(Icons.close),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Center(
+                child: Text(
+                  "Create Game",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 22,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: AppBar().preferredSize.height + 40,
+              height: AppBar().preferredSize.height,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _game_title(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0, left: 20.0),
+      child: Text(
+        title,
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900, fontSize: 16.0),
+      ),
+    );
+  }
+
+  Widget _game_name() {
+    return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(24.0)),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              offset: Offset(4, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          children: <Widget>[
+            Container(
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: TextFormField(
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                          hintText: '게임 이름 입력',
+                          hintStyle: TextStyle(color: Colors.grey),
+                        ),
+                        validator: (value) {
+                          return value.isEmpty ? "Game name can\'t be empty" : null;
+                        },
+                        onSaved: (value) {
+                          _gameName = value;
+                        },
+                      ),
+                    )
+                  ],
+                ))
+          ],
+        ));
+  }
+
+  Widget _game_type() {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          new Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Icon(Icons.check, color: Colors.black)),
+          Container(
+            height: 30.0,
+            width: 1.0,
+            color: Colors.grey.withOpacity(0.5),
+            margin: const EdgeInsets.only(right: 10.0),
+          ),
+          DropdownButtonHideUnderline(
+              child: DropdownButton(
+                  value: _selectedSports,
+                  items: _sportsList,
+                  hint: Text("Select sports"),
+                  iconSize: 40.0,
+                  onChanged: (value) {
+                    _selectedSports = value;
+                    setState(() {});
+                  }))
+        ],
+      ),
+    );
+  }
+
+  Widget _game_date() {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          new Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Icon(Icons.date_range, color: Colors.black)),
+          Container(
+            height: 30.0,
+            width: 1.0,
+            color: Colors.grey.withOpacity(0.5),
+            margin: const EdgeInsets.only(right: 10.0),
+          ),
+          FlatButton(
+            child: Text(_dateText, style: TextStyle(fontSize: 16)),
+            onPressed: () {
+              _selectDate(context);
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _game_time() {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          new Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Icon(Icons.access_time, color: Colors.black)),
+          Container(
+            height: 30.0,
+            width: 1.0,
+            color: Colors.grey.withOpacity(0.5),
+            margin: const EdgeInsets.only(right: 10.0),
+          ),
+          FlatButton(
+            child: Text(_startTimeText, style: TextStyle(fontSize: 16)),
+            onPressed: () {
+              _selectStart(context);
+            },
+          ),
+          Text("~", style: TextStyle(fontSize: 16)),
+          FlatButton(
+            child: Text(_endTimeText, style: TextStyle(fontSize: 16)),
+            onPressed: () {
+              _selectEnd(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _game_location() {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Icon(Icons.location_on, color: Colors.black)),
+          Container(
+            height: 30.0,
+            width: 1.0,
+            color: Colors.grey.withOpacity(0.5),
+            margin: const EdgeInsets.only(right: 10.0),
+          ),
+          FlatButton(
+            child: Text(_loc_name),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTest(onSelected: _change_loc_name)));
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _game_gender() {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          new Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Icon(Icons.wc, color: Colors.black)),
+          Container(
+            height: 30.0,
+            width: 1.0,
+            color: Colors.grey.withOpacity(0.5),
+            margin: const EdgeInsets.only(right: 10.0),
+          ),
+          Radio(
+            value: Gender.MALE,
+            groupValue: _selectedGender,
+            onChanged: (Gender value) {
+              setState(() {
+                _selectedGender = value;
+              });
+            },
+          ),
+          Text("Male", style: TextStyle(fontSize: 16)),
+          Radio(
+            value: Gender.FEMALE,
+            groupValue: _selectedGender,
+            onChanged: (Gender value) {
+              setState(() {
+                _selectedGender = value;
+              });
+            },
+          ),
+          Text("Female", style: TextStyle(fontSize: 16)),
+          Radio(
+            value: Gender.ALL,
+            groupValue: _selectedGender,
+            onChanged: (Gender value) {
+              setState(() {
+                _selectedGender = value;
+              });
+            },
+          ),
+          Text("All", style: TextStyle(fontSize: 16)),
+        ],
+      ),
+    );
+  }
+
+  Widget _game_member_number() {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          new Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Icon(Icons.group, color: Colors.black)),
+          Container(
+            height: 30.0,
+            width: 1.0,
+            color: Colors.grey.withOpacity(0.5),
+            margin: const EdgeInsets.only(right: 10.0),
+          ),
+          Flexible(
+              child: TextFormField(
+                inputFormatters: [ LengthLimitingTextInputFormatter(2)],
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  hintText: 'Group Size',
+                  hintStyle: TextStyle(color: Colors.grey),
+                ),
+                validator: (value) {
+                  return value.isEmpty ? "Group size can\'t be empty" : null;
+                },
+                onSaved: (value) {
+                  _groupSize = int.parse(value);
+                },
+              )
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _game_level() {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Icon(Icons.thumb_up, color: Colors.black)),
+          Container(
+            height: 30.0,
+            width: 1.0,
+            color: Colors.grey.withOpacity(0.5),
+            margin: const EdgeInsets.only(right: 10.0),
+          ),
+          Flexible(
+              child: TextFormField(
+                inputFormatters: [ LengthLimitingTextInputFormatter(2)],
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  hintText: 'Game Level',
+                  hintStyle: TextStyle(color: Colors.grey),
+                ),
+                validator: (value) {
+                  return value.isEmpty ? "Game level can\'t be empty" : null;
+                },
+                onSaved: (value) {
+                  _gameLevel = int.parse(value);
+                },
+              )
+          )
+        ],
+      ),
+    );
+  }
+
+  void _showMaterialDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('확인'),
+            content: SingleChildScrollView(
+                child: ListBody(
+              children: <Widget>[Text("abc"), Text("def")],
+            )),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('취소')),
+              FlatButton(
+                onPressed: () {
+                  if(_formKey.currentState.validate()){
+                    _formKey.currentState.save();
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  }
+                },
+                child: Text('생성'),
+              )
+            ],
+          );
+        });
+  }
+
+  Widget _game_create() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 8),
+      child: Container(
+        height: 48,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(24.0)),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Colors.blueGrey.withOpacity(0.8),
+              offset: Offset(4, 4),
+            ),
+          ],
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: RaisedButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(24.0)),
+            ),
+            onPressed: () {
+              _showMaterialDialog();
+            },
+            child: Center(
+              child: Text(
+                "Create Game",
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 18,
+                    color: Colors.black),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
