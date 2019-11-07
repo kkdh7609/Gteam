@@ -189,7 +189,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
         )
     );
   }
-  
+
   Widget _game_title(String title) {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0, left: 20.0),
