@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gteams/login/login_auth.dart';
+import 'package:gteams/setting/home.dart';
 import 'package:gteams/setting/settings_admin.dart';
 import 'package:gteams/setting/settings_user.dart';
 import 'package:gteams/login/login.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:gteams/services/crud.dart';
 
 class RootPage extends StatefulWidget{
   RootPage({this.auth});
@@ -24,9 +24,14 @@ enum AuthStatus{
 }
 
 class _RootPageState extends State<RootPage>{
+
+  crudMedthods crudObj = new crudMedthods();
+
   AuthStatus authStatus = AuthStatus.NOT_DETERMINED;
   String _userId = "";
   String _user_mail ="";
+  String _user_docID ="";
+  bool _info_status = false;
 
   @override
   void initState() {
@@ -66,9 +71,9 @@ class _RootPageState extends State<RootPage>{
 
   void _isUser(){ // Check User or Admin
     if (_userId.length > 0 && _userId != null){
+      var userQuery = crudObj.getDocumentByWhere('user', 'email', _user_mail);
       setState(() {
-        var userQuery = Firestore.instance.collection('user').where('email',isEqualTo: _user_mail).limit(1); // Send Query to firestore
-        userQuery.getDocuments().then((data){
+        userQuery.then((data){
           if (data.documents[0].data['isUser']) {
             print('set authstatus user');
             setState(() {
@@ -80,6 +85,10 @@ class _RootPageState extends State<RootPage>{
               authStatus = AuthStatus.LOGGED_IN_ADMIN;
             });
           }
+          setState(() {
+            _info_status=data.documents[0].data['info_status'];
+            _user_docID=data.documents[0].documentID;
+          });
         });
       });
     }
@@ -118,7 +127,13 @@ class _RootPageState extends State<RootPage>{
 
       case AuthStatus.LOGGED_IN_USER:
         print('user check in');
-        return new SettingUserPage(onSignedOut: _onSignedOut,);
+        if(!_info_status){ // 초기로그인 일때
+          print("info_status : $_info_status");
+          return new SettingUser(onSignedOut: _onSignedOut,user_docID: _user_docID,);
+        }else{ //초기로그인이 아닐때
+          print("info_status : $_info_status");
+          return new HomePage(onSignedOut: _onSignedOut,);
+        }
         break;
 
       case AuthStatus.LOGGED_IN_ADMIN:

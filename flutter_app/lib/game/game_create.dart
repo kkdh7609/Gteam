@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gteams/map/google_map.dart';
+import 'package:gteams/services/crud.dart';
 import 'dart:async';
 
 class GameCreatePage extends StatefulWidget {
@@ -12,6 +13,7 @@ enum Gender { MALE, FEMALE, ALL }
 
 class _GameCreatePageState extends State<GameCreatePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  crudMedthods crudObj = new crudMedthods();
 
   String _gameName;
   String _selectedSports = null;
@@ -187,64 +189,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
         )
     );
   }
-
-  Widget _game_appBar() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              offset: Offset(0, 2),
-              blurRadius: 4.0),
-        ],
-      ),
-      child: Padding(
-        padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top, left: 8, right: 8),
-        child: Row(
-          children: <Widget>[
-            Container(
-              alignment: Alignment.centerLeft,
-              width: AppBar().preferredSize.height + 40,
-              height: AppBar().preferredSize.height,
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(32.0),
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(Icons.close),
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Center(
-                child: Text(
-                  "Create Game",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 22,
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              width: AppBar().preferredSize.height + 40,
-              height: AppBar().preferredSize.height,
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
+  
   Widget _game_title(String title) {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0, left: 20.0),
@@ -524,7 +469,13 @@ class _GameCreatePageState extends State<GameCreatePage> {
             title: Text('확인'),
             content: SingleChildScrollView(
                 child: ListBody(
-              children: <Widget>[Text("abc"), Text("def")],
+              children: <Widget>[
+                Text("게임 이름 : $_gameName"),
+                Text("게임 종목: $_selectedSports"),
+                Text("게임 날짜 : $_dateText"),
+                Text("게임 시간 : $_startTimeText ~ $_endTimeText"),
+                Text("게임을 만드시겠습니까?")
+              ],
             )),
             actions: <Widget>[
               FlatButton(
@@ -536,6 +487,22 @@ class _GameCreatePageState extends State<GameCreatePage> {
                 onPressed: () {
                   if(_formKey.currentState.validate()){
                     _formKey.currentState.save();
+                    crudObj.addData('game3', {
+                      'gameName' : _gameName,
+                      'selectedSport':_selectedSports,
+                      'dateText':_dateText,
+                      'startTime':_startTimeText,
+                      'endTime':_endTimeText,
+                      'groupSize':_groupSize,
+                      'gameLevel':_gameLevel,
+                      'Gender':_selectedGender.toString(),
+                      'loc_name':_loc_name,
+                    });
+
+                    print(crudObj.getDataCollection('/game').then((data){
+                      data.documents[0].data['gameName'];
+                    }));
+
                     Navigator.pop(context);
                     Navigator.pop(context);
                   }
