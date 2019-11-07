@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gteams/game_join/model/GameListData.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'package:gteams/game_join/GameJoinTheme.dart';
-import 'package:gteams/game_join/Model/GameListData.dart';
 import 'package:gteams/game_join/game_room/game_room.dart';
 
 class GameListView extends StatelessWidget {
@@ -13,7 +12,7 @@ class GameListView extends StatelessWidget {
   final AnimationController animationController;
   final Animation animation;
 
-  const GameListView({Key key, this.gameData, this.animationController, this.animation, this.callback}) : super(key: key);
+  GameListView({Key key, this.gameData, this.animationController, this.animation, this.callback}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
