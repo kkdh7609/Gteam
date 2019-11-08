@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter/material.dart';
 
 class RectangleIndicator extends StatelessWidget {
   final List<String> icons;
@@ -86,19 +86,19 @@ class _IconState extends State<_Icon> with TickerProviderStateMixin {
                 padding: EdgeInsets.only(top: 38.0),
                 child: Column(
                   children: <Widget>[
-                    _renderRectangle(this.widget.selectedColor),
+                    _showRectangle(this.widget.selectedColor),
                     Padding(
                       padding: EdgeInsets.only(top: 8.0),
-                      child: _renderIcon(this.widget.selectedColor),
+                      child: _showIcon(this.widget.selectedColor),
                     ),
                   ],
                 ),
               ),
             ),
-            _renderRectangle(this.widget.baseColor),
+            _showRectangle(this.widget.baseColor),
             Padding(
               padding: EdgeInsets.only(top: 48.0),
-              child: _renderIcon(this.widget.baseColor),
+              child: _showIcon(this.widget.baseColor),
             ),
           ],
         ),
@@ -106,7 +106,7 @@ class _IconState extends State<_Icon> with TickerProviderStateMixin {
     );
   }
 
-  SvgPicture _renderIcon(Color color) {
+  SvgPicture _showIcon(Color color) {
     return SvgPicture.asset(
       this.widget.image,
       color: color,
@@ -115,7 +115,7 @@ class _IconState extends State<_Icon> with TickerProviderStateMixin {
     );
   }
 
-  Container _renderRectangle(Color color) {
+  Container _showRectangle(Color color) {
     return Container(
       width: this.widget.radius * 20,
       height: this.widget.radius / 2,

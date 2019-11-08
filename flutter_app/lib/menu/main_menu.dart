@@ -1,27 +1,35 @@
-import 'package:gteams/menu/model/aliments.dart';
-import 'package:gteams/menu/widgets/aliment.dart';
-import 'package:gteams/menu/widgets/card_item.dart';
-import 'package:gteams/menu/widgets/page.dart';
-import 'package:gteams/menu/widgets/pager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gteams/menu/widgets/page.dart';
+import 'package:gteams/menu/widgets/pager.dart';
+import 'package:gteams/menu/model/aliments.dart';
+import 'package:gteams/menu/widgets/aliment.dart';
+import 'package:gteams/menu/widgets/sports_content.dart';
 
-class MyApps extends StatelessWidget {
+
+class MainMenuPage extends StatelessWidget {
+
+  MainMenuPage({Key key,this.onSignedOut,}):super(key: key);
+
+  final VoidCallback onSignedOut;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'BurnOff',
+      title: 'G-TEAM',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      home: Scaffold(
+        body: MainHomePage(),
+      ),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class HomePage extends StatelessWidget {
-  HomePage() {
+class MainHomePage extends StatelessWidget {
+  MainHomePage() {
     SystemChrome.setPreferredOrientations(
         <DeviceOrientation>[DeviceOrientation.portraitUp]);
   }

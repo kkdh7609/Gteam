@@ -1,13 +1,15 @@
 import 'dart:ui';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gteams/game/game_join/model/GameListData.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gteams/services/crud.dart';
+import 'package:gteams/game/game_join/widgets/GameListView.dart';
+import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
+import 'package:gteams/game/game_join/widgets/GameFilterScreen.dart';
+import 'package:gteams/game/game_join/widgets/CalendarPopUpView.dart';
 
-import 'package:gteams/game/game_join/GameListView.dart';
-import 'package:gteams/game/game_join/GameJoinTheme.dart';
-import 'package:gteams/game/game_join/GameFilterScreen.dart';
-import 'package:gteams/game/game_join/CalendarPopUpView.dart';
-import 'package:gteams/game/game_join/Model/GameListData.dart';
 
 class GameJoinPage extends StatefulWidget {
   @override
@@ -16,7 +18,10 @@ class GameJoinPage extends StatefulWidget {
 
 class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMixin {
 
-  var gameList = GameListData.gameList;
+  var gameList =GameListData.gameList;
+
+  crudMedthods crudObj = new crudMedthods();
+
   AnimationController animationController;
   ScrollController _scrollController = new ScrollController();
 
@@ -30,6 +35,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
 
   @override
   void initState() {
+    this.gameList = GameListData.gameList;
     animationController = AnimationController(
         duration: Duration(milliseconds: 1000), vsync: this);
     super.initState();
@@ -84,28 +90,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                                       ),
                                     ];
                                   },
-                                  body: Container(
-                                    color: GameJoinTheme.buildLightTheme().backgroundColor,
-                                    child: ListView.builder(
-                                      itemCount: gameList.length,
-                                      padding: EdgeInsets.only(top: 8),
-                                      scrollDirection: Axis.vertical,
-                                      itemBuilder: (context, index) {
-                                        var count = gameList.length > 10 ? 10 : gameList.length;
-                                        var animation = Tween(begin: 0.0, end: 1.0).animate(
-                                            CurvedAnimation(
-                                                parent: animationController,
-                                                curve: Interval((1 / count) * index, 1.0, curve: Curves.fastOutSlowIn)));
-                                        animationController.forward();
-                                        return GameListView(
-                                          callback: () {},
-                                          gameData: gameList[index],
-                                          animation: animation,
-                                          animationController: animationController,
-                                        );
-                                      },
-                                    ),
-                                  ),
+                                  body: _buildBody()
                                 )
                             )
                           ],
@@ -115,6 +100,43 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                 )
             )
         )
+    );
+  }
+  /*YeongUn modify
+  By using Stream Builder, Firestroe game2 collection and App can update real time*/
+  Widget _buildBody(){
+    return StreamBuilder<QuerySnapshot>(
+        stream: Firestore.instance.collection('game2').snapshots(),
+        builder: (context, snapshot){
+          if(!snapshot.hasData) return LinearProgressIndicator();
+
+          return _showGamelist(context,snapshot.data.documents);
+        }
+      );
+  }
+
+  Widget _showGamelist(BuildContext context, List<DocumentSnapshot> snapshot){
+    return Container(
+      color: GameJoinTheme.buildLightTheme().backgroundColor,
+      child:  ListView.builder(
+        itemCount: snapshot.length,
+        padding: EdgeInsets.only(top: 8),
+        scrollDirection: Axis.vertical,
+        itemBuilder: (context, index) {
+          var count = snapshot.length > 10 ? 10 : snapshot.length;
+          var animation = Tween(begin: 0.0, end: 1.0).animate(
+              CurvedAnimation(
+                  parent: animationController,
+                  curve: Interval((1 / count) * index, 1.0, curve: Curves.fastOutSlowIn)));
+          animationController.forward();
+          return GameListView(
+            callback: () {},
+            gameData: snapshot.map((data) => GameListData.fromJson(data.data)).toList()[index],
+            animation: animation,
+            animationController: animationController,
+          );
+        },
+      ),
     );
   }
 
@@ -131,64 +153,67 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                   blurRadius: 8.0),
             ]
         ),
-        child: Padding(
-            padding: EdgeInsets.only(top: MediaQuery
-                .of(context)
-                .padding
-                .top, left: 8, right: 8),
-            child: Row(
-              children: <Widget>[
-                Container(
-                    alignment: Alignment.centerLeft,
-                    width: AppBar().preferredSize.height + 40,
-                    height: AppBar().preferredSize.height,
-                    child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(32.0),
-                            ),
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(Icons.arrow_back),
-                            )
-                        )
-                    )
-                ),
-                Expanded(
-                    child: Center(
-                        child: Text("Search the Game", style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 22),)
-                    )
-                ),
-                Container(
-                    width: AppBar().preferredSize.height + 40,
-                    height: AppBar().preferredSize.height,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(32.0),
-                                ),
-                                onTap: () {},
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Icon(FontAwesomeIcons.mapMarkedAlt),
-                                )
-                            )
-                        )
-                      ],
-                    )
-                )
-              ],
-            )
+        child: Container(
+          color: GameJoinTheme.buildLightTheme().primaryColor,
+          child: Padding(
+              padding: EdgeInsets.only(top: MediaQuery
+                  .of(context)
+                  .padding
+                  .top, left: 8, right: 8),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                      alignment: Alignment.centerLeft,
+                      width: AppBar().preferredSize.height + 40,
+                      height: AppBar().preferredSize.height,
+                      child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(32.0),
+                              ),
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(Icons.arrow_back, color: Colors.white),
+                              )
+                          )
+                      )
+                  ),
+                  Expanded(
+                      child: Center(
+                          child: Text("Search the Game", style: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white),)
+                      )
+                  ),
+                  Container(
+                      width: AppBar().preferredSize.height + 40,
+                      height: AppBar().preferredSize.height,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(32.0),
+                                  ),
+                                  onTap: () {},
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(FontAwesomeIcons.mapMarkedAlt, color: Colors.white),
+                                  )
+                              )
+                          )
+                        ],
+                      )
+                  )
+                ],
+              )
+          )
         )
     );
   }
@@ -221,6 +246,12 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                     decoration: new InputDecoration(
                       border: InputBorder.none,
                       hintText: "Suwon",
+                      hintStyle: TextStyle(
+                          fontFamily: 'Dosis',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          color: Colors.black.withOpacity(0.2)
+                      )
                     ),
                   ),
                 ),
@@ -298,7 +329,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                         children: <Widget>[
                           Text(
                             "Choose date",
-                            style: TextStyle(fontWeight: FontWeight.w100, fontSize: 16, color: Colors.grey.withOpacity(0.8)),
+                            style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w600, fontSize: 16, color: Colors.black.withOpacity(0.5)),
                           ),
                           SizedBox(
                             height: 8,
@@ -306,8 +337,10 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                           Text(
                             "${DateFormat("dd, MMM").format(startDate)} - ${DateFormat("dd, MMM").format(endDate)}",
                             style: TextStyle(
-                              fontWeight: FontWeight.w100,
+                              fontFamily: 'Dosis',
+                              fontWeight: FontWeight.w600,
                               fontSize: 16,
+                              color: Colors.black.withOpacity(0.5)
                             ),
                           ),
                         ],
@@ -349,17 +382,19 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            "Number of Rooms",
-                            style: TextStyle(fontWeight: FontWeight.w100, fontSize: 16, color: Colors.grey.withOpacity(0.8)),
+                            "Number of Members",
+                            style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w600, fontSize: 16, color: Colors.black.withOpacity(0.5)),
                           ),
                           SizedBox(
                             height: 8,
                           ),
                           Text(
-                            "1 Room - 2 Adults",
+                            "10 Members",
                             style: TextStyle(
-                              fontWeight: FontWeight.w100,
+                              fontFamily: 'Dosis',
+                              fontWeight: FontWeight.w600,
                               fontSize: 16,
+                              color: Colors.black.withOpacity(0.5)
                             ),
                           ),
                         ],
@@ -402,10 +437,12 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "530 hotels found",
+                      "530 games found",
                       style: TextStyle(
-                        fontWeight: FontWeight.w100,
+                        fontFamily: 'Dosis',
+                        fontWeight: FontWeight.w600,
                         fontSize: 16,
+                        color: Colors.black.withOpacity(0.5)
                       ),
                     ),
                   ),
@@ -432,10 +469,12 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                       child: Row(
                         children: <Widget>[
                           Text(
-                            "Filtter",
+                            "Filter",
                             style: TextStyle(
-                              fontWeight: FontWeight.w100,
-                              fontSize: 16,
+                                fontFamily: 'Dosis',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                                color: Colors.black.withOpacity(0.5)
                             ),
                           ),
                           Padding(

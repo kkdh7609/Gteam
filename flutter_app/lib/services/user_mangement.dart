@@ -1,6 +1,6 @@
 //To add user account to firestore 'user' collection
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserManagement {
   storeNewUser(email,context,name,isUser) {

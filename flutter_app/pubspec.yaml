@@ -11,6 +11,7 @@ description: A new Flutter application.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+
 version: 1.0.0+1
 
 environment:
@@ -19,17 +20,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  google_maps_flutter: ^0.4.0
+  cloud_firestore: ^0.12.9+5
+  cupertino_icons: ^0.1.2
+  flutter_svg: ^0.13.0+1
   firebase_auth: ^0.14.0+5
+  font_awesome_flutter: ^8.5.0
   grouped_buttons: ^1.0.4
   google_sign_in:
-  cloud_firestore: ^0.12.9+5
-  gender_selector:
-  cupertino_icons: ^0.1.2
-  font_awesome_flutter: ^8.5.0
-  smooth_star_rating: ^1.0.3
+  google_maps_flutter: ^0.4.0
   intl: ^0.16.0
-  flutter_svg: ^0.13.0+1
+  smooth_star_rating: ^1.0.3
 
 dev_dependencies:
   flutter_test:
@@ -44,9 +44,9 @@ flutter:
   assets:
     - assets/image/google.png
     - assets/image/milkyway.jpg
+    - assets/image/game/room/footsal_club.jpg
     - assets/image/hotel/
     - assets/image/menu/
-    - assets/image/game/room/footsal_club.jpg
 
   fonts:
     - family: Qwigley

@@ -1,8 +1,8 @@
-import 'package:gteams/menu/model/aliment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gteams/game/game_create/game_create.dart';
+import 'package:gteams/menu/model/aliment.dart';
 import 'package:gteams/game/game_join/game_join.dart';
+import 'package:gteams/game/game_create/game_create.dart';
 
 class AlimentWidget extends StatelessWidget {
   final LinearGradient theme;
@@ -96,7 +96,7 @@ class AlimentWidget extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       SvgPicture.asset(
-                        "assets/image/calendar.svg",
+                        "assets/image/menu/calendar.svg",
                         width: 50.0,
                         height: 50.0,
                       ),
@@ -116,7 +116,7 @@ class AlimentWidget extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       SvgPicture.asset(
-                        "assets/image/magnifying-glass.svg",
+                        "assets/image/menu/magnifying-glass.svg",
                         width: 50.0,
                         height: 50.0,
                       ),

@@ -1,7 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-
-import 'package:gteams/game/game_join/GameJoinTheme.dart';
+import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 
 class CustomCalendarView extends StatefulWidget {
   final DateTime minimumDate;

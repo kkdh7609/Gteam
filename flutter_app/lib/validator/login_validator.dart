@@ -1,4 +1,3 @@
-import 'package:gteams/login/login.dart';
 
 class ValidationMixin{
   static String validateEmail(String value){

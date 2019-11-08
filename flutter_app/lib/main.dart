@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gteams/login/login_auth.dart';
 import 'package:gteams/root_page.dart';
+import 'package:gteams/login/login_auth.dart';
 
 void main() => runApp(MyApp());
 

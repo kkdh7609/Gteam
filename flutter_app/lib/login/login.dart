@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
-import 'package:gteams/login/login_auth.dart';
 import 'package:gteams/signup/sign_up.dart';
+import 'package:gteams/login/login_auth.dart';
 import 'package:gteams/validator/login_validator.dart';
 
 class LoginPage extends StatefulWidget {

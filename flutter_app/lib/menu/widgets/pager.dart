@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:gteams/menu/widgets/page.dart';
 import 'package:gteams/menu/widgets/rectangle_indicator.dart';
-import 'package:flutter/material.dart';
 
 class MenuPager extends StatefulWidget {
   final List<Page> children;
@@ -21,9 +21,9 @@ class _MenuPagerState extends State<MenuPager> {
     return Container(
       child: Stack(
         children: <Widget>[
-          _renderBackground(this.widget.children[selectedPageIndex].background),
-          _renderTitle(this.widget.children[selectedPageIndex].title),
-          _renderBottomNav(
+          _showBackground(this.widget.children[selectedPageIndex].background),
+          _showTitle(this.widget.children[selectedPageIndex].title),
+          _showBottomNav(
               this.widget.children.map((page) => page.icon).toList()),
           _renderContents(
               this.widget.children, selectedPageIndex, this.handlePageChanged),
@@ -44,13 +44,13 @@ class _MenuPagerState extends State<MenuPager> {
       controller: PageController(
           initialPage: selectedPageIndex, viewportFraction: _kViewportFraction),
       children: List<Widget>.generate(pages.length, (index) {
-        return _renderPage(pages[index], index, selectedPageIndex);
+        return _showPage(pages[index], index, selectedPageIndex);
       }, growable: false),
       onPageChanged: onPageChanged,
     );
   }
 
-  Widget _renderPage(Page page, int index, int selectedPageIndex) {
+  Widget _showPage(Page page, int index, int selectedPageIndex) {
     var resizeFactor = 1 - ((selectedPageIndex - index).abs() * 0.2).clamp(0.0, 1.0);
     return Center(
       child: Container(
@@ -68,7 +68,7 @@ class _MenuPagerState extends State<MenuPager> {
     );
   }
 
-  Widget _renderBottomNav(List<String> iconImages) {
+  Widget _showBottomNav(List<String> iconImages) {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
@@ -84,7 +84,7 @@ class _MenuPagerState extends State<MenuPager> {
     );
   }
 
-  Widget _renderTitle(String titleText) {
+  Widget _showTitle(String titleText) {
     return Align(
       alignment: Alignment.topCenter,
       child: Padding(
@@ -102,7 +102,7 @@ class _MenuPagerState extends State<MenuPager> {
     );
   }
 
-  Widget _renderBackground(LinearGradient gradient2) {
+  Widget _showBackground(LinearGradient gradient2) {
     return Positioned.fill(
       child: Container(
         decoration: BoxDecoration(

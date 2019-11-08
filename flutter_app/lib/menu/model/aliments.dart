@@ -1,5 +1,5 @@
-import 'package:gteams/menu/model/aliment.dart';
 import 'package:flutter/material.dart';
+import 'package:gteams/menu/model/aliment.dart';
 
 class Aliments {
   static List<Aliment> aliments = [

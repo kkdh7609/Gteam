@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:gteams/game/game_join/GameJoinTheme.dart';
+import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 
 class SliderView extends StatefulWidget {
   final Function(double) onChnagedistValue;
