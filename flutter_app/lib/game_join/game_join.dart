@@ -1,14 +1,14 @@
 import 'dart:ui';
-import 'package:gteams/game_join/model/GameListData.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gteams/game_join/GameListView.dart';
 import 'package:gteams/game_join/GameJoinTheme.dart';
 import 'package:gteams/game_join/GameFilterScreen.dart';
 import 'package:gteams/game_join/CalendarPopUpView.dart';
 import 'package:gteams/services/crud.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gteams/game_join/model/GameListData.dart';
+import 'package:gteams/game_join/GameListView.dart';
 
 class GameJoinPage extends StatefulWidget {
   @override
@@ -105,10 +105,9 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
   By using Stream Builder, Firestroe game2 collection and App can update real time*/
   Widget _buildBody(){
     return StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection('game2').snapshots(),
+        stream: Firestore.instance.collection('game3').snapshots(),
         builder: (context, snapshot){
           if(!snapshot.hasData) return LinearProgressIndicator();
-
           return _showGamelist(context,snapshot.data.documents);
         }
       );
@@ -138,7 +137,6 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
       ),
     );
   }
-
   /* AppBar 보여주는 UI */
   Widget _showAppBarUI() {
     return Container(
