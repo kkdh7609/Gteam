@@ -2,14 +2,14 @@ import 'dart:ui';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:gteams/game/game_join/model/GameListData.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gteams/services/crud.dart';
+import 'package:gteams/map/google_map.dart';
+import 'package:gteams/game/game_join/model/GameListData.dart';
 import 'package:gteams/game/game_join/widgets/GameListView.dart';
 import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 import 'package:gteams/game/game_join/widgets/GameFilterScreen.dart';
 import 'package:gteams/game/game_join/widgets/CalendarPopUpView.dart';
-
 
 class GameJoinPage extends StatefulWidget {
   @override
@@ -27,6 +27,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
 
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(Duration(days: 5));
+  String _nowLocation;
 
   Future<bool> getData() async {
     await Future.delayed(const Duration(milliseconds: 200));
@@ -102,14 +103,14 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
         )
     );
   }
+
   /*YeongUn modify
   By using Stream Builder, Firestroe game2 collection and App can update real time*/
   Widget _buildBody(){
     return StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection('game2').snapshots(),
+        stream: Firestore.instance.collection('game3').snapshots(),
         builder: (context, snapshot){
           if(!snapshot.hasData) return LinearProgressIndicator();
-
           return _showGamelist(context,snapshot.data.documents);
         }
       );
@@ -138,6 +139,11 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
         },
       ),
     );
+  }
+
+
+  void _changeLoc(String newLocation){
+    _nowLocation = newLocation;
   }
 
   /* AppBar 보여주는 UI */
@@ -185,7 +191,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                   Expanded(
                       child: Center(
                           child: Text("Search the Game", style: TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white),)
+                              fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white))
                       )
                   ),
                   Container(
@@ -201,7 +207,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(32.0),
                                   ),
-                                  onTap: () {},
+                                  onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTest(onSelected: _changeLoc))); },
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Icon(FontAwesomeIcons.mapMarkedAlt, color: Colors.white),

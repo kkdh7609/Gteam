@@ -30,7 +30,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
   Gender _selectedGender = null;
 
   List<DropdownMenuItem<String>> _sportsList = [];
-  List<String> _sports = ["Football", "Baseball", "Basketball"];
+  List<String> _sports = ["Football", "Table Tennis", "Bowling", "Basketball", "Baseball"];
 
   DateTime _date = DateTime.now();
   TimeOfDay _startTime = TimeOfDay.now();
@@ -144,7 +144,8 @@ class _GameCreatePageState extends State<GameCreatePage> {
     ];
 
     return Scaffold(
-        appBar: AppBar(title: Text("Game Create"), centerTitle: true, backgroundColor: GameCreateTheme.buildLightTheme().primaryColor),
+        appBar: AppBar(title: Text("Create the Game", style: TextStyle(
+            fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white)), centerTitle: true, backgroundColor: GameCreateTheme.buildLightTheme().primaryColor),
         body: Container(
             child: Form(
                 key: _formKey,
@@ -363,7 +364,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
           FlatButton(
             child: Text(_loc_name),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTest(onSelected: _change_loc_name)));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTest(onSelected: _change_loc_name, nowReq:mapReq.findLocation)));
             },
           )
         ],
@@ -387,6 +388,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
           Radio(
             value: Gender.MALE,
             groupValue: _selectedGender,
+            activeColor: GameCreateTheme.buildLightTheme().primaryColor,
             onChanged: (Gender value) {
               setState(() {
                 _selectedGender = value;
@@ -397,6 +399,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
           Radio(
             value: Gender.FEMALE,
             groupValue: _selectedGender,
+            activeColor: GameCreateTheme.buildLightTheme().primaryColor,
             onChanged: (Gender value) {
               setState(() {
                 _selectedGender = value;
@@ -407,6 +410,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
           Radio(
             value: Gender.ALL,
             groupValue: _selectedGender,
+            activeColor: GameCreateTheme.buildLightTheme().primaryColor,
             onChanged: (Gender value) {
               setState(() {
                 _selectedGender = value;

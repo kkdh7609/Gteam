@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gteams/map/google_map.dart';
 import 'package:gteams/game/game_join/game_room/GameRoomTheme.dart';
+
 
 class GameRoomPage extends StatefulWidget {
   @override
@@ -41,6 +43,10 @@ class _GameRoomPageState extends State<GameRoomPage>
     setState(() {
       opacity3 = 1.0;
     });
+  }
+
+  void _changeState(String tempStr){
+    print(tempStr);
   }
 
   @override
@@ -174,7 +180,12 @@ class _GameRoomPageState extends State<GameRoomPage>
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: <Widget>[
-                                          getTimeBoxUI("위치", "Location", Icon(FontAwesomeIcons.mapMarkedAlt)),
+                                          InkWell(
+                                            child: getTimeBoxUI("위치", "Location", Icon(FontAwesomeIcons.mapMarkedAlt)),
+                                            onTap:(){
+                                              Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTest(onSelected: _changeState, nowReq: mapReq.mapCheck)));
+                                            }
+                                          ),
                                           getTimeBoxUI("초보", "Skill", Icon(FontAwesomeIcons.mapMarkedAlt)),
                                           getTimeBoxUI("옷 대여", "Clothes", Icon(FontAwesomeIcons.mapMarkedAlt)),
                                         ],
