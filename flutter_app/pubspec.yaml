@@ -20,6 +20,7 @@ dependencies:
   flutter:
     sdk: flutter
   google_maps_flutter: ^0.4.0
+  flutter_google_places:
   firebase_auth: ^0.14.0+5
   grouped_buttons: ^1.0.4
   google_sign_in:
@@ -31,6 +32,7 @@ dependencies:
   font_awesome_flutter: ^8.5.0
   smooth_star_rating: ^1.0.3
   intl: ^0.16.0
+  geocoder:
 
 dev_dependencies:
   flutter_test:

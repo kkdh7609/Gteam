@@ -8,6 +8,7 @@ import 'package:gteams/game_join/GameJoinTheme.dart';
 import 'package:gteams/game_join/GameFilterScreen.dart';
 import 'package:gteams/game_join/CalendarPopUpView.dart';
 import 'package:gteams/game_join/Model/GameListData.dart';
+import 'package:gteams/map/google_map.dart';
 
 class GameJoinPage extends StatefulWidget {
   @override
@@ -22,6 +23,8 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
 
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(Duration(days: 5));
+  String _nowLocation;
+
 
   Future<bool> getData() async {
     await Future.delayed(const Duration(milliseconds: 200));
@@ -118,6 +121,11 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
     );
   }
 
+
+  void _changeLoc(String newLocation){
+    _nowLocation = newLocation;
+  }
+
   /* AppBar 보여주는 UI */
   Widget _showAppBarUI() {
     return Container(
@@ -177,7 +185,9 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(32.0),
                                 ),
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTest(onSelected: _changeLoc)));
+                                },
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Icon(FontAwesomeIcons.mapMarkedAlt),

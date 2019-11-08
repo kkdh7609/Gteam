@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gteams/map/google_map.dart';
+import 'package:gteams/map/google_place.dart';
 import 'dart:async';
 
 class GameCreatePage extends StatefulWidget {
@@ -392,7 +393,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
           FlatButton(
             child: Text(_loc_name),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTest(onSelected: _change_loc_name)));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTest(onSelected: _change_loc_name, nowReq:mapReq.findLocation)));
             },
           )
         ],
