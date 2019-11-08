@@ -42,6 +42,7 @@ class crudMedthods {
   }
 
 */
+
   Future<QuerySnapshot> getDocumentByWhere(String collection,String field,String where) async{
      return await _db.collection(collection).where(field,isEqualTo:where).limit(1).getDocuments();
   }
