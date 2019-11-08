@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:gteams/game_join/GameJoinTheme.dart';
+import 'package:gteams/game/game_join/GameJoinTheme.dart';
 
 class RangeSliderView extends StatefulWidget {
   final Function(RangeValues) onChangeRangeValues;

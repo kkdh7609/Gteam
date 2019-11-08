@@ -25,12 +25,11 @@ dependencies:
   google_sign_in:
   cloud_firestore: ^0.12.9+5
   gender_selector:
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   font_awesome_flutter: ^8.5.0
   smooth_star_rating: ^1.0.3
   intl: ^0.16.0
+  flutter_svg: ^0.13.0+1
 
 dev_dependencies:
   flutter_test:
@@ -43,10 +42,28 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
   assets:
-    - assets/google.png
-    - assets/milkyway.jpg
-    - assets/hotel/
-    - assets/game/room/footsal_club.jpg
+    - assets/image/google.png
+    - assets/image/milkyway.jpg
+    - assets/image/hotel/
+    - assets/image/menu/
+    - assets/image/game/room/footsal_club.jpg
+
+  fonts:
+    - family: Qwigley
+      fonts:
+        - asset: assets/fonts/qwigley/Qwigley-Regular.ttf
+    - family: Dosis
+      fonts:
+        - asset: assets/fonts/dosis/Dosis-Regular.otf
+          weight: 400
+        - asset: assets/fonts/dosis/Dosis-Medium.otf
+          weight: 500
+        - asset: assets/fonts/dosis/Dosis-SemiBold.otf
+          weight: 600
+        - asset: assets/fonts/dosis/Dosis-Bold.otf
+          weight: 800
+        - asset: assets/fonts/dosis/Dosis-ExtraBold.otf
+          weight: 900
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

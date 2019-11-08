@@ -3,11 +3,11 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:gteams/game_join/GameListView.dart';
-import 'package:gteams/game_join/GameJoinTheme.dart';
-import 'package:gteams/game_join/GameFilterScreen.dart';
-import 'package:gteams/game_join/CalendarPopUpView.dart';
-import 'package:gteams/game_join/Model/GameListData.dart';
+import 'package:gteams/game/game_join/GameListView.dart';
+import 'package:gteams/game/game_join/GameJoinTheme.dart';
+import 'package:gteams/game/game_join/GameFilterScreen.dart';
+import 'package:gteams/game/game_join/CalendarPopUpView.dart';
+import 'package:gteams/game/game_join/Model/GameListData.dart';
 
 class GameJoinPage extends StatefulWidget {
   @override

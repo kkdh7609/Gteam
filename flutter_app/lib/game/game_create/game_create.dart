@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:gteams/map/google_map.dart';
-import 'dart:async';
+import 'package:gteams/game/game_create/GameCreateTheme.dart';
 
 class GameCreatePage extends StatefulWidget {
   @override
@@ -18,12 +20,13 @@ class _GameCreatePageState extends State<GameCreatePage> {
   String _dateText = "Select Date";
   String _startTimeText = "Start Time";
   String _endTimeText = "End Time";
-  int _groupSize;
-  int _gameLevel;
-  Gender _selectedGender = null;
   String _loc_name = "Selecte Location";
 
+  int _groupSize;
+  int _gameLevel;
   int _curStep = 0;
+
+  Gender _selectedGender = null;
 
   List<DropdownMenuItem<String>> _sportsList = [];
   List<String> _sports = ["Football", "Baseball", "Basketball"];
@@ -140,7 +143,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
     ];
 
     return Scaffold(
-        appBar: AppBar(title: Text("Game Create"), centerTitle: true,),
+        appBar: AppBar(title: Text("Game Create"), centerTitle: true),
         body: Container(
             child: Form(
                 key: _formKey,
@@ -194,7 +197,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
         color: Colors.transparent,
         boxShadow: <BoxShadow>[
           BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
+              color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.2),
               offset: Offset(0, 2),
               blurRadius: 4.0),
         ],
@@ -262,7 +265,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
           borderRadius: BorderRadius.all(Radius.circular(24.0)),
           boxShadow: <BoxShadow>[
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
+              color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.2),
               offset: Offset(4, 4),
             ),
           ],
@@ -277,7 +280,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
                         keyboardType: TextInputType.text,
                         decoration: InputDecoration(
                           hintText: '게임 이름 입력',
-                          hintStyle: TextStyle(color: Colors.grey),
+                          hintStyle: TextStyle(color: GameCreateTheme.buildLightTheme().primaryColor),
                         ),
                         validator: (value) {
                           return value.isEmpty ? "Game name can\'t be empty" : null;
@@ -303,7 +306,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
           Container(
             height: 30.0,
             width: 1.0,
-            color: Colors.grey.withOpacity(0.5),
+            color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           DropdownButtonHideUnderline(
@@ -331,7 +334,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
           Container(
             height: 30.0,
             width: 1.0,
-            color: Colors.grey.withOpacity(0.5),
+            color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           FlatButton(
@@ -355,7 +358,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
           Container(
             height: 30.0,
             width: 1.0,
-            color: Colors.grey.withOpacity(0.5),
+            color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           FlatButton(
@@ -386,7 +389,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
           Container(
             height: 30.0,
             width: 1.0,
-            color: Colors.grey.withOpacity(0.5),
+            color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           FlatButton(
@@ -410,7 +413,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
           Container(
             height: 30.0,
             width: 1.0,
-            color: Colors.grey.withOpacity(0.5),
+            color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           Radio(
@@ -458,7 +461,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
           Container(
             height: 30.0,
             width: 1.0,
-            color: Colors.grey.withOpacity(0.5),
+            color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           Flexible(
@@ -467,7 +470,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   hintText: 'Group Size',
-                  hintStyle: TextStyle(color: Colors.grey),
+                  hintStyle: TextStyle(color: GameCreateTheme.buildLightTheme().primaryColor),
                 ),
                 validator: (value) {
                   return value.isEmpty ? "Group size can\'t be empty" : null;
@@ -492,7 +495,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
           Container(
             height: 30.0,
             width: 1.0,
-            color: Colors.grey.withOpacity(0.5),
+            color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           Flexible(
@@ -501,7 +504,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   hintText: 'Game Level',
-                  hintStyle: TextStyle(color: Colors.grey),
+                  hintStyle: TextStyle(color: GameCreateTheme.buildLightTheme().primaryColor),
                 ),
                 validator: (value) {
                   return value.isEmpty ? "Game level can\'t be empty" : null;
@@ -564,6 +567,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
         child: Material(
           color: Colors.transparent,
           child: RaisedButton(
+            color: GameCreateTheme.buildLightTheme().primaryColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(24.0)),
             ),
@@ -576,7 +580,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 18,
-                    color: Colors.black),
+                    color: Colors.white),
               ),
             ),
           ),

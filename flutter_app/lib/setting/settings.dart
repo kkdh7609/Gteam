@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gteams/login/login_auth.dart';
 import 'package:gteams/root_page.dart';
 import "package:gteams/signup/sign_up.dart";
-import "package:gteams/game/game_create.dart";
+import "package:gteams/game/game_create/game_create.dart";
 import "package:gteams/map/google_map.dart";
 
 class SettingPage extends StatefulWidget{

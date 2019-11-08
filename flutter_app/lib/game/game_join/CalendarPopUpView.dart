@@ -2,8 +2,8 @@ import 'dart:ui';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 
-import 'package:gteams/game_join/GameJoinTheme.dart';
-import 'package:gteams/game_join/CustomCalendar.dart';
+import 'package:gteams/game/game_join/GameJoinTheme.dart';
+import 'package:gteams/game/game_join/CustomCalendar.dart';
 
 class CalendarPopupView extends StatefulWidget {
   final DateTime minimumDate;

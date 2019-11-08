@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'package:gteams/game_join/SliderView.dart';
-import 'package:gteams/game_join/GameJoinTheme.dart';
-import 'package:gteams/game_join/RangeSliderView.dart';
-import 'package:gteams/game_join/model/popularFilterList.dart';
+import 'package:gteams/game/game_join/SliderView.dart';
+import 'package:gteams/game/game_join/GameJoinTheme.dart';
+import 'package:gteams/game/game_join/RangeSliderView.dart';
+import 'package:gteams/game/game_join/model/popularFilterList.dart';
 
 class GameFilterScreen extends StatefulWidget {
   @override

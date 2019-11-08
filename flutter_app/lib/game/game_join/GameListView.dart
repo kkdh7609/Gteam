@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:gteams/game_join/GameJoinTheme.dart';
-import 'package:gteams/game_join/Model/GameListData.dart';
-import 'package:gteams/game_join/game_room/game_room.dart';
+import 'package:gteams/game/game_join/GameJoinTheme.dart';
+import 'package:gteams/game/game_join/Model/GameListData.dart';
+import 'package:gteams/game/game_join/game_room/game_room.dart';
 
 class GameListView extends StatelessWidget {
 
