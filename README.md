@@ -33,6 +33,7 @@
 - flutter UI      <https://flutterawesome.com/> 
 - flutter ICON    <https://fontawesome.com/icons>  
 - additional ICON <https://www.flaticon.com/> 
+- lifecycle of flutter <https://flutterbyexample.com/stateful-widget-lifecycle/>
 ---------------------------------------
 ## Getting Started (Flutter)
 
