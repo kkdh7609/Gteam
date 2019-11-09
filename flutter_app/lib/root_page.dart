@@ -80,7 +80,7 @@ class _RootPageState extends State<RootPage>{
               authStatus = AuthStatus.LOGGED_IN_USER;
             });
           } else {
-            print('set authstatus admin');
+            print('set authstatus manager');
             setState(() {
               authStatus = AuthStatus.LOGGED_IN_ADMIN;
             });
@@ -138,7 +138,7 @@ class _RootPageState extends State<RootPage>{
         break;
 
       case AuthStatus.LOGGED_IN_ADMIN:
-        print('admin check in');
+        print('manager check in');
           return new SettingAdminPage(onSignedOut: _onSignedOut,);
         break;
 
