@@ -23,11 +23,12 @@
   - Google MAP API
   - IamPort API
 ---------------------------------------
-## To-Do List
-- 김도현:
-- 김영운:
-- 김학준:
-- 안우일:
+## To-Do List 
+## DUE DATE : 우일이 없다... 
+- 김도현: 관리자 경기장 추가
+- 김영운: 게임데이터 연동 및 필터 쿼리, 풋살장 DB 구축  
+- 김학준: Current Room Page , 방 참여 다음 페이지?   
+- 안우일: 결제 UI 및 API 조사
 ---------------------------------------
 ## Reference
 - flutter UI      <https://flutterawesome.com/> 
