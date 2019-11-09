@@ -11,7 +11,7 @@
 - 안우일:
 ---------------------------------------
 ## FrameWork & Language
-- **App (For User && Facility Manager)**
+- **App (For User & Facility Manager)**
   - FrameWork: Flutter (Language: Dart)
   - DataBase: Firebase
   <br><br>
