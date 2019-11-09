@@ -1,6 +1,7 @@
 import 'package:gteams/menu/drawer/DrawerTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gteams/setting/profile/myProfile.dart';
 
 class HomeDrawer extends StatefulWidget {
   final AnimationController iconAnimationController;
@@ -106,7 +107,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
                             fontSize: 18,
                           ),
                         ),
-                        Padding(padding: const EdgeInsets.only(left: 15), child: InkWell(onTap: () {}, child: Text("Edit")))
+                        Padding(padding: const EdgeInsets.only(left: 15), child: InkWell(onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => UserProfile()));
+                        }, child: Text("Edit")))
                       ],
                     ),
                   )
