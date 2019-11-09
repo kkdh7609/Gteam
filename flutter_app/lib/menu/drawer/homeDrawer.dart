@@ -44,7 +44,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
       ),
       DrawerList(
         index: DrawerIndex.About,
-        labelName: 'Contact G-TEAM',
+        labelName: 'Contact G-TEAMs',
         icon: new Icon(Icons.info),
       ),
     ];
