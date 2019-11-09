@@ -21,7 +21,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
   String _dateText = "Select Date";
   String _startTimeText = "Start Time";
   String _endTimeText = "End Time";
-  String _loc_name = "Selecte Location";
+  String _loc_name = "Select Location";
 
   int _groupSize;
   int _gameLevel;
@@ -363,11 +363,13 @@ class _GameCreatePageState extends State<GameCreatePage> {
             color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
-          FlatButton(
+          Expanded(
+          child:FlatButton(
             child: Text(_loc_name),
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTest(onSelected: _change_loc_name, nowReq:mapReq.findLocation)));
             },
+          )
           )
         ],
       ),

@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:gteams/signup/sign_up.dart';
 import 'package:gteams/login/login_auth.dart';
 import 'package:gteams/validator/login_validator.dart';
+import 'package:gteams/manager/managerSetTime.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({this.auth, this.onSignedIn});
@@ -271,7 +272,7 @@ class _LoginPageState extends State<LoginPage> {
       alignment: Alignment(1.0, 1.0),
       padding: EdgeInsets.only(top: 15.0, right: 30.0),
       child: InkWell(
-          onTap: () { },
+          onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context)=>SetTime())); },
           child: Text('Forgot Password', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontFamily: 'Montserrat', decoration: TextDecoration.underline))
       ),
     );
