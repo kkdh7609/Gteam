@@ -30,9 +30,9 @@
 - 안우일:
 ---------------------------------------
 ## Reference
-- flutter UI <https://flutterawesome.com/>
-- flutter ICON <https://fontawesome.com/icons>
-- additional ICON <https://www.flaticon.com/>
+- <https://flutterawesome.com/> flutter UI
+- <https://fontawesome.com/icons> flutter ICON 
+- <https://www.flaticon.com/> additional ICON 
 ---------------------------------------
 ## Getting Started (Flutter)
 
