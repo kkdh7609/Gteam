@@ -33,10 +33,14 @@
 **/android/**/gradle-wrapper.jar
 **/android/.gradle
 **/android/captures/
+**/android/app/src/main/AndroidManifest.xml
 **/android/gradlew
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
+
+# Secure
+**/map/forSecure.dart
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
