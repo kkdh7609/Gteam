@@ -338,7 +338,9 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
           Padding(
             padding: EdgeInsets.only(top: 10.0),
             child: FlatButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SetTime()));
+                },
                 child: Text(
                   "Forgot Password?",
                   style:
