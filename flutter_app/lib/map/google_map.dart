@@ -6,7 +6,11 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:gteams/util/customGeocoder.dart';
 import 'package:gteams/map/forSecure.dart';
-import 'package:gteams/map/tempStadium.dart';   // just for testing
+//import 'package:gteams/map/tempStadium.dart';   // just for testing
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gteams/map/StadiumListData.dart';
+import 'package:gteams/map/StadiumListView.dart';
 
 typedef selectFunc = void Function(String);
 
@@ -16,10 +20,11 @@ GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 enum mapReq { mapCheck, findLocation, newLocation }
 
 class MapTest extends StatefulWidget {
-  MapTest({this.onSelected, this.nowReq});
-
+  MapTest({this.onSelected, this.nowReq,this.stadiumList,this.changeState});
+  final List<StadiumListData> stadiumList;
   final selectFunc onSelected;
   final mapReq nowReq;
+  final VoidCallback changeState;
 
   @override
   _MapTestState createState() => _MapTestState();
@@ -29,6 +34,7 @@ class _MapTestState extends State<MapTest> {
   Completer<GoogleMapController> _controller = Completer();
   static const LatLng _center = const LatLng(37.26222, 127.02889);
   final Set<Marker> _markers = {};
+
   LatLng _lastMapPosition = _center;
   MapType _currentMapType = MapType.normal;
   String _tempMarker = null;
@@ -38,8 +44,8 @@ class _MapTestState extends State<MapTest> {
 
   @override
   void initState(){
-    super.initState();
-    tempStadiums.forEach((element){
+    //_getStadiumList();
+    widget.stadiumList.forEach((element){
       String nowLoc = [
         element.locationCoords.latitude.toStringAsFixed(6),
         element.locationCoords.longitude.toStringAsFixed(6)
@@ -48,18 +54,25 @@ class _MapTestState extends State<MapTest> {
         markerId: MarkerId(nowLoc),
         draggable: false,
         infoWindow:
-          InfoWindow(title: element.shopName, snippet: element.address),
+          InfoWindow(title: element.stadiumName, snippet: element.location),
         position: element.locationCoords
       ));
       _pageController = PageController(initialPage: 1, viewportFraction: 0.8)
       ..addListener(_onScroll);
     });
+    super.initState();
+  }
+
+  @override
+  void deactivate() {
+    widget.changeState();
+    super.deactivate();
   }
 
   void _onScroll(){
     if(_pageController.page.toInt() != prevPage){
       prevPage = _pageController.page.toInt();
-      _goToNewPosition(makePosition(tempStadiums[prevPage].locationCoords));
+      _goToNewPosition(makePosition(widget.stadiumList[prevPage].locationCoords));
     }
   }
 
@@ -196,7 +209,24 @@ class _MapTestState extends State<MapTest> {
     displayPrediction(p);
   }
 
-  _stadiumList(index){
+  /*Widget _getStadiumList(){
+    print("1111113232323");
+    StreamBuilder temp =  StreamBuilder<QuerySnapshot>(
+       //stadium정보를  가져온다
+        stream: Firestore.instance.collection("stadium").snapshots(),
+        builder: (BuildContext context, AsyncSnapshot snapshot){
+          print("빌더빌더빌더");
+          if(!snapshot.hasData) return Text(
+            'No Data...',
+          );
+            stadiumList=snapshot.data.documents.map((data) => StadiumListData.fromJson(data.data)).toList();
+        }
+    );
+    print("124124124124124");
+    return temp;
+  }*/
+/*
+  Widget _stadiumList(BuildContext context,index,List<DocumentSnapshot> snapshot){
     return AnimatedBuilder(
       animation: _pageController,
       builder: (BuildContext context, Widget widget){
@@ -255,7 +285,7 @@ class _MapTestState extends State<MapTest> {
                           Container(
                             width: 250.0,
                             child: Text(
-                                tempStadiums[index].shopName,
+                                stadiumList[index].stadiumName,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     color: Color(0xff3B5998),
@@ -267,7 +297,7 @@ class _MapTestState extends State<MapTest> {
                           Container(
                             width: 250.0,
                             child:Text(
-                                tempStadiums[index].address,
+                                stadiumList[index].location,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 2,
                                 style: TextStyle(
@@ -285,7 +315,7 @@ class _MapTestState extends State<MapTest> {
                           Container(
                             width: 250.0,
                             child: Text(
-                              tempStadiums[index].description,
+                              stadiumList[index].etc,
                               overflow: TextOverflow.ellipsis,
                               maxLines:3,
                               style: TextStyle(
@@ -304,7 +334,7 @@ class _MapTestState extends State<MapTest> {
         )
       )
     );
-  }
+  }*/
 
   Future<Null> displayPrediction(Prediction p) async {
     if (p != null) {
@@ -384,9 +414,13 @@ class _MapTestState extends State<MapTest> {
               width: MediaQuery.of(context).size.width,
               child: PageView.builder(
                 controller: _pageController,
-                itemCount: tempStadiums.length,
+                itemCount: widget.stadiumList.length,
                 itemBuilder: (BuildContext context, int index){
-                  return _stadiumList(index);
+                  return StadiumListView(
+                      stadiumList : widget.stadiumList[index],
+                      index : index,
+                    pageController: _pageController,
+                  );
                 }
               )
             )

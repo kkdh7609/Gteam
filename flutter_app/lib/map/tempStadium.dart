@@ -14,7 +14,7 @@ class Stadium{
 });
 }
 
-final List<Stadium> tempStadiums = [
+final List<Stadium> stadiumList = [
   Stadium(
     shopName: "Suwon",
     address: "here",

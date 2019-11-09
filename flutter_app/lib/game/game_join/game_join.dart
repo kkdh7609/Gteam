@@ -10,16 +10,26 @@ import 'package:gteams/game/game_join/widgets/GameListView.dart';
 import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 import 'package:gteams/game/game_join/widgets/GameFilterScreen.dart';
 import 'package:gteams/game/game_join/widgets/CalendarPopUpView.dart';
+import 'package:gteams/map/StadiumListData.dart';
+
 
 class GameJoinPage extends StatefulWidget {
   @override
   _GameJoinPageState createState() => _GameJoinPageState();
 }
 
+enum PAGE{
+  JOIN,
+  MAP,
+}
+
 class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMixin {
 
-  var gameList =GameListData.gameList;
+  PAGE page =PAGE.JOIN;
 
+  var gameList =GameListData.gameList;
+  var stadiumList =StadiumListData.stadiumList;
+  var testCheck = false;
   crudMedthods crudObj = new crudMedthods();
 
   AnimationController animationController;
@@ -40,6 +50,9 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
     animationController = AnimationController(
         duration: Duration(milliseconds: 1000), vsync: this);
     super.initState();
+    setState(() {
+      page=PAGE.JOIN;
+    });
   }
 
   @override
@@ -48,8 +61,20 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
     super.dispose();
   }
 
+  void changeState(){
+    print("213123123123");
+    testCheck = true;
+  }
+
   @override
   Widget build(BuildContext context) {
+    setState((){
+      if(testCheck){
+        print(111);
+        page = PAGE.JOIN;
+      }
+    });
+    print(testCheck);
     return Theme(
         data: GameJoinTheme.buildLightTheme(),
         child: Container(
@@ -91,7 +116,8 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                                       ),
                                     ];
                                   },
-                                  body: _buildBody()
+                                //  body: page == PAGE.JOIN ? Text("hello?") : _buildBody(false),
+                                  body: page == PAGE.JOIN ? _buildBody(false): Text("hello?") ,
                                 )
                             )
                           ],
@@ -106,15 +132,33 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
 
   /*YeongUn modify
   By using Stream Builder, Firestroe game2 collection and App can update real time*/
-  Widget _buildBody(){
-    return StreamBuilder<QuerySnapshot>(
-      /* 설정한 기간의 게임 List만 가져온다 */
-        stream: Firestore.instance.collection('game3').where('dateNumber',isGreaterThanOrEqualTo: startDate.millisecondsSinceEpoch,isLessThanOrEqualTo: endDate.millisecondsSinceEpoch).snapshots(),
-        builder: (context, snapshot){
-          if(!snapshot.hasData) return LinearProgressIndicator();
-          return _showGamelist(context,snapshot.data.documents);
-        }
+  Widget _buildBody(bool check){
+
+ //   if(check){
+      return StreamBuilder<QuerySnapshot>(
+        /* 설정한 기간의 게임 List만 가져온다 */
+          stream: Firestore.instance.collection('game3').where('dateNumber',isGreaterThanOrEqualTo: startDate.millisecondsSinceEpoch,isLessThanOrEqualTo: endDate.millisecondsSinceEpoch).snapshots(),
+          //stream: Firestore.instance.collection("stadium").snapshots(),
+          builder: (context, snapshot){
+            print("test1");
+            if(!snapshot.hasData) return LinearProgressIndicator();
+            //this.stadiumList=snapshot.data.documents.map((data) => StadiumListData.fromJson(data.data)).toList();
+            return _showGamelist(context,snapshot.data.documents);
+          }
       );
+/*    }else{
+      return StreamBuilder<QuerySnapshot>(
+        *//* 설정한 기간의 게임 List만 가져온다 *//*
+          //stream: Firestore.instance.collection('game3').where('dateNumber',isGreaterThanOrEqualTo: startDate.millisecondsSinceEpoch,isLessThanOrEqualTo: endDate.millisecondsSinceEpoch).snapshots(),
+          stream: Firestore.instance.collection("stadium").snapshots(),
+          builder: (context, snapshot){
+            print("test2");
+            if(!snapshot.hasData) return LinearProgressIndicator();
+              this.stadiumList=snapshot.data.documents.map((data) => StadiumListData.fromJson(data.data)).toList();
+            //return _showGamelist(context,snapshot.data.documents);
+          }
+      );
+    }*/
   }
 
   Widget _showGamelist(BuildContext context, List<DocumentSnapshot> snapshot){
@@ -208,7 +252,18 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(32.0),
                                   ),
-                                  onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTest(onSelected: _changeLoc))); },
+                                  onTap: () {
+                                    setState(() {
+                                      page=PAGE.MAP;
+                                    });
+                                    this.stadiumList=StadiumListData.stadiumList;
+                                    testCheck = false;
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTest(onSelected: _changeLoc,stadiumList: stadiumList,changeState: changeState,))).then((data){
+                                      setState(() {
+                                        page=PAGE.JOIN;
+                                      });
+                                    });
+                                    },
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Icon(FontAwesomeIcons.mapMarkedAlt, color: Colors.white),
@@ -224,7 +279,6 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
         )
     );
   }
-
   Widget _showSearchBarUI() {
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),

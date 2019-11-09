@@ -1,3 +1,5 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 class StadiumListData {
   String imagePath;
   String stadiumName;
@@ -5,7 +7,7 @@ class StadiumListData {
   int fieldNumber;
   String telephone;
   String webSite;
-  List<Map<dynamic,dynamic>> operationTime=[{"openTime":1,"endTime":1}];
+ // List<Map<dynamic,dynamic>> operationTime=[{"openTime":1,"endTime":1}];
   bool isShower;
   bool isParking;
   bool isClothes;
@@ -13,7 +15,7 @@ class StadiumListData {
   String etc;
   int price;
   int addPrice;
-
+  LatLng locationCoords;
 
   StadiumListData({
     this.imagePath = '',
@@ -29,7 +31,8 @@ class StadiumListData {
     this.etc="",
     this.parkingHours=0,
     this.price=0,
-    this.operationTime,
+    //this.operationTime,
+    this.locationCoords=const LatLng(37.26222, 127.02889),
   });
 
   factory StadiumListData.fromJson(Map<String, dynamic> json){
@@ -47,7 +50,8 @@ class StadiumListData {
       etc: json['etc'],
       parkingHours: json['parkingHours'],
       price: json['price'],
-      operationTime: json['operationTime'],
+      //operationTime: json['operationTime'],
+      locationCoords: LatLng(37.26222, 127.02889),
     );
   }
   static List<StadiumListData> stadiumList = [
