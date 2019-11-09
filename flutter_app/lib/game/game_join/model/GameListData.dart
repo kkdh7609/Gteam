@@ -8,6 +8,7 @@ class GameListData {
   String startTime;
   String endTime;
   String loc_name;
+  int dateNumber;
 
   GameListData({
     this.imagePath = '',
@@ -19,6 +20,7 @@ class GameListData {
     this.loc_name = "",
     this.gameLevel=1,
     this.groupSize=1,
+    this.dateNumber=1,
   });
 
   factory GameListData.fromJson(Map<String, dynamic> json){
@@ -32,6 +34,7 @@ class GameListData {
       loc_name: json['loc_name'],
       gameLevel:json['gameLevel'],
       groupSize:json['groupSize'],
+      dateNumber: json['dateNumber'],
     );
   }
   static List<GameListData> gameList = [

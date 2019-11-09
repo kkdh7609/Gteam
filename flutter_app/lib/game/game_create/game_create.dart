@@ -26,6 +26,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
   int _groupSize;
   int _gameLevel;
   int _curStep = 0;
+  int _dateNumber;
 
   Gender _selectedGender = null;
 
@@ -55,6 +56,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
     if (_pickedDate != null && _pickedDate != _date) {
       setState(() {
         _date = _pickedDate;
+        _dateNumber=_date.millisecondsSinceEpoch;
         _dateText = _date.toString().split(" ")[0];
       });
     }
@@ -527,6 +529,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
                       'gameLevel':_gameLevel,
                       'Gender':_selectedGender.toString(),
                       'loc_name':_loc_name,
+                      'dateNumber':_dateNumber,
                     });
 
                     print(crudObj.getDataCollection('/game').then((data){

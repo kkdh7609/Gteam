@@ -108,7 +108,8 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
   By using Stream Builder, Firestroe game2 collection and App can update real time*/
   Widget _buildBody(){
     return StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection('game3').snapshots(),
+      /* 설정한 기간의 게임 List만 가져온다 */
+        stream: Firestore.instance.collection('game3').where('dateNumber',isGreaterThanOrEqualTo: startDate.millisecondsSinceEpoch,isLessThanOrEqualTo: endDate.millisecondsSinceEpoch).snapshots(),
         builder: (context, snapshot){
           if(!snapshot.hasData) return LinearProgressIndicator();
           return _showGamelist(context,snapshot.data.documents);
