@@ -4,14 +4,14 @@ import 'package:gteams/menu/model/aliment.dart';
 class Aliments {
   static List<Aliment> aliments = [
     Aliment(
-        name: "Football",
+        name: "Futsal",
         background: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
           //0xFFFD8183 // 0xFFFB425A 0xFF083663
           colors: [const Color(0xFF083663), const Color(0xFF6CD8F0)],
         ),
-        subtitle: "Make Your Football Team",
+        subtitle: "Make Your Futsal Team",
         image: "assets/image/menu/soccerball.svg",
         bottomImage: "assets/image/menu/bottom_soccerball.svg",
         totalCalories: 420.0,
@@ -69,7 +69,7 @@ class Aliments {
         background: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [const Color(0xFFFBD3E9), const Color(0xFFBB377D)],
+          colors: [const Color(0xFFBB377D), const Color(0xFFFBD3E9)],
         ),
         subtitle: "Make Your Baseball Team",
         image: "assets/image/menu/baseball.svg",

@@ -5,7 +5,9 @@ class SliderView extends StatefulWidget {
   final Function(double) onChnagedistValue;
   final double distValue;
 
-  const SliderView({Key key, this.onChnagedistValue, this.distValue}) : super(key: key);
+  const SliderView({Key key, this.onChnagedistValue, this.distValue})
+      : super(key: key);
+
   @override
   _SliderViewState createState() => _SliderViewState();
 }
@@ -76,7 +78,9 @@ class CustomThumbShape extends SliderComponentShape {
 
   @override
   Size getPreferredSize(bool isEnabled, bool isDiscrete) {
-    return isEnabled ? const Size.fromRadius(_thumbSize) : const Size.fromRadius(_disabledThumbSize);
+    return isEnabled
+        ? const Size.fromRadius(_thumbSize)
+        : const Size.fromRadius(_disabledThumbSize);
   }
 
   static final Animatable<double> sizeTween = Tween<double>(
@@ -86,17 +90,17 @@ class CustomThumbShape extends SliderComponentShape {
 
   @override
   void paint(
-      PaintingContext context,
-      Offset thumbCenter, {
-        Animation<double> activationAnimation,
-        Animation<double> enableAnimation,
-        bool isDiscrete,
-        TextPainter labelPainter,
-        RenderBox parentBox,
-        SliderThemeData sliderTheme,
-        TextDirection textDirection,
-        double value,
-      }) {
+    PaintingContext context,
+    Offset thumbCenter, {
+    Animation<double> activationAnimation,
+    Animation<double> enableAnimation,
+    bool isDiscrete,
+    TextPainter labelPainter,
+    RenderBox parentBox,
+    SliderThemeData sliderTheme,
+    TextDirection textDirection,
+    double value,
+  }) {
     final Canvas canvas = context.canvas;
     final ColorTween colorTween = ColorTween(
       begin: sliderTheme.disabledThumbColor,
@@ -104,11 +108,14 @@ class CustomThumbShape extends SliderComponentShape {
     );
     canvas.drawPath(
         Path()
-          ..addOval(Rect.fromPoints(Offset(thumbCenter.dx + 12, thumbCenter.dy + 12), Offset(thumbCenter.dx - 12, thumbCenter.dy - 12)))
+          ..addOval(Rect.fromPoints(
+              Offset(thumbCenter.dx + 12, thumbCenter.dy + 12),
+              Offset(thumbCenter.dx - 12, thumbCenter.dy - 12)))
           ..fillType = PathFillType.evenOdd,
         Paint()
           ..color = Colors.black.withOpacity(0.5)
-          ..maskFilter = MaskFilter.blur(BlurStyle.normal, convertRadiusToSigma(8)));
+          ..maskFilter =
+              MaskFilter.blur(BlurStyle.normal, convertRadiusToSigma(8)));
 
     var cPaint = new Paint();
     cPaint..color = Colors.white;

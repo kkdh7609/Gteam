@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 class CardItem extends StatelessWidget {
   final Widget child;
 
-  CardItem({
-    @required this.child
-  });
+  CardItem({@required this.child});
 
   @override
   Widget build(BuildContext context) {

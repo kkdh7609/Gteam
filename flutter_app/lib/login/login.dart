@@ -1,8 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
-import 'package:gteams/signup/sign_up.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gteams/services/user_mangement.dart';
+import 'package:gteams/login/loginTheme.dart';
+import 'package:gteams/login/painter.dart';
 import 'package:gteams/login/login_auth.dart';
+import 'package:gteams/login/manager_signUp.dart';
+import 'package:gteams/login/signUpWaitingPage.dart';
 import 'package:gteams/validator/login_validator.dart';
 
 class LoginPage extends StatefulWidget {
@@ -12,29 +18,719 @@ class LoginPage extends StatefulWidget {
   final VoidCallback onSignedIn;
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginPageState createState() => new _LoginPageState();
 }
 
-enum FormMode {LOGIN, GOOGLE, SIGNUP}
+enum FormMode { LOGIN, GOOGLE, SIGNUP }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage>
+    with SingleTickerProviderStateMixin {
   final _formKey = new GlobalKey<FormState>();
 
-  String _email;
-  String _password;
+  String _loginEmail;
+  String _loginPassword;
   String _errorMessage;
 
-  FormMode _formMode = FormMode.LOGIN;
-  bool _isIos;
-  bool _isLoading;
-  bool isAdmin=false;
-  bool _isAvailable;      // for checking if we can act now
-  String _success = "";
+  String _signUpName;
+  String _signUpEmail;
+  String _signUpPassword;
 
-  bool _validateAndSave(){
+  String userId = "";
+  FormMode _formMode = FormMode.LOGIN;
+  bool isAdmin = false;
+  bool _isLoading;
+  String _success = "";
+  bool _isIos;
+
+  final FocusNode myFocusNodeEmailLogin = FocusNode();
+  final FocusNode myFocusNodePasswordLogin = FocusNode();
+
+  final FocusNode myFocusNodePassword = FocusNode();
+  final FocusNode myFocusNodeEmail = FocusNode();
+  final FocusNode myFocusNodeName = FocusNode();
+
+  TextEditingController loginEmailController = new TextEditingController();
+  TextEditingController loginPasswordController = new TextEditingController();
+
+  TextEditingController signUpEmailController = new TextEditingController();
+  TextEditingController signUpNameController = new TextEditingController();
+  TextEditingController signUpPasswordController = new TextEditingController();
+
+  bool _obscureTextLogin = true;
+  bool _obscureTextSignUp = true;
+
+  PageController _pageController;
+
+  Color left = Colors.black;
+  Color right = Colors.white;
+
+  @override
+  void initState() {
+    super.initState();
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    myFocusNodePassword.dispose();
+    myFocusNodeEmail.dispose();
+    myFocusNodeName.dispose();
+    _pageController?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      body: NotificationListener<OverscrollIndicatorNotification>(
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height >= 775.0
+                  ? MediaQuery.of(context).size.height
+                  : 775.0,
+              decoration: new BoxDecoration(
+                gradient: new LinearGradient(
+                    colors: [
+                      LoginTheme.loginGradientStart,
+                      LoginTheme.loginGradientEnd
+                    ],
+                    begin: const FractionalOffset(0.0, 0.0),
+                    end: const FractionalOffset(1.0, 1.0),
+                    stops: [0.0, 1.0],
+                    tileMode: TileMode.clamp),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  /* Team Title */
+                  Padding(
+                      padding: EdgeInsets.only(top: 75.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Text("G-TEAM",
+                              style: TextStyle(
+                                  fontFamily: 'Dosis',
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                  fontSize: 50)),
+                          Text("Make Your Team Now",
+                              style: TextStyle(
+                                  fontFamily: 'Dosis',
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white,
+                                  fontSize: 25)),
+                        ],
+                      )),
+                  /* Login | Sign-up button */
+                  Padding(
+                    padding: EdgeInsets.only(top: 40.0),
+                    child: _showMenuBar(context),
+                  ),
+                  /* Different Page View according to button */
+                  Expanded(
+                    flex: 2,
+                    child: PageView(
+                      controller: _pageController,
+                      onPageChanged: (i) {
+                        if (i == 0) {
+                          setState(() {
+                            right = Colors.white;
+                            left = Colors.black;
+                          });
+                        } else if (i == 1) {
+                          setState(() {
+                            right = Colors.black;
+                            left = Colors.white;
+                          });
+                        }
+                      },
+                      children: <Widget>[
+                        new ConstrainedBox(
+                          constraints: const BoxConstraints.expand(),
+                          child: _showLoginScreen(context),
+                        ),
+                        new ConstrainedBox(
+                          constraints: const BoxConstraints.expand(),
+                          child: _showSignUpScreen(context),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _showMenuBar(BuildContext context) {
+    return Container(
+      width: 300.0,
+      height: 50.0,
+      decoration: BoxDecoration(
+        color: Color(0x552B2B2B),
+        borderRadius: BorderRadius.all(Radius.circular(25.0)),
+      ),
+      child: CustomPaint(
+        painter: TabIndicationPainter(pageController: _pageController),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Expanded(
+              child: FlatButton(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onPressed: _onSignInButtonPress,
+                child: Text(
+                  "Login",
+                  style: TextStyle(
+                      color: left,
+                      fontSize: 16.0,
+                      fontFamily: "Dosis",
+                      fontWeight: FontWeight.w500),
+                ),
+              ),
+            ),
+            Container(height: 33.0, width: 1.0, color: Colors.white),
+            Expanded(
+              child: FlatButton(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onPressed: _onSignUpButtonPress,
+                child: Text(
+                  "Sign-up",
+                  style: TextStyle(
+                      color: right,
+                      fontSize: 16.0,
+                      fontFamily: "Dosis",
+                      fontWeight: FontWeight.w500),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _showLoginScreen(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(top: 23.0),
+      child: Column(
+        children: <Widget>[
+          Stack(
+            alignment: Alignment.topCenter,
+            overflow: Overflow.visible,
+            children: <Widget>[
+              Card(
+                elevation: 2.0,
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Container(
+                  width: 300.0,
+                  height: 220.0,
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: 20.0, bottom: 10.0, left: 25.0, right: 25.0),
+                        child: TextFormField(
+                          key: new Key('email'),
+                          validator: ValidationMixin.validateEmail,
+                          onSaved: (value) {
+                            _loginEmail = value;
+                          },
+                          focusNode: myFocusNodeEmailLogin,
+                          controller: loginEmailController,
+                          keyboardType: TextInputType.emailAddress,
+                          style: TextStyle(
+                              fontFamily: "Dosis",
+                              fontSize: 16.0,
+                              color: Colors.black),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            icon: Icon(
+                              FontAwesomeIcons.envelope,
+                              color: Colors.black,
+                              size: 22.0,
+                            ),
+                            hintText: "Email Address",
+                            hintStyle:
+                                TextStyle(fontFamily: "Dosis", fontSize: 17.0),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 250.0,
+                        height: 0.5,
+                        color: Colors.grey[400],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: 20.0, bottom: 10.0, left: 25.0, right: 25.0),
+                        child: TextFormField(
+                          key: new Key('pw'),
+                          validator: ValidationMixin.validatePW,
+                          onSaved: (value) => _loginPassword = value.trim(),
+                          focusNode: myFocusNodePasswordLogin,
+                          controller: loginPasswordController,
+                          obscureText: _obscureTextLogin,
+                          style: TextStyle(
+                              fontFamily: "Dosis",
+                              fontSize: 16.0,
+                              color: Colors.black),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            icon: Icon(
+                              FontAwesomeIcons.lock,
+                              size: 22.0,
+                              color: Colors.black,
+                            ),
+                            hintText: "Password",
+                            hintStyle:
+                                TextStyle(fontFamily: "Dosis", fontSize: 17.0),
+                            suffixIcon: GestureDetector(
+                              onTap: _toggleLogin,
+                              child: Icon(
+                                _obscureTextLogin
+                                    ? FontAwesomeIcons.eye
+                                    : FontAwesomeIcons.eyeSlash,
+                                size: 15.0,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 250.0,
+                        height: 1.0,
+                        color: Colors.grey[400],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 210.0),
+                decoration: new BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                      color: LoginTheme.loginGradientStart,
+                      offset: Offset(1.0, 6.0),
+                      blurRadius: 20.0,
+                    ),
+                    BoxShadow(
+                      color: LoginTheme.loginGradientEnd,
+                      offset: Offset(1.0, 6.0),
+                      blurRadius: 20.0,
+                    ),
+                  ],
+                  gradient: new LinearGradient(
+                      colors: [
+                        LoginTheme.loginGradientEnd,
+                        LoginTheme.loginGradientStart
+                      ],
+                      begin: const FractionalOffset(0.2, 0.2),
+                      end: const FractionalOffset(1.0, 1.0),
+                      stops: [0.0, 1.0],
+                      tileMode: TileMode.clamp),
+                ),
+                child: MaterialButton(
+                    key: new Key('login_btn'),
+                    highlightColor: Colors.transparent,
+                    splashColor: LoginTheme.loginGradientEnd,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 42.0),
+                      child: Text(
+                        "LOGIN",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 25.0,
+                            fontFamily: "Dosis"),
+                      ),
+                    ),
+                    onPressed: () {
+                      _formMode = FormMode.LOGIN;
+                      _validateAndSubmit();
+                    }),
+              ),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 10.0),
+            child: FlatButton(
+                onPressed: () {},
+                child: Text(
+                  "Forgot Password?",
+                  style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      color: Colors.white,
+                      fontSize: 16.0,
+                      fontFamily: "Dosis"),
+                )),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 2.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: new LinearGradient(
+                        colors: [
+                          Colors.white10,
+                          Colors.white,
+                        ],
+                        begin: const FractionalOffset(0.0, 0.0),
+                        end: const FractionalOffset(1.0, 1.0),
+                        stops: [0.0, 1.0],
+                        tileMode: TileMode.clamp),
+                  ),
+                  width: 100.0,
+                  height: 1.0,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 15.0, right: 15.0),
+                  child: Text(
+                    "Or",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
+                        fontFamily: "Dosis"),
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: new LinearGradient(
+                        colors: [
+                          Colors.white,
+                          Colors.white10,
+                        ],
+                        begin: const FractionalOffset(0.0, 0.0),
+                        end: const FractionalOffset(1.0, 1.0),
+                        stops: [0.0, 1.0],
+                        tileMode: TileMode.clamp),
+                  ),
+                  width: 100.0,
+                  height: 1.0,
+                ),
+              ],
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(top: 3.0),
+                child: GestureDetector(
+                  onTap: () {
+                    _formMode = FormMode.GOOGLE;
+                    _validateAndSubmit();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(9.0),
+                    decoration: new BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                    ),
+                    child: new Icon(
+                      FontAwesomeIcons.google,
+                      color: Color(0xFF0084ff),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _showSignUpScreen(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(top: 23.0),
+      child: Column(
+        children: <Widget>[
+          Stack(
+            alignment: Alignment.topCenter,
+            overflow: Overflow.visible,
+            children: <Widget>[
+              Card(
+                elevation: 2.0,
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Container(
+                  width: 300.0,
+                  height: 300.0,
+                  child: Column(
+                    children: <Widget>[
+                      /* Name */
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: 20.0, bottom: 10.0, left: 25.0, right: 25.0),
+                        child: TextFormField(
+                            focusNode: myFocusNodeName,
+                            controller: signUpNameController,
+                            keyboardType: TextInputType.text,
+                            textCapitalization: TextCapitalization.words,
+                            style: TextStyle(
+                                fontFamily: "Dosis",
+                                fontSize: 16.0,
+                                color: Colors.black),
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              icon: Icon(
+                                FontAwesomeIcons.user,
+                                color: Colors.black,
+                              ),
+                              hintText: "Name",
+                              hintStyle: TextStyle(
+                                  fontFamily: "Dosis", fontSize: 16.0),
+                            ),
+                            validator: (value) {
+                              return value.isEmpty
+                                  ? "Name can\'t be empty"
+                                  : null;
+                            },
+                            onSaved: (value) {
+                              _signUpName = value;
+                            }),
+                      ),
+                      /* Name underline */
+                      Container(
+                        width: 250.0,
+                        height: 1.0,
+                        color: Colors.grey[400],
+                      ),
+                      /* Email */
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: 20.0, bottom: 10.0, left: 25.0, right: 25.0),
+                        child: TextFormField(
+                          focusNode: myFocusNodeEmail,
+                          controller: signUpEmailController,
+                          keyboardType: TextInputType.emailAddress,
+                          style: TextStyle(
+                              fontFamily: "Dosis",
+                              fontSize: 16.0,
+                              color: Colors.black),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            icon: Icon(
+                              FontAwesomeIcons.envelope,
+                              color: Colors.black,
+                            ),
+                            hintText: "Email Address",
+                            hintStyle:
+                                TextStyle(fontFamily: "Dosis", fontSize: 16.0),
+                          ),
+                          validator: (value) {
+                            return value.isEmpty
+                                ? "Email can\'t be empty"
+                                : null;
+                          },
+                          onSaved: (value) {
+                            print(value);
+                            _signUpEmail = value;
+                          },
+                        ),
+                      ),
+                      /* Email underline */
+                      Container(
+                        width: 250.0,
+                        height: 1.0,
+                        color: Colors.grey[400],
+                      ),
+                      /* Password */
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: 20.0, bottom: 5.0, left: 25.0, right: 25.0),
+                        child: TextFormField(
+                          focusNode: myFocusNodePassword,
+                          controller: signUpPasswordController,
+                          obscureText: _obscureTextSignUp,
+                          style: TextStyle(
+                              fontFamily: "Dosis",
+                              fontSize: 16.0,
+                              color: Colors.black),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            icon: Icon(
+                              FontAwesomeIcons.lock,
+                              color: Colors.black,
+                            ),
+                            hintText: "Password",
+                            hintStyle:
+                                TextStyle(fontFamily: "Dosis", fontSize: 16.0),
+                            suffixIcon: GestureDetector(
+                              onTap: _toggleSignUp,
+                              child: Icon(
+                                _obscureTextSignUp
+                                    ? FontAwesomeIcons.eye
+                                    : FontAwesomeIcons.eyeSlash,
+                                size: 15.0,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            return value.isEmpty
+                                ? "Password can\'t be empty"
+                                : null;
+                          },
+                          onSaved: (value) {
+                            print(value);
+                            _signUpPassword = value;
+                          },
+                        ),
+                      ),
+                      /* Password underline */
+                      Container(
+                        width: 250.0,
+                        height: 1.0,
+                        color: Colors.grey[400],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 290.0),
+                decoration: new BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                      color: LoginTheme.loginGradientStart,
+                      offset: Offset(1.0, 6.0),
+                      blurRadius: 20.0,
+                    ),
+                    BoxShadow(
+                      color: LoginTheme.loginGradientEnd,
+                      offset: Offset(1.0, 6.0),
+                      blurRadius: 20.0,
+                    ),
+                  ],
+                  gradient: new LinearGradient(
+                      colors: [
+                        LoginTheme.loginGradientEnd,
+                        LoginTheme.loginGradientStart
+                      ],
+                      begin: const FractionalOffset(0.2, 0.2),
+                      end: const FractionalOffset(1.0, 1.0),
+                      stops: [0.0, 1.0],
+                      tileMode: TileMode.clamp),
+                ),
+                child: MaterialButton(
+                    highlightColor: Colors.transparent,
+                    splashColor: LoginTheme.loginGradientEnd,
+                    //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 42.0),
+                      child: Text(
+                        "SIGN UP",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 25.0,
+                          fontFamily: "Dosis",
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      if (_formKey.currentState.validate())
+                        _formKey.currentState.save();
+                      widget.auth
+                          .signUp(_signUpEmail, _signUpPassword)
+                          .then((user) {
+                        userId = user.toString();
+                        print("Signed Up: $userId");
+                        UserManagement().storeNewUser(
+                            _signUpEmail, context, _signUpName, true);
+
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SignUpWaitingPage()));
+
+                        signUpEmailController.clear();
+                        signUpNameController.clear();
+                        signUpPasswordController.clear();
+                      }).catchError((e) {
+                        print(e);
+                      });
+                    }),
+              ),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 5.0),
+            child: FlatButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ManagerSignUpPage()));
+                },
+                child: Text(
+                  "you are Facility Manager? click here.",
+                  style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      color: Colors.white,
+                      fontSize: 16.0,
+                      fontFamily: "Dosis"),
+                )),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _onSignInButtonPress() {
+    _pageController.animateToPage(0,
+        duration: Duration(milliseconds: 500), curve: Curves.decelerate);
+  }
+
+  void _onSignUpButtonPress() {
+    _pageController?.animateToPage(1,
+        duration: Duration(milliseconds: 500), curve: Curves.decelerate);
+  }
+
+  void _toggleLogin() {
+    setState(() {
+      _obscureTextLogin = !_obscureTextLogin;
+    });
+  }
+
+  void _toggleSignUp() {
+    setState(() {
+      _obscureTextSignUp = !_obscureTextSignUp;
+    });
+  }
+
+  bool _validateAndSave() {
     final form = _formKey.currentState;
 
- /* unsolved conflict 
+    /* unsolved conflict
     if(form.validate()){
       form.save();
       return true;
@@ -42,369 +738,61 @@ class _LoginPageState extends State<LoginPage> {
     return false;
   }
 */
-    if(_formMode == FormMode.LOGIN && form.validate()){
+    if (_formMode == FormMode.LOGIN && form.validate()) {
       form.save();
       return true;
     }
 
-    if(_formMode == FormMode.GOOGLE){
+    if (_formMode == FormMode.GOOGLE) {
       return true;
     }
     return false;
   }
 
-  void _validateAndSubmit() async{
-    setState((){
+  void _validateAndSubmit() async {
+    setState(() {
       _errorMessage = "";
       _isLoading = true;
     });
-    if (_validateAndSave()){
+    if (_validateAndSave()) {
       String userId = "";
-      try{
-        if(_formMode == FormMode.LOGIN){
-          userId = await widget.auth.signIn(_email, _password);
+      try {
+        if (_formMode == FormMode.LOGIN) {
+          userId = await widget.auth.signIn(_loginEmail, _loginPassword);
           print("Signed in: $userId");
-        }
-        else if(_formMode == FormMode.GOOGLE){
+        } else if (_formMode == FormMode.GOOGLE) {
           userId = await widget.auth.signInWithGoogle();
           print("Signed in: $userId");
-        }
-        else{
-          userId = await widget.auth.signUp(_email, _password);
+        } else {
+          userId = await widget.auth.signUp(_loginEmail, _loginPassword);
           print("Signed up user: $userId");
         }
-        setState((){
+        setState(() {
           _success = "success";
           _isLoading = false;
         });
 
-        if (userId.length > 0 && userId != null && (_formMode == FormMode.LOGIN || _formMode == FormMode.GOOGLE )){
+        if (userId.length > 0 &&
+            userId != null &&
+            (_formMode == FormMode.LOGIN || _formMode == FormMode.GOOGLE)) {
           print("check on signed in");
           widget.onSignedIn();
         }
-      } catch (e){
+      } catch (e) {
         print('Error: $e');
-        setState((){
+        setState(() {
           _isLoading = false;
           _success = "";
-          if (_isIos){
+          if (_isIos) {
             _errorMessage = e.details;
-          }
-          else{
+          } else {
             _errorMessage = e.message;
           }
         });
       }
-
     }
-    setState((){
+    setState(() {
       _isLoading = false;
     });
   }
-
-  @override
-  void initState(){
-    _errorMessage = "";
-    _isLoading = false;
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    _isIos = Theme.of(context).platform == TargetPlatform.iOS;
-
-    return new Scaffold(
-      resizeToAvoidBottomPadding: false,
-      body: SingleChildScrollView(
-          child: new Form(
-              key: _formKey,
-              child : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  _showTitle(),
-                  _showTextFieldTitle("Email"),
-                  _showEmailTextField(),
-                  _showTextFieldTitle("Password"),
-                  _showPasswordTextField(),
-                  SizedBox(height: 10.0),
-                  _showFindPassword(),
-                  _showLoginButton(),
-                  _showGoogleLoginButton(),
-                  SizedBox(height : 30.0),
-                  _showRegisterSentence('일반 사용자 회원가입',true),
-                  _showRegisterSentence('시설 관리자 회원가입',false)
-                ],
-              )
-          )
-      ),
-    );
-  }
-
-  Widget _showTitle(){
-    return Container(
-      child: Stack(
-          children: <Widget>[
-            Container(
-                padding: EdgeInsets.fromLTRB(15.0, 70.0, 0.0, 0.0),
-                child: Text('G-TEAM Login', style: TextStyle(
-                    fontSize: 50.0,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Dosis',
-                    color: Colors.black))
-            ),
-            Container(
-                padding: EdgeInsets.fromLTRB(130.0, 130.0, 0.0, 35.0),
-                child: Text('Make your team with G-TEAM',
-                    style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w600,
-                        fontFamily: 'Dosis', color: Colors.black))
-            ),
-          ]
-      ),
-    );
-  }
-
-  Widget _showTextFieldTitle(String title){
-    return  Padding(
-      padding: const EdgeInsets.only(left: 40.0),
-      child: Text(
-        title,
-        style: TextStyle(color: Colors.grey, fontSize: 16.0),
-      ),
-    );
-  }
-
-  Widget _showEmailTextField(){
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.grey.withOpacity(0.5),
-          width: 1.0,
-        ),
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-      child: Row(
-        children: <Widget>[
-          new Padding(
-            padding:
-            EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-            child: Icon(
-              Icons.email,
-              color: Colors.grey,
-            ),
-          ),
-          Container(
-            height: 30.0,
-            width: 1.0,
-            color: Colors.grey.withOpacity(0.5),
-            margin: const EdgeInsets.only(left: 00.0, right: 10.0),
-          ),
-          new Expanded(
-            child: new TextFormField(
-              key: new Key('email'),
-              maxLines: 1,
-              autofocus: false,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Enter your email',
-                hintStyle: TextStyle(color: Colors.grey),
-                // errorStyle: TextStyle(color: Colors.red),       // we can change error message style using this
-              ),
-              validator: ValidationMixin.validateEmail,
-              onSaved: (value) { _email = value; },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _showPasswordTextField(){
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.grey.withOpacity(0.5),
-          width: 1.0,
-        ),
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      margin:
-      const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-      child: Row(
-        children: <Widget>[
-          new Padding(
-            padding:
-            EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-            child: Icon(
-              Icons.lock_open,
-              color: Colors.grey,
-            ),
-          ),
-          Container(
-            height: 30.0,
-            width: 1.0,
-            color: Colors.grey.withOpacity(0.5),
-            margin: const EdgeInsets.only(left: 00.0, right: 10.0),
-          ),
-          new Expanded(
-            child: TextFormField(
-              key: new Key('pw'),
-              maxLines: 1,
-              obscureText: true,
-              autofocus: false,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Enter your password',
-                hintStyle: TextStyle(color: Colors.grey),
-              ),
-              validator: ValidationMixin.validatePW,
-              onSaved: (value) => _password = value.trim(),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _showFindPassword(){
-    return Container(
-      alignment: Alignment(1.0, 1.0),
-      padding: EdgeInsets.only(top: 15.0, right: 30.0),
-      child: InkWell(
-          onTap: () { },
-          child: Text('Forgot Password', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontFamily: 'Montserrat', decoration: TextDecoration.underline))
-      ),
-    );
-  }
-
-  Widget _showLoginButton(){
-    return Container(
-      margin: const EdgeInsets.only(top: 20.0),
-      padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-      child: new Row(
-        children: <Widget>[
-          new Expanded(
-            child: FlatButton(
-              key: new Key('login_btn'),
-              shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(30.0)),
-              splashColor: Colors.blue,
-              color: Colors.blue,
-              child: new Row(
-                children: <Widget>[
-                  new Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: Text(
-                      "LOGIN",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  new Expanded(
-                    child: Container(),
-                  ),
-                  new Transform.translate(
-                    offset: Offset(15.0, 0.0),
-                    child: new Container(
-                      padding: const EdgeInsets.all(5.0),
-                      child: FlatButton(
-                        key: new Key('round_login_btn'),
-                        shape: new RoundedRectangleBorder(
-                            borderRadius:
-                            new BorderRadius.circular(28.0)),
-                        splashColor: Colors.white,
-                        color: Colors.white,
-                        child: Icon(
-                          Icons.arrow_forward,
-                          color: Colors.blue,
-                        ),
-                        onPressed: () {
-                          _formMode = FormMode.LOGIN;
-                          _validateAndSubmit();
-                        },
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              onPressed:(){
-                _formMode = FormMode.LOGIN;
-                _validateAndSubmit();
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _showGoogleLoginButton(){
-    return Container(
-      margin: const EdgeInsets.only(top: 20.0),
-      padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-      child: new Row(
-        children: <Widget>[
-          new Expanded(
-            child: FlatButton(
-              shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(30.0)),
-              splashColor: Color(0xff3B5998),
-              color: Color(0xff3B5998),
-              child: new Row(
-                children: <Widget>[
-                  new Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: Text(
-                      "LOGIN WITH GOOGLE",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  new Expanded(
-                    child: Container(),
-                  ),
-                  new Transform.translate(
-                    offset: Offset(15.0, 0.0),
-                    child: new Container(
-                      padding: const EdgeInsets.all(5.0),
-                      child: FlatButton(
-                        shape: new RoundedRectangleBorder(
-                            borderRadius:
-                            new BorderRadius.circular(28.0)),
-                        splashColor: Colors.white,
-                        color: Colors.white,
-                        child: ImageIcon(
-                            AssetImage('assets/image/google.png'), color: Color(0xff3B5998)),
-                        onPressed: () {
-                          _formMode = FormMode.GOOGLE;
-                          _validateAndSubmit();
-                        },
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              onPressed: (){
-                _formMode = FormMode.GOOGLE;
-                _validateAndSubmit();
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _showRegisterSentence(String show_text, bool isUser){
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Text(show_text, style: TextStyle(fontFamily: 'Montserrat')),
-        SizedBox(width: 5.0),
-        InkWell(
-            onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpPage(isUser,widget.auth))); },
-            child: Text('Register', style: TextStyle(color: Colors.blueAccent, fontFamily: 'Montserrat', fontWeight: FontWeight.bold, decoration: TextDecoration.underline))
-        ),
-      ],
-    );
-  }
 }
-

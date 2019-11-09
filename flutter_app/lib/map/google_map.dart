@@ -6,19 +6,18 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:geocoder/geocoder.dart';
 
 typedef selectFunc = void Function(String);
+
 const kGoogleApiKey = 'api key';
 GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 
-enum mapReq{
-  mapCheck,
-  findLocation,
-  newLocation
-}
+enum mapReq { mapCheck, findLocation, newLocation }
+
 class MapTest extends StatefulWidget {
   MapTest({this.onSelected, this.nowReq});
 
   final selectFunc onSelected;
   final mapReq nowReq;
+
   @override
   _MapTestState createState() => _MapTestState();
 }
@@ -38,11 +37,10 @@ class _MapTestState extends State<MapTest> {
 
   Future<void> _goToPosition1() async {
     final GoogleMapController controller = await _controller.future;
-    if(_tempMarker != null){
+    if (_tempMarker != null) {
       setState(() {
         _markers.remove(Marker(markerId: MarkerId(_tempMarker)));
-      }
-      );
+      });
     }
     controller.animateCamera(CameraUpdate.newCameraPosition(_position1));
   }
@@ -52,7 +50,7 @@ class _MapTestState extends State<MapTest> {
     controller.animateCamera(CameraUpdate.newCameraPosition(newPosition));
   }
 
-  CameraPosition makePosition(LatLng location){
+  CameraPosition makePosition(LatLng location) {
     return CameraPosition(
       target: location,
       zoom: 17.0,
@@ -67,18 +65,22 @@ class _MapTestState extends State<MapTest> {
     _lastMapPosition = position.target;
   }
 
-  _onMapTypeButtonPressed(){
+  _onMapTypeButtonPressed() {
     setState(() {
-      _currentMapType = _currentMapType == MapType.normal ? MapType.satellite : MapType.normal;
+      _currentMapType = _currentMapType == MapType.normal
+          ? MapType.satellite
+          : MapType.normal;
     });
   }
 
-  _onAddMarkerButtonPressed(){
-    String nowLoc = [_lastMapPosition.latitude.toStringAsFixed(6),
-      _lastMapPosition.latitude.toStringAsFixed(6)].toString();
+  _onAddMarkerButtonPressed() {
+    String nowLoc = [
+      _lastMapPosition.latitude.toStringAsFixed(6),
+      _lastMapPosition.latitude.toStringAsFixed(6)
+    ].toString();
     String title = "This is a title";
     setState(() {
-      if(_tempMarker == nowLoc){
+      if (_tempMarker == nowLoc) {
         _tempMarker = null;
         _markers.remove(Marker(markerId: MarkerId(nowLoc)));
       }
@@ -89,7 +91,7 @@ class _MapTestState extends State<MapTest> {
           title: title,
           snippet: "This is snippet",
         ),
-        onTap: (){
+        onTap: () {
           // print(nowLoc);
           widget.onSelected(title);
           Navigator.pop(context);
@@ -99,9 +101,11 @@ class _MapTestState extends State<MapTest> {
     });
   }
 
-  _onAddMarkerButtonPressed2(){
-    String nowLoc = [_lastMapPosition.latitude.toStringAsFixed(6),
-                    _lastMapPosition.latitude.toStringAsFixed(6)].toString();
+  _onAddMarkerButtonPressed2() {
+    String nowLoc = [
+      _lastMapPosition.latitude.toStringAsFixed(6),
+      _lastMapPosition.latitude.toStringAsFixed(6)
+    ].toString();
 
     // print(_markers);
     String title = "This is a title";
@@ -140,15 +144,14 @@ class _MapTestState extends State<MapTest> {
   Future<Null> displayPrediction(Prediction p) async {
     if (p != null) {
       PlacesDetailsResponse detail =
-      await _places.getDetailsByPlaceId(p.placeId);
+          await _places.getDetailsByPlaceId(p.placeId);
 
       double lat = detail.result.geometry.location.lat;
       double lng = detail.result.geometry.location.lng;
 
-
       CameraPosition newPosition = makePosition(LatLng(lat, lng));
       _goToNewPosition(newPosition);
-      if(_tempMarker != null){
+      if (_tempMarker != null) {
         _markers.remove(Marker(markerId: MarkerId(_tempMarker)));
       }
       _onCameraMove(newPosition);
@@ -160,16 +163,17 @@ class _MapTestState extends State<MapTest> {
     return Theme(
         data: ThemeData(primaryColor: Color(0xff3B5998)),
         child: FloatingActionButton(
-      heroTag:"btn$index",
-      onPressed: function,
-      materialTapTargetSize: MaterialTapTargetSize.padded,
-      backgroundColor: Color(0xff3B5998),
-      child: Icon(icon, size: 36.0),
-    ));
+          heroTag: "btn$index",
+          onPressed: function,
+          materialTapTargetSize: MaterialTapTargetSize.padded,
+          backgroundColor: Color(0xff3B5998),
+          child: Icon(icon, size: 36.0),
+        ));
   }
 
-  Widget mapButtons(){
-    if(widget.nowReq == mapReq.mapCheck || widget.nowReq == mapReq.findLocation) {
+  Widget mapButtons() {
+    if (widget.nowReq == mapReq.mapCheck ||
+        widget.nowReq == mapReq.findLocation) {
       return Column(
         children: <Widget>[
           button(_onSearchButtonPressed, Icons.search, 0),
@@ -179,8 +183,7 @@ class _MapTestState extends State<MapTest> {
           button(_goToPosition1, Icons.location_searching, 2),
         ],
       );
-    }
-    else{
+    } else {
       return Column(
         children: <Widget>[
           button(_onSearchButtonPressed, Icons.search, 0),
@@ -199,26 +202,19 @@ class _MapTestState extends State<MapTest> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Stack(children: <Widget>[
-          GoogleMap(
-              onMapCreated: _onMapCreated,
-              initialCameraPosition: CameraPosition(
-                target: _center,
-                zoom: 11.0,
-              ),
-              rotateGesturesEnabled: false,
-              mapType: _currentMapType,
-              markers: _markers,
-              onCameraMove: _onCameraMove
+      GoogleMap(
+          onMapCreated: _onMapCreated,
+          initialCameraPosition: CameraPosition(
+            target: _center,
+            zoom: 11.0,
           ),
-          Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Align(
-                  alignment: Alignment.topRight,
-                  child: mapButtons()
-              )
-          )
-        ]
-        )
-    );
+          rotateGesturesEnabled: false,
+          mapType: _currentMapType,
+          markers: _markers,
+          onCameraMove: _onCameraMove),
+      Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Align(alignment: Alignment.topRight, child: mapButtons()))
+    ]));
   }
 }

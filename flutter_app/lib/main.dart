@@ -4,16 +4,17 @@ import 'package:gteams/login/login_auth.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget{
+class MyApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Flutter login demo',
-      debugShowCheckedModeBanner: false,
-      theme: new ThemeData(
-        primarySwatch: Colors.grey,
+      theme: ThemeData(
+        primaryColor: Color(0xff3B5998),
+        accentColor: Color(0xff3B5998),
+        fontFamily: 'Dosis',
       ),
-      home: new RootPage(auth: new Auth())
+      home: new RootPage(auth: new Auth()),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

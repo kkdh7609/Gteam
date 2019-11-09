@@ -5,7 +5,9 @@ class RangeSliderView extends StatefulWidget {
   final Function(RangeValues) onChangeRangeValues;
   final RangeValues values;
 
-  const RangeSliderView({Key key, this.values, this.onChangeRangeValues}) : super(key: key);
+  const RangeSliderView({Key key, this.values, this.onChangeRangeValues})
+      : super(key: key);
+
   @override
   _RangeSliderViewState createState() => _RangeSliderViewState();
 }
@@ -92,13 +94,16 @@ class _RangeSliderViewState extends State<RangeSliderView> {
     );
   }
 }
+
 class CustomRangeThumbShape extends RangeSliderThumbShape {
   static const double _thumbSize = 3.0;
   static const double _disabledThumbSize = 3.0;
 
   @override
   Size getPreferredSize(bool isEnabled, bool isDiscrete) {
-    return isEnabled ? const Size.fromRadius(_thumbSize) : const Size.fromRadius(_disabledThumbSize);
+    return isEnabled
+        ? const Size.fromRadius(_thumbSize)
+        : const Size.fromRadius(_disabledThumbSize);
   }
 
   static final Animatable<double> sizeTween = Tween<double>(
@@ -108,17 +113,17 @@ class CustomRangeThumbShape extends RangeSliderThumbShape {
 
   @override
   void paint(
-      PaintingContext context,
-      Offset center, {
-        @required Animation<double> activationAnimation,
-        @required Animation<double> enableAnimation,
-        bool isDiscrete = false,
-        bool isEnabled = false,
-        bool isOnTop,
-        @required SliderThemeData sliderTheme,
-        TextDirection textDirection,
-        Thumb thumb,
-      }) {
+    PaintingContext context,
+    Offset center, {
+    @required Animation<double> activationAnimation,
+    @required Animation<double> enableAnimation,
+    bool isDiscrete = false,
+    bool isEnabled = false,
+    bool isOnTop,
+    @required SliderThemeData sliderTheme,
+    TextDirection textDirection,
+    Thumb thumb,
+  }) {
     final Canvas canvas = context.canvas;
     final ColorTween colorTween = ColorTween(
       begin: sliderTheme.disabledThumbColor,
@@ -152,11 +157,13 @@ class CustomRangeThumbShape extends RangeSliderThumbShape {
 
     canvas.drawPath(
         Path()
-          ..addOval(Rect.fromPoints(Offset(center.dx + 12, center.dy + 12), Offset(center.dx - 12, center.dy - 12)))
+          ..addOval(Rect.fromPoints(Offset(center.dx + 12, center.dy + 12),
+              Offset(center.dx - 12, center.dy - 12)))
           ..fillType = PathFillType.evenOdd,
         Paint()
           ..color = Colors.black.withOpacity(0.5)
-          ..maskFilter = MaskFilter.blur(BlurStyle.normal, convertRadiusToSigma(8)));
+          ..maskFilter =
+              MaskFilter.blur(BlurStyle.normal, convertRadiusToSigma(8)));
 
     var cPaint = new Paint();
     cPaint..color = Colors.white;
@@ -181,5 +188,6 @@ class CustomRangeThumbShape extends RangeSliderThumbShape {
     return thumbPath;
   }
 
-  Path _leftTriangle(double size, Offset thumbCenter) => _rightTriangle(size, thumbCenter, invert: true);
+  Path _leftTriangle(double size, Offset thumbCenter) =>
+      _rightTriangle(size, thumbCenter, invert: true);
 }

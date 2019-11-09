@@ -51,7 +51,8 @@ class _MenuPagerState extends State<MenuPager> {
   }
 
   Widget _showPage(Page page, int index, int selectedPageIndex) {
-    var resizeFactor = 1 - ((selectedPageIndex - index).abs() * 0.2).clamp(0.0, 1.0);
+    var resizeFactor =
+        1 - ((selectedPageIndex - index).abs() * 0.2).clamp(0.0, 1.0);
     return Center(
       child: Container(
         alignment: Alignment.center +

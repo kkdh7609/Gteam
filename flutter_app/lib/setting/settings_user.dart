@@ -2,15 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gteams/services/crud.dart';
-import 'package:gteams/menu/main_menu.dart';
+import 'package:gteams/menu/MainMenuScreen.dart';
 import 'package:gteams/setting/popularFilterList.dart';
 import 'package:gteams/game/game_join/widgets/SliderView.dart';
 import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 
-
 class SettingUser extends StatefulWidget {
-
-  SettingUser({Key key,this.onSignedOut,this.user_docID}):super(key: key);
+  SettingUser({Key key, this.onSignedOut, this.user_docID}) : super(key: key);
 
   final String user_docID;
   final VoidCallback onSignedOut;
@@ -19,19 +17,16 @@ class SettingUser extends StatefulWidget {
   _SettingUserState createState() => _SettingUserState();
 }
 
-enum Gender{
-  MALE,
-  FEMALE,
-  ALL
-}
+enum Gender { MALE, FEMALE, ALL }
 
 class _SettingUserState extends State<SettingUser> {
   List<SettingListData> sportListData = SettingListData.sportList;
+
   //List<SettingListData> accomodationListData = SettingListData.dayList;
 
   RangeValues _values = RangeValues(0, 24);
   double distValue = 50.0;
-  Gender _selectedGender =null;
+  Gender _selectedGender = null;
   List<int> checNum;
 
   crudMedthods crudObj = new crudMedthods();
@@ -70,7 +65,8 @@ class _SettingUserState extends State<SettingUser> {
               height: 1,
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 8),
+              padding: const EdgeInsets.only(
+                  left: 16, right: 16, bottom: 16, top: 8),
               child: Container(
                 height: 48,
                 decoration: BoxDecoration(
@@ -86,30 +82,41 @@ class _SettingUserState extends State<SettingUser> {
                 ),
                 child: Material(
                   color: Colors.transparent,
-                    child: InkWell(
+                  child: InkWell(
                     borderRadius: BorderRadius.all(Radius.circular(24.0)),
                     highlightColor: Colors.transparent,
-                    onTap: () { // When pressed apply button update Database about user
-                      List<String> updateList =[]; // List for get select sport list
-                      for(var i = 0; i < sportListData.length; i++){
-                        if(sportListData[i].isSelected){
+                    onTap: () {
+                      // When pressed apply button update Database about user
+                      List<String> updateList =
+                          []; // List for get select sport list
+                      for (var i = 0; i < sportListData.length; i++) {
+                        if (sportListData[i].isSelected) {
                           updateList.add(sportListData[i].titleTxt);
                         }
                       }
                       crudObj.updateData('user', widget.user_docID, {
-                        'info_status':true,
-                        'prferenceTime':"1700~1800",
-                        'prferenceLoc':"loc",
-                        'gender':_selectedGender.toString(),
-                        'sportList':FieldValue.arrayUnion(updateList), // It can update array type field
+                        'info_status': true,
+                        'prferenceTime': "1700~1800",
+                        'prferenceLoc': "loc",
+                        'gender': _selectedGender.toString(),
+                        'sportList': FieldValue.arrayUnion(updateList),
+                        // It can update array type field
                       });
                       Navigator.pop(context);
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>MainMenuPage(onSignedOut: widget.onSignedOut,)));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MainMenuPageScreen(
+                                    onSignedOut: widget.onSignedOut,
+                                  )));
                     },
                     child: Center(
                       child: Text(
                         "Apply",
-                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18, color: Colors.white),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18,
+                            color: Colors.white),
                       ),
                     ),
                   ),
@@ -144,7 +151,7 @@ class _SettingUserState extends State<SettingUser> {
               });
             },
           ),
-          Text("Male", style: TextStyle(color: Colors.grey,fontSize: 16)),
+          Text("Male", style: TextStyle(color: Colors.grey, fontSize: 16)),
           Radio(
             value: Gender.FEMALE,
             groupValue: _selectedGender,
@@ -154,7 +161,7 @@ class _SettingUserState extends State<SettingUser> {
               });
             },
           ),
-          Text("Female", style: TextStyle(color: Colors.grey,fontSize: 16)),
+          Text("Female", style: TextStyle(color: Colors.grey, fontSize: 16)),
           Radio(
             value: Gender.ALL,
             groupValue: _selectedGender,
@@ -164,7 +171,7 @@ class _SettingUserState extends State<SettingUser> {
               });
             },
           ),
-          Text("All", style: TextStyle(color: Colors.grey,fontSize: 16)),
+          Text("All", style: TextStyle(color: Colors.grey, fontSize: 16)),
         ],
       ),
     );
@@ -176,11 +183,15 @@ class _SettingUserState extends State<SettingUser> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+          padding:
+              const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
           child: Text(
             "Distance from city center",
             textAlign: TextAlign.left,
-            style: TextStyle(color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
+            style: TextStyle(
+                color: Colors.grey,
+                fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16,
+                fontWeight: FontWeight.normal),
           ),
         ),
         SliderView(
@@ -202,11 +213,15 @@ class _SettingUserState extends State<SettingUser> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+          padding:
+              const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
           child: Text(
             "선호 종목",
             textAlign: TextAlign.left,
-            style: TextStyle(color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
+            style: TextStyle(
+                color: Colors.grey,
+                fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16,
+                fontWeight: FontWeight.normal),
           ),
         ),
         Padding(
@@ -248,8 +263,12 @@ class _SettingUserState extends State<SettingUser> {
                       child: Row(
                         children: <Widget>[
                           Icon(
-                            sport.isSelected ? Icons.check_box : Icons.check_box_outline_blank,
-                            color: sport.isSelected ? GameJoinTheme.buildLightTheme().primaryColor : Colors.grey.withOpacity(0.6),
+                            sport.isSelected
+                                ? Icons.check_box
+                                : Icons.check_box_outline_blank,
+                            color: sport.isSelected
+                                ? GameJoinTheme.buildLightTheme().primaryColor
+                                : Colors.grey.withOpacity(0.6),
                           ),
                           SizedBox(
                             width: 10,
@@ -279,6 +298,7 @@ class _SettingUserState extends State<SettingUser> {
     }
     return noList;
   }
+
   /* unused..
   Widget timeRangeBar() {
     return Column(
@@ -313,11 +333,15 @@ class _SettingUserState extends State<SettingUser> {
       decoration: BoxDecoration(
         color: GameJoinTheme.buildLightTheme().primaryColor,
         boxShadow: <BoxShadow>[
-          BoxShadow(color: Colors.grey.withOpacity(0.2), offset: Offset(0, 2), blurRadius: 4.0),
+          BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              offset: Offset(0, 2),
+              blurRadius: 4.0),
         ],
       ),
       child: Padding(
-        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top, left: 8, right: 8),
+        padding: EdgeInsets.only(
+            top: MediaQuery.of(context).padding.top, left: 8, right: 8),
         child: Row(
           children: <Widget>[
             Container(
@@ -360,5 +384,4 @@ class _SettingUserState extends State<SettingUser> {
       ),
     );
   }
-
 }

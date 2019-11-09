@@ -17,11 +17,11 @@ class GameListData {
     this.dateText = "",
     this.endTime = "",
     this.loc_name = "",
-    this.gameLevel=1,
-    this.groupSize=1,
+    this.gameLevel = 1,
+    this.groupSize = 1,
   });
 
-  factory GameListData.fromJson(Map<String, dynamic> json){
+  factory GameListData.fromJson(Map<String, dynamic> json) {
     return GameListData(
       imagePath: json['imagePath'],
       gameName: json['gameName'],
@@ -30,11 +30,10 @@ class GameListData {
       startTime: json['startTime'],
       endTime: json['endTime'],
       loc_name: json['loc_name'],
-      gameLevel:json['gameLevel'],
-      groupSize:json['groupSize'],
+      gameLevel: json['gameLevel'],
+      groupSize: json['groupSize'],
     );
   }
-  static List<GameListData> gameList = [
-  ];
 
+  static List<GameListData> gameList = [];
 }

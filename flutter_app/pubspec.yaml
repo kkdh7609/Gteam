@@ -28,16 +28,14 @@ dependencies:
   cloud_firestore: ^0.12.9+5
   cupertino_icons: ^0.1.2
   flutter_svg: ^0.13.0+1
-  font_awesome_flutter: ^8.5.0
+  font_awesome_flutter:
   intl: ^0.16.0
   smooth_star_rating: ^1.0.3
   geocoder:
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -45,11 +43,10 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
   assets:
-    - assets/image/google.png
-    - assets/image/milkyway.jpg
     - assets/image/game/room/footsal_club.jpg
     - assets/image/hotel/
     - assets/image/menu/
+    - assets/image/
 
   fonts:
     - family: Qwigley

@@ -13,16 +13,15 @@ class RectangleIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children:
-      List<Widget>.generate(
+      children: List<Widget>.generate(
         icons.length,
         (i) => _Icon(
-              key: Key(icons[i]),
-              baseColor: Colors.white54,
-              selectedColor: Colors.white,
-              image: icons[i],
-              isSelected: i == selectedIndex,
-            ),
+          key: Key(icons[i]),
+          baseColor: Colors.white54,
+          selectedColor: Colors.white,
+          image: icons[i],
+          isSelected: i == selectedIndex,
+        ),
       ),
     );
   }

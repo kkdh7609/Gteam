@@ -30,7 +30,13 @@ class _GameCreatePageState extends State<GameCreatePage> {
   Gender _selectedGender = null;
 
   List<DropdownMenuItem<String>> _sportsList = [];
-  List<String> _sports = ["Football", "Table Tennis", "Bowling", "Basketball", "Baseball"];
+  List<String> _sports = [
+    "Football",
+    "Table Tennis",
+    "Bowling",
+    "Basketball",
+    "Baseball"
+  ];
 
   DateTime _date = DateTime.now();
   TimeOfDay _startTime = TimeOfDay.now();
@@ -38,11 +44,12 @@ class _GameCreatePageState extends State<GameCreatePage> {
 
   void loadData() {
     _sportsList = [];
-    _sportsList = _sports.map((val) => DropdownMenuItem<String>(
+    _sportsList = _sports
+        .map((val) => DropdownMenuItem<String>(
               child: Text(val),
               value: val,
-            )).toList();
-
+            ))
+        .toList();
   }
 
   Future<Null> _selectDate(BuildContext context) async {
@@ -51,7 +58,6 @@ class _GameCreatePageState extends State<GameCreatePage> {
         initialDate: _date,
         firstDate: DateTime.now().subtract(Duration(days: 1)),
         lastDate: _date.add(Duration(days: 100)));
-
     if (_pickedDate != null && _pickedDate != _date) {
       setState(() {
         _date = _pickedDate;
@@ -84,7 +90,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
     }
   }
 
-  void _change_loc_name(String new_name){
+  void _change_loc_name(String new_name) {
     _loc_name = new_name;
   }
 
@@ -93,7 +99,8 @@ class _GameCreatePageState extends State<GameCreatePage> {
     loadData();
     List<Step> steps = [
       Step(
-        title: const Text("What",
+        title: const Text(
+          "What",
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 18,
@@ -104,7 +111,8 @@ class _GameCreatePageState extends State<GameCreatePage> {
         content: _showGameType(),
       ),
       Step(
-          title: const Text("When",
+          title: const Text(
+            "When",
             style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 18,
@@ -116,7 +124,8 @@ class _GameCreatePageState extends State<GameCreatePage> {
             children: <Widget>[_showGameDate(), _showGameTime()],
           )),
       Step(
-          title: const Text("Where",
+          title: const Text(
+            "Where",
             style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 18,
@@ -126,7 +135,8 @@ class _GameCreatePageState extends State<GameCreatePage> {
           state: StepState.indexed,
           content: _showGameLoc()),
       Step(
-          title: const Text("Extra",
+          title: const Text(
+            "Extra",
             style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 18,
@@ -144,55 +154,59 @@ class _GameCreatePageState extends State<GameCreatePage> {
     ];
 
     return Scaffold(
-        appBar: AppBar(title: Text("Create the Game", style: TextStyle(
-            fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white)), centerTitle: true, backgroundColor: GameCreateTheme.buildLightTheme().primaryColor),
+        appBar: AppBar(
+            title: Text("Create the Game",
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 22,
+                    color: Colors.white)),
+            centerTitle: true,
+            backgroundColor: GameCreateTheme.buildLightTheme().primaryColor),
         body: Container(
             child: Form(
                 key: _formKey,
                 child: SingleChildScrollView(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        _showGameTitle("게임 이름"),
-                        _showGameName(),
-                        Theme(
-                          data: ThemeData(fontFamily: 'Dosis', primaryColor:GameCreateTheme.buildLightTheme().primaryColor),
-                          child: Stepper(
-                            steps: steps,
-                            type: StepperType.vertical,
-                            currentStep: this._curStep,
-                            onStepContinue: () {
-                              setState(() {
-                                if (this._curStep < steps.length - 1) {
-                                  this._curStep = this._curStep + 1;
-                                } else {
-                                  this._curStep = 0;
-                                }
-                              });
-                            },
-                            onStepCancel: () {
-                              setState(() {
-                                if (this._curStep > 0) {
-                                  this._curStep = this._curStep - 1;
-                                } else {
-                                  this._curStep = 0;
-                                }
-                              });
-                            },
-                            onStepTapped: (step) {
-                              setState(() {
-                                this._curStep = step;
-                              });
-                            },
-                          )
-                        ),
-                        _game_create()
-                      ],
-                    )
-                )
-            )
-        )
-    );
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    _showGameTitle("게임 이름"),
+                    _showGameName(),
+                    Theme(
+                        data: ThemeData(
+                            fontFamily: 'Dosis',
+                            primaryColor:
+                                GameCreateTheme.buildLightTheme().primaryColor),
+                        child: Stepper(
+                          steps: steps,
+                          type: StepperType.vertical,
+                          currentStep: this._curStep,
+                          onStepContinue: () {
+                            setState(() {
+                              if (this._curStep < steps.length - 1) {
+                                this._curStep = this._curStep + 1;
+                              } else {
+                                this._curStep = 0;
+                              }
+                            });
+                          },
+                          onStepCancel: () {
+                            setState(() {
+                              if (this._curStep > 0) {
+                                this._curStep = this._curStep - 1;
+                              } else {
+                                this._curStep = 0;
+                              }
+                            });
+                          },
+                          onStepTapped: (step) {
+                            setState(() {
+                              this._curStep = step;
+                            });
+                          },
+                        )),
+                    _game_create()
+                  ],
+                )))));
   }
 
   Widget _showGameTitle(String title) {
@@ -200,7 +214,11 @@ class _GameCreatePageState extends State<GameCreatePage> {
       padding: const EdgeInsets.only(top: 20.0, left: 20.0),
       child: Text(
         title,
-        style: TextStyle(color: Colors.black, fontFamily: 'Dosis', fontWeight: FontWeight.w900, fontSize: 16.0),
+        style: TextStyle(
+            color: Colors.black,
+            fontFamily: 'Dosis',
+            fontWeight: FontWeight.w900,
+            fontSize: 16.0),
       ),
     );
   }
@@ -221,24 +239,27 @@ class _GameCreatePageState extends State<GameCreatePage> {
           children: <Widget>[
             Container(
                 child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: TextFormField(
-                        keyboardType: TextInputType.text,
-                        decoration: InputDecoration(
-                          hintText: '게임 이름 입력',
-                          hintStyle: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w400, color: Colors.grey),
-                        ),
-                        validator: (value) {
-                          return value.isEmpty ? "Game name can\'t be empty" : null;
-                        },
-                        onSaved: (value) {
-                          _gameName = value;
-                        },
-                      ),
-                    )
-                  ],
-                ))
+              children: <Widget>[
+                Expanded(
+                  child: TextFormField(
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      hintText: '게임 이름 입력',
+                      hintStyle: TextStyle(
+                          fontFamily: 'Dosis',
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey),
+                    ),
+                    validator: (value) {
+                      return value.isEmpty ? "Game name can\'t be empty" : null;
+                    },
+                    onSaved: (value) {
+                      _gameName = value;
+                    },
+                  ),
+                )
+              ],
+            ))
           ],
         ));
   }
@@ -253,7 +274,8 @@ class _GameCreatePageState extends State<GameCreatePage> {
           Container(
             height: 30.0,
             width: 1.0,
-            color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+            color:
+                GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           DropdownButtonHideUnderline(
@@ -281,16 +303,22 @@ class _GameCreatePageState extends State<GameCreatePage> {
           Container(
             height: 30.0,
             width: 1.0,
-            color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+            color:
+                GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           SizedBox(
             width: (MediaQuery.of(context).size.width / 4) + 12,
             height: 40,
-            child:  FlatButton(
-              color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.2),
-              child: Text(_dateText, style: TextStyle(fontSize: 16, fontFamily: 'Dosis',
-                  fontWeight: FontWeight.w700)),
+            child: FlatButton(
+              color: GameCreateTheme.buildLightTheme()
+                  .primaryColor
+                  .withOpacity(0.2),
+              child: Text(_dateText,
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Dosis',
+                      fontWeight: FontWeight.w700)),
               onPressed: () {
                 _selectDate(context);
               },
@@ -312,32 +340,46 @@ class _GameCreatePageState extends State<GameCreatePage> {
           Container(
             height: 30.0,
             width: 1.0,
-            color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.2),
+            color:
+                GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.2),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           SizedBox(
             width: (MediaQuery.of(context).size.width / 4) + 12,
             height: 40,
             child: FlatButton(
-              color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.2),
-              child: Text(_startTimeText, style: TextStyle(fontSize: 16, fontFamily: 'Dosis',
-                  fontWeight: FontWeight.w700)),
+              color: GameCreateTheme.buildLightTheme()
+                  .primaryColor
+                  .withOpacity(0.2),
+              child: Text(_startTimeText,
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Dosis',
+                      fontWeight: FontWeight.w700)),
               onPressed: () {
                 _selectStart(context);
               },
             ),
           ),
           SizedBox(width: 5),
-          Text("~", style: TextStyle(fontSize: 16, fontFamily: 'Dosis',
-              fontWeight: FontWeight.w400)),
+          Text("~",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontFamily: 'Dosis',
+                  fontWeight: FontWeight.w400)),
           SizedBox(width: 5),
           SizedBox(
             width: (MediaQuery.of(context).size.width / 4) + 12,
             height: 40,
             child: FlatButton(
-              color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.1),
-              child: Text(_endTimeText, style: TextStyle(fontSize: 16, fontFamily: 'Dosis',
-                  fontWeight: FontWeight.w700)),
+              color: GameCreateTheme.buildLightTheme()
+                  .primaryColor
+                  .withOpacity(0.2),
+              child: Text(_endTimeText,
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Dosis',
+                      fontWeight: FontWeight.w700)),
               onPressed: () {
                 _selectEnd(context);
               },
@@ -358,13 +400,19 @@ class _GameCreatePageState extends State<GameCreatePage> {
           Container(
             height: 30.0,
             width: 1.0,
-            color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+            color:
+                GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           FlatButton(
             child: Text(_loc_name),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTest(onSelected: _change_loc_name, nowReq:mapReq.findLocation)));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MapTest(
+                          onSelected: _change_loc_name,
+                          nowReq: mapReq.findLocation)));
             },
           )
         ],
@@ -382,7 +430,8 @@ class _GameCreatePageState extends State<GameCreatePage> {
           Container(
             height: 30.0,
             width: 1.0,
-            color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+            color:
+                GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           Radio(
@@ -395,7 +444,11 @@ class _GameCreatePageState extends State<GameCreatePage> {
               });
             },
           ),
-          Text("Male", style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w700, fontSize: 16)),
+          Text("Male",
+              style: TextStyle(
+                  fontFamily: 'Dosis',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16)),
           Radio(
             value: Gender.FEMALE,
             groupValue: _selectedGender,
@@ -406,7 +459,11 @@ class _GameCreatePageState extends State<GameCreatePage> {
               });
             },
           ),
-          Text("Female", style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w700, fontSize: 16)),
+          Text("Female",
+              style: TextStyle(
+                  fontFamily: 'Dosis',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16)),
           Radio(
             value: Gender.ALL,
             groupValue: _selectedGender,
@@ -417,7 +474,11 @@ class _GameCreatePageState extends State<GameCreatePage> {
               });
             },
           ),
-          Text("All", style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w700, fontSize: 16)),
+          Text("All",
+              style: TextStyle(
+                  fontFamily: 'Dosis',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16)),
         ],
       ),
     );
@@ -433,25 +494,25 @@ class _GameCreatePageState extends State<GameCreatePage> {
           Container(
             height: 30.0,
             width: 1.0,
-            color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+            color:
+                GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           Flexible(
               child: TextFormField(
-                inputFormatters: [ LengthLimitingTextInputFormatter(2)],
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: 'Group Size',
-                  hintStyle: TextStyle(color: Colors.grey),
-                ),
-                validator: (value) {
-                  return value.isEmpty ? "Group size can\'t be empty" : null;
-                },
-                onSaved: (value) {
-                  _groupSize = int.parse(value);
-                },
-              )
-          )
+            inputFormatters: [LengthLimitingTextInputFormatter(2)],
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              hintText: 'Group Size',
+              hintStyle: TextStyle(color: Colors.grey),
+            ),
+            validator: (value) {
+              return value.isEmpty ? "Group size can\'t be empty" : null;
+            },
+            onSaved: (value) {
+              _groupSize = int.parse(value);
+            },
+          ))
         ],
       ),
     );
@@ -467,25 +528,25 @@ class _GameCreatePageState extends State<GameCreatePage> {
           Container(
             height: 30.0,
             width: 1.0,
-            color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+            color:
+                GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           Flexible(
               child: TextFormField(
-                inputFormatters: [ LengthLimitingTextInputFormatter(2)],
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: 'Game Level',
-                  hintStyle: TextStyle(color: Colors.grey),
-                ),
-                validator: (value) {
-                  return value.isEmpty ? "Game level can\'t be empty" : null;
-                },
-                onSaved: (value) {
-                  _gameLevel = int.parse(value);
-                },
-              )
-          )
+            inputFormatters: [LengthLimitingTextInputFormatter(2)],
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              hintText: 'Game Level',
+              hintStyle: TextStyle(color: Colors.grey),
+            ),
+            validator: (value) {
+              return value.isEmpty ? "Game level can\'t be empty" : null;
+            },
+            onSaved: (value) {
+              _gameLevel = int.parse(value);
+            },
+          ))
         ],
       ),
     );
@@ -515,21 +576,21 @@ class _GameCreatePageState extends State<GameCreatePage> {
                   child: Text('취소')),
               FlatButton(
                 onPressed: () {
-                  if(_formKey.currentState.validate()){
+                  if (_formKey.currentState.validate()) {
                     _formKey.currentState.save();
                     crudObj.addData('game3', {
-                      'gameName' : _gameName,
-                      'selectedSport':_selectedSports,
-                      'dateText':_dateText,
-                      'startTime':_startTimeText,
-                      'endTime':_endTimeText,
-                      'groupSize':_groupSize,
-                      'gameLevel':_gameLevel,
-                      'Gender':_selectedGender.toString(),
-                      'loc_name':_loc_name,
+                      'gameName': _gameName,
+                      'selectedSport': _selectedSports,
+                      'dateText': _dateText,
+                      'startTime': _startTimeText,
+                      'endTime': _endTimeText,
+                      'groupSize': _groupSize,
+                      'gameLevel': _gameLevel,
+                      'Gender': _selectedGender.toString(),
+                      'loc_name': _loc_name,
                     });
 
-                    print(crudObj.getDataCollection('/game').then((data){
+                    print(crudObj.getDataCollection('/game').then((data) {
                       data.documents[0].data['gameName'];
                     }));
 
@@ -553,7 +614,9 @@ class _GameCreatePageState extends State<GameCreatePage> {
           borderRadius: BorderRadius.all(Radius.circular(24.0)),
           boxShadow: <BoxShadow>[
             BoxShadow(
-              color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.2),
+              color: GameCreateTheme.buildLightTheme()
+                  .primaryColor
+                  .withOpacity(0.2),
               offset: Offset(4, 4),
             ),
           ],

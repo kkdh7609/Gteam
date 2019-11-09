@@ -3,7 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gteams/map/google_map.dart';
 import 'package:gteams/game/game_join/game_room/GameRoomTheme.dart';
 
-
 class GameRoomPage extends StatefulWidget {
   @override
   _GameRoomPageState createState() => _GameRoomPageState();
@@ -45,7 +44,7 @@ class _GameRoomPageState extends State<GameRoomPage>
     });
   }
 
-  void _changeState(String tempStr){
+  void _changeState(String tempStr) {
     print(tempStr);
   }
 
@@ -169,9 +168,18 @@ class _GameRoomPageState extends State<GameRoomPage>
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: <Widget>[
-                                          getTimeBoxUI("5 vs 5", "Match", Icon(FontAwesomeIcons.mapMarkedAlt)),
-                                          getTimeBoxUI("2시간", "Time", Icon(FontAwesomeIcons.mapMarkedAlt)),
-                                          getTimeBoxUI("신발 대여", "Shoe", Icon(FontAwesomeIcons.mapMarkedAlt)),
+                                          getTimeBoxUI(
+                                              "5 vs 5",
+                                              "Match",
+                                              Icon(FontAwesomeIcons
+                                                  .peopleCarry)),
+                                          getTimeBoxUI("2시간", "Time",
+                                              Icon(FontAwesomeIcons.clock)),
+                                          getTimeBoxUI(
+                                              "신발 대여",
+                                              "Shoe",
+                                              Icon(
+                                                  FontAwesomeIcons.shoePrints)),
                                         ],
                                       ),
                                       Row(
@@ -181,13 +189,26 @@ class _GameRoomPageState extends State<GameRoomPage>
                                             CrossAxisAlignment.center,
                                         children: <Widget>[
                                           InkWell(
-                                            child: getTimeBoxUI("위치", "Location", Icon(FontAwesomeIcons.mapMarkedAlt)),
-                                            onTap:(){
-                                              Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTest(onSelected: _changeState, nowReq: mapReq.mapCheck)));
-                                            }
-                                          ),
-                                          getTimeBoxUI("초보", "Skill", Icon(FontAwesomeIcons.mapMarkedAlt)),
-                                          getTimeBoxUI("옷 대여", "Clothes", Icon(FontAwesomeIcons.mapMarkedAlt)),
+                                              child: getTimeBoxUI(
+                                                  "위치",
+                                                  "Location",
+                                                  Icon(FontAwesomeIcons
+                                                      .mapMarkedAlt)),
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            MapTest(
+                                                                onSelected:
+                                                                    _changeState,
+                                                                nowReq: mapReq
+                                                                    .mapCheck)));
+                                              }),
+                                          getTimeBoxUI("초보", "Skill",
+                                              Icon(FontAwesomeIcons.users)),
+                                          getTimeBoxUI("옷 대여", "Clothes",
+                                              Icon(FontAwesomeIcons.tshirt)),
                                         ],
                                       ),
                                     ],
@@ -204,6 +225,7 @@ class _GameRoomPageState extends State<GameRoomPage>
                                     "초보자분들 환영합니다. 풋살을 즐기시는 누구나 참가 신청 가능합니다.",
                                     textAlign: TextAlign.justify,
                                     style: TextStyle(
+                                      fontFamily: 'Dosis',
                                       fontWeight: FontWeight.w200,
                                       fontSize: 14,
                                       letterSpacing: 0.27,
@@ -350,6 +372,7 @@ class _GameRoomPageState extends State<GameRoomPage>
                     text1,
                     textAlign: TextAlign.center,
                     style: TextStyle(
+                      fontFamily: 'Dosis',
                       fontWeight: FontWeight.w600,
                       fontSize: 15,
                       letterSpacing: 0.27,
@@ -360,10 +383,11 @@ class _GameRoomPageState extends State<GameRoomPage>
                     text2,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontWeight: FontWeight.w200,
+                      fontFamily: 'Dosis',
+                      fontWeight: FontWeight.w500,
                       fontSize: 14,
                       letterSpacing: 0.27,
-                      color: GameRoomTheme.grey,
+                      color: Colors.black,
                     ),
                   ),
                 ],
