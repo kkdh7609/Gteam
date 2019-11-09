@@ -262,10 +262,9 @@ class _UserProfileState extends State<UserProfile> {
                                       padding: EdgeInsets.all(5),
                                       child: CircleAvatar(
                                         minRadius: 10,
-                                        backgroundColor: Colors.white,
-                                        child: Image.asset(
-                                          "assets/image/profile_pic.png",
-                                          fit: BoxFit.fill,
+                                        backgroundColor: Colors.transparent,
+                                        backgroundImage: AssetImage(
+                                          "assets/image/userImage.png",
                                         ),
                                       ),
                                     ),
