@@ -5,11 +5,12 @@ import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:gteams/util/customGeocoder.dart';
+import 'package:gteams/map/forSecure.dart';
 import 'package:gteams/map/tempStadium.dart';   // just for testing
 
 typedef selectFunc = void Function(String);
 
-const kGoogleApiKey = '';
+String kGoogleApiKey = getSecureKey();
 GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 
 enum mapReq { mapCheck, findLocation, newLocation }
