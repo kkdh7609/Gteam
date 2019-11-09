@@ -2,8 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 class GameCreateTheme {
-
-  static TextTheme _buildTextTheme(TextTheme base){
+  static TextTheme _buildTextTheme(TextTheme base) {
     var fontName = "WorkSans";
 
     return base.copyWith(
@@ -22,6 +21,7 @@ class GameCreateTheme {
       subtitle: base.title.copyWith(fontFamily: fontName),
     );
   }
+
   static ThemeData buildLightTheme() {
     Color primaryColor = Color(0xff3B5998);
     Color secondaryColor = Color(0xff3B5998);
@@ -49,7 +49,6 @@ class GameCreateTheme {
         textTheme: _buildTextTheme(base.textTheme),
         primaryTextTheme: _buildTextTheme(base.primaryTextTheme),
         accentTextTheme: _buildTextTheme(base.accentTextTheme),
-        platform: TargetPlatform.iOS
-    );
+        platform: TargetPlatform.iOS);
   }
 }

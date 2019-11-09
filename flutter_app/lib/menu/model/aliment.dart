@@ -12,16 +12,15 @@ class Aliment {
   final double swimTime;
   final double workoutTime;
 
-  Aliment({ this.name,
-    this.background,
-    this.subtitle,
-    this.image,
-    this.bottomImage,
-    this.totalCalories,
-    this.runTime,
-    this.bikeTime,
-    this.swimTime,
-    this.workoutTime
-  });
-
+  Aliment(
+      {this.name,
+      this.background,
+      this.subtitle,
+      this.image,
+      this.bottomImage,
+      this.totalCalories,
+      this.runTime,
+      this.bikeTime,
+      this.swimTime,
+      this.workoutTime});
 }

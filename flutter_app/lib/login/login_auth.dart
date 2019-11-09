@@ -2,34 +2,38 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import "package:google_sign_in/google_sign_in.dart";
 
-abstract class BaseAuth{
+abstract class BaseAuth {
   Future<String> signIn(String email, String password);
+
   Future<String> signUp(String email, String password);
+
   Future<String> signInWithGoogle();
-  Future<FirebaseUser> getCurrentUser() ;
+
+  Future<FirebaseUser> getCurrentUser();
+
   Future<void> signOut();
 }
 
-class Auth implements BaseAuth{
+class Auth implements BaseAuth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  Future<String> signIn(String email, String password) async{
+  Future<String> signIn(String email, String password) async {
     FirebaseUser user = (await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password)).user;
     return user.uid;
   }
 
-  Future<String> signUp(String email, String password) async{
+  Future<String> signUp(String email, String password) async {
     FirebaseUser user = (await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password)).user;
     return user.uid;
   }
 
-  Future<FirebaseUser> getCurrentUser() async{
+  Future<FirebaseUser> getCurrentUser() async {
     FirebaseUser user = await _firebaseAuth.currentUser();
     return user;
   }
 
-  Future<void> signOut() async{
+  Future<void> signOut() async {
     return _firebaseAuth.signOut();
   }
 
@@ -49,6 +53,7 @@ class Auth implements BaseAuth{
     final FirebaseUser currentUser = await _firebaseAuth.currentUser();
     assert(user.uid == currentUser.uid);
 
-    return user.uid; //user 정보를 넘기게 되면 이름 및 사진 같은것도 받을 수 있음
+    //user 정보를 넘기게 되면 이름 및 사진 같은것도 받을 수 있음
+    return user.uid;
   }
 }

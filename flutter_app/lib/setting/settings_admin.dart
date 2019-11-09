@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gteams/root_page.dart';
 import 'package:gteams/login/login_auth.dart';
 
-class SettingAdminPage extends StatefulWidget{
+class SettingAdminPage extends StatefulWidget {
   SettingAdminPage({Key key, this.onSignedOut}) : super(key: key);
 
   final VoidCallback onSignedOut;
@@ -11,21 +11,22 @@ class SettingAdminPage extends StatefulWidget{
   State<StatefulWidget> createState() => new _SettingAdminPageState();
 }
 
-class _SettingAdminPageState extends State<SettingAdminPage>{
+class _SettingAdminPageState extends State<SettingAdminPage> {
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: AppBar(title: Text("Setting Admin"),
-      actions: <Widget>[
-        new IconButton(
-          icon: new Icon(Icons.arrow_back),
-          onPressed: (){
-            widget.onSignedOut();
-            new RootPage(auth: new Auth());
-          }
-        )
-      ]),
-      body: Text("setting Admin page")
-    );
+        appBar: AppBar(
+          title: Text("Setting Admin"),
+          actions: <Widget>[
+            new IconButton(
+              icon: new Icon(Icons.arrow_back),
+              onPressed: () {
+                widget.onSignedOut();
+                new RootPage(auth: new Auth());
+              },
+            )
+          ],
+        ),
+        body: Text("setting Admin page"));
   }
 }

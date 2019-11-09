@@ -23,10 +23,8 @@ class _MenuPagerState extends State<MenuPager> {
         children: <Widget>[
           _showBackground(this.widget.children[selectedPageIndex].background),
           _showTitle(this.widget.children[selectedPageIndex].title),
-          _showBottomNav(
-              this.widget.children.map((page) => page.icon).toList()),
-          _renderContents(
-              this.widget.children, selectedPageIndex, this.handlePageChanged),
+          _showBottomNav(this.widget.children.map((page) => page.icon).toList()),
+          _renderContents(this.widget.children, selectedPageIndex, this.handlePageChanged),
         ],
       ),
     );
@@ -38,11 +36,9 @@ class _MenuPagerState extends State<MenuPager> {
     });
   }
 
-  Widget _renderContents(List<Page> pages, int selectedPageIndex,
-      void onPageChanged(int pageIndex)) {
+  Widget _renderContents(List<Page> pages, int selectedPageIndex, void onPageChanged(int pageIndex)) {
     return PageView(
-      controller: PageController(
-          initialPage: selectedPageIndex, viewportFraction: _kViewportFraction),
+      controller: PageController(initialPage: selectedPageIndex, viewportFraction: _kViewportFraction),
       children: List<Widget>.generate(pages.length, (index) {
         return _showPage(pages[index], index, selectedPageIndex);
       }, growable: false),
@@ -54,8 +50,7 @@ class _MenuPagerState extends State<MenuPager> {
     var resizeFactor = 1 - ((selectedPageIndex - index).abs() * 0.2).clamp(0.0, 1.0);
     return Center(
       child: Container(
-        alignment: Alignment.center +
-            Alignment((selectedPageIndex - index) * _kViewportFraction, 0.0),
+        alignment: Alignment.center + Alignment((selectedPageIndex - index) * _kViewportFraction, 0.0),
         width: 350.0 * resizeFactor,
         height: 600.0 * resizeFactor,
         child: Center(

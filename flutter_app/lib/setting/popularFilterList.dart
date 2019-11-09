@@ -29,7 +29,7 @@ class SettingListData {
       isSelected: false,
     ),
   ];
-/* unused..
+
   static List<SettingListData> dayList = [
     SettingListData(
       titleTxt: '월',
@@ -60,5 +60,4 @@ class SettingListData {
       isSelected: false,
     ),
   ];
- */
 }

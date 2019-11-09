@@ -13,16 +13,15 @@ class RectangleIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children:
-      List<Widget>.generate(
+      children: List<Widget>.generate(
         icons.length,
         (i) => _Icon(
-              key: Key(icons[i]),
-              baseColor: Colors.white54,
-              selectedColor: Colors.white,
-              image: icons[i],
-              isSelected: i == selectedIndex,
-            ),
+          key: Key(icons[i]),
+          baseColor: Colors.white54,
+          selectedColor: Colors.white,
+          image: icons[i],
+          isSelected: i == selectedIndex,
+        ),
       ),
     );
   }
@@ -78,10 +77,7 @@ class _IconState extends State<_Icon> with TickerProviderStateMixin {
           alignment: FractionalOffset.center,
           children: <Widget>[
             ScaleTransition(
-              scale: CurvedAnimation(
-                  parent: controller,
-                  curve: Curves.linear,
-                  reverseCurve: Curves.bounceOut),
+              scale: CurvedAnimation(parent: controller, curve: Curves.linear, reverseCurve: Curves.bounceOut),
               child: Padding(
                 padding: EdgeInsets.only(top: 38.0),
                 child: Column(
