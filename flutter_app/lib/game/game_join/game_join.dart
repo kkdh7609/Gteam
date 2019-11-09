@@ -16,8 +16,7 @@ class GameJoinPage extends StatefulWidget {
   _GameJoinPageState createState() => _GameJoinPageState();
 }
 
-class _GameJoinPageState extends State<GameJoinPage>
-    with TickerProviderStateMixin {
+class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMixin {
   var gameList = GameListData.gameList;
 
   crudMedthods crudObj = new crudMedthods();
@@ -37,8 +36,7 @@ class _GameJoinPageState extends State<GameJoinPage>
   @override
   void initState() {
     this.gameList = GameListData.gameList;
-    animationController = AnimationController(
-        duration: Duration(milliseconds: 1000), vsync: this);
+    animationController = AnimationController(duration: Duration(milliseconds: 1000), vsync: this);
     super.initState();
   }
 
@@ -70,12 +68,10 @@ class _GameJoinPageState extends State<GameJoinPage>
                     Expanded(
                         child: NestedScrollView(
                             controller: _scrollController,
-                            headerSliverBuilder: (BuildContext context,
-                                bool innerBoxIsScrolled) {
+                            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                               return <Widget>[
                                 SliverList(
-                                  delegate: SliverChildBuilderDelegate(
-                                      (BuildContext context, int index) {
+                                  delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
                                     return Column(
                                       children: <Widget>[
                                         _showSearchBarUI(),
@@ -121,15 +117,11 @@ class _GameJoinPageState extends State<GameJoinPage>
         itemBuilder: (context, index) {
           var count = snapshot.length > 10 ? 10 : snapshot.length;
           var animation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-              parent: animationController,
-              curve: Interval((1 / count) * index, 1.0,
-                  curve: Curves.fastOutSlowIn)));
+              parent: animationController, curve: Interval((1 / count) * index, 1.0, curve: Curves.fastOutSlowIn)));
           animationController.forward();
           return GameListView(
             callback: () {},
-            gameData: snapshot
-                .map((data) => GameListData.fromJson(data.data))
-                .toList()[index],
+            gameData: snapshot.map((data) => GameListData.fromJson(data.data)).toList()[index],
             animation: animation,
             animationController: animationController,
           );
@@ -145,75 +137,65 @@ class _GameJoinPageState extends State<GameJoinPage>
   /* AppBar 보여주는 UI */
   Widget _showAppBarUI() {
     return Container(
-        decoration: BoxDecoration(
-            color: GameJoinTheme.buildLightTheme().backgroundColor,
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  offset: Offset(0, 2),
-                  blurRadius: 8.0),
-            ]),
-        child: Container(
-            color: GameJoinTheme.buildLightTheme().primaryColor,
-            child: Padding(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top, left: 8, right: 8),
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                        alignment: Alignment.centerLeft,
-                        width: AppBar().preferredSize.height + 40,
-                        height: AppBar().preferredSize.height,
-                        child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(32.0),
-                                ),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Icon(Icons.arrow_back,
-                                      color: Colors.white),
-                                )))),
-                    Expanded(
-                        child: Center(
-                            child: Text("Search the Game",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 22,
-                                    color: Colors.white)))),
-                    Container(
-                        width: AppBar().preferredSize.height + 40,
-                        height: AppBar().preferredSize.height,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(32.0),
-                                    ),
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => MapTest(
-                                                  onSelected: _changeLoc)));
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Icon(FontAwesomeIcons.mapMarkedAlt,
-                                          color: Colors.white),
-                                    )))
-                          ],
-                        ))
-                  ],
-                ))));
+      decoration: BoxDecoration(color: GameJoinTheme.buildLightTheme().backgroundColor, boxShadow: <BoxShadow>[
+        BoxShadow(color: Colors.grey.withOpacity(0.2), offset: Offset(0, 2), blurRadius: 8.0),
+      ]),
+      child: Container(
+        color: GameJoinTheme.buildLightTheme().primaryColor,
+        child: Padding(
+          padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top, left: 8, right: 8),
+          child: Row(
+            children: <Widget>[
+              Container(
+                  alignment: Alignment.centerLeft,
+                  width: AppBar().preferredSize.height + 40,
+                  height: AppBar().preferredSize.height,
+                  child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(32.0),
+                          ),
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Icon(Icons.arrow_back, color: Colors.white),
+                          )))),
+              Expanded(
+                  child: Center(
+                      child: Text("Search the Game",
+                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white)))),
+              Container(
+                  width: AppBar().preferredSize.height + 40,
+                  height: AppBar().preferredSize.height,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(32.0),
+                          ),
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => MapTest(onSelected: _changeLoc)));
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Icon(FontAwesomeIcons.mapMarkedAlt, color: Colors.white),
+                          ),
+                        ),
+                      )
+                    ],
+                  ))
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _showSearchBarUI() {
@@ -229,15 +211,11 @@ class _GameJoinPageState extends State<GameJoinPage>
                   color: GameJoinTheme.buildLightTheme().backgroundColor,
                   borderRadius: BorderRadius.all(Radius.circular(38.0)),
                   boxShadow: <BoxShadow>[
-                    BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        offset: Offset(0, 2),
-                        blurRadius: 8.0),
+                    BoxShadow(color: Colors.grey.withOpacity(0.2), offset: Offset(0, 2), blurRadius: 8.0),
                   ],
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 16, right: 16, top: 4, bottom: 4),
+                  padding: const EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 4),
                   child: TextField(
                     onChanged: (String txt) {},
                     style: TextStyle(fontSize: 18),
@@ -262,10 +240,7 @@ class _GameJoinPageState extends State<GameJoinPage>
                 Radius.circular(38.0),
               ),
               boxShadow: <BoxShadow>[
-                BoxShadow(
-                    color: Colors.grey.withOpacity(0.4),
-                    offset: Offset(0, 2),
-                    blurRadius: 8.0),
+                BoxShadow(color: Colors.grey.withOpacity(0.4), offset: Offset(0, 2), blurRadius: 8.0),
               ],
             ),
             child: Material(
@@ -279,10 +254,7 @@ class _GameJoinPageState extends State<GameJoinPage>
                 },
                 child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Icon(FontAwesomeIcons.search,
-                        size: 20,
-                        color:
-                            GameJoinTheme.buildLightTheme().backgroundColor)),
+                    child: Icon(FontAwesomeIcons.search, size: 20, color: GameJoinTheme.buildLightTheme().backgroundColor)),
               ),
             ),
           ),
@@ -317,8 +289,7 @@ class _GameJoinPageState extends State<GameJoinPage>
                       showDemoDialog(context: context);
                     },
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8, right: 8, top: 4, bottom: 4),
+                      padding: const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -375,8 +346,7 @@ class _GameJoinPageState extends State<GameJoinPage>
                       FocusScope.of(context).requestFocus(FocusNode());
                     },
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8, right: 8, top: 4, bottom: 4),
+                      padding: const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -425,10 +395,7 @@ class _GameJoinPageState extends State<GameJoinPage>
             decoration: BoxDecoration(
               color: GameJoinTheme.buildLightTheme().backgroundColor,
               boxShadow: <BoxShadow>[
-                BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    offset: Offset(0, -2),
-                    blurRadius: 8.0),
+                BoxShadow(color: Colors.grey.withOpacity(0.2), offset: Offset(0, -2), blurRadius: 8.0),
               ],
             ),
           ),
@@ -436,8 +403,7 @@ class _GameJoinPageState extends State<GameJoinPage>
         Container(
           color: GameJoinTheme.buildLightTheme().backgroundColor,
           child: Padding(
-            padding:
-                const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 4),
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 4),
             child: Row(
               children: <Widget>[
                 Expanded(
@@ -446,10 +412,7 @@ class _GameJoinPageState extends State<GameJoinPage>
                     child: Text(
                       "530 games found",
                       style: TextStyle(
-                          fontFamily: 'Dosis',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                          color: Colors.black.withOpacity(0.5)),
+                          fontFamily: 'Dosis', fontWeight: FontWeight.w600, fontSize: 16, color: Colors.black.withOpacity(0.5)),
                     ),
                   ),
                 ),
@@ -467,9 +430,7 @@ class _GameJoinPageState extends State<GameJoinPage>
                       FocusScope.of(context).requestFocus(FocusNode());
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => GameFilterScreen(),
-                            fullscreenDialog: true),
+                        MaterialPageRoute(builder: (context) => GameFilterScreen(), fullscreenDialog: true),
                       );
                     },
                     child: Padding(
@@ -486,9 +447,7 @@ class _GameJoinPageState extends State<GameJoinPage>
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Icon(Icons.sort,
-                                color: GameJoinTheme.buildLightTheme()
-                                    .primaryColor),
+                            child: Icon(Icons.sort, color: GameJoinTheme.buildLightTheme().primaryColor),
                           ),
                         ],
                       ),
@@ -542,8 +501,7 @@ class ContestTabHeader extends SliverPersistentHeaderDelegate {
   );
 
   @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return searchUI;
   }
 

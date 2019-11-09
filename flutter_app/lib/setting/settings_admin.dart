@@ -15,14 +15,18 @@ class _SettingAdminPageState extends State<SettingAdminPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: AppBar(title: Text("Setting Admin"), actions: <Widget>[
-          new IconButton(
+        appBar: AppBar(
+          title: Text("Setting Admin"),
+          actions: <Widget>[
+            new IconButton(
               icon: new Icon(Icons.arrow_back),
               onPressed: () {
                 widget.onSignedOut();
                 new RootPage(auth: new Auth());
-              })
-        ]),
+              },
+            )
+          ],
+        ),
         body: Text("setting Admin page"));
   }
 }

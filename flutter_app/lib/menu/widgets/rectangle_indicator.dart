@@ -77,10 +77,7 @@ class _IconState extends State<_Icon> with TickerProviderStateMixin {
           alignment: FractionalOffset.center,
           children: <Widget>[
             ScaleTransition(
-              scale: CurvedAnimation(
-                  parent: controller,
-                  curve: Curves.linear,
-                  reverseCurve: Curves.bounceOut),
+              scale: CurvedAnimation(parent: controller, curve: Curves.linear, reverseCurve: Curves.bounceOut),
               child: Padding(
                 padding: EdgeInsets.only(top: 38.0),
                 child: Column(

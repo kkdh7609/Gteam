@@ -11,11 +11,7 @@ class AlimentWidget extends StatelessWidget {
   final VoidCallback decrement;
 
   // 생성자
-  AlimentWidget(
-      {@required this.aliment,
-      @required this.theme,
-      this.increment,
-      this.decrement});
+  AlimentWidget({@required this.aliment, @required this.theme, this.increment, this.decrement});
 
   @override
   Widget build(BuildContext context) {
@@ -30,20 +26,12 @@ class AlimentWidget extends StatelessWidget {
         Container(
           child: Column(
             children: <Widget>[
-              Text(aliment.name,
-                  style: TextStyle(
-                      fontSize: 60.0,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: 'Qwigley')),
+              Text(aliment.name, style: TextStyle(fontSize: 60.0, fontWeight: FontWeight.w700, fontFamily: 'Qwigley')),
               Padding(
                 padding: EdgeInsets.only(top: 15.0),
                 child: Text(
                   "• " + aliment.subtitle + " •",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 17.0,
-                      fontFamily: 'Dosis',
-                      fontWeight: FontWeight.w400),
+                  style: TextStyle(color: Colors.black, fontSize: 17.0, fontFamily: 'Dosis', fontWeight: FontWeight.w400),
                 ),
               ),
             ],
@@ -67,10 +55,7 @@ class AlimentWidget extends StatelessWidget {
                   height: 45.0,
                   child: Center(
                       child: Text('${aliment.totalCalories.toInt()}' + " Games",
-                          style: TextStyle(
-                              color: theme.colors[0],
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w400),
+                          style: TextStyle(color: theme.colors[0], fontSize: 14.0, fontWeight: FontWeight.w400),
                           textAlign: TextAlign.center)),
                 ),
               ),
@@ -88,8 +73,7 @@ class AlimentWidget extends StatelessWidget {
           children: <Widget>[
             InkWell(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => GameCreatePage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => GameCreatePage()));
               },
               child: Column(
                 children: <Widget>[
@@ -111,8 +95,7 @@ class AlimentWidget extends StatelessWidget {
             ),
             InkWell(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => GameJoinPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => GameJoinPage()));
               },
               child: Column(
                 children: <Widget>[

@@ -2,15 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gteams/services/crud.dart';
-import 'package:gteams/menu/MainMenuScreen.dart';
+import 'package:gteams/menu/main_menu.dart';
 import 'package:gteams/setting/popularFilterList.dart';
 import 'package:gteams/game/game_join/widgets/SliderView.dart';
 import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 
 class SettingUser extends StatefulWidget {
-  SettingUser({Key key, this.onSignedOut, this.user_docID}) : super(key: key);
+  SettingUser({Key key, this.onSignedOut, this.userDocID}) : super(key: key);
 
-  final String user_docID;
+  final String userDocID;
   final VoidCallback onSignedOut;
 
   @override
@@ -65,8 +65,7 @@ class _SettingUserState extends State<SettingUser> {
               height: 1,
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                  left: 16, right: 16, bottom: 16, top: 8),
+              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 8),
               child: Container(
                 height: 48,
                 decoration: BoxDecoration(
@@ -87,36 +86,36 @@ class _SettingUserState extends State<SettingUser> {
                     highlightColor: Colors.transparent,
                     onTap: () {
                       // When pressed apply button update Database about user
-                      List<String> updateList =
-                          []; // List for get select sport list
+                      List<String> updateList = []; // List for get select sport list
                       for (var i = 0; i < sportListData.length; i++) {
                         if (sportListData[i].isSelected) {
                           updateList.add(sportListData[i].titleTxt);
                         }
                       }
-                      crudObj.updateData('user', widget.user_docID, {
-                        'info_status': true,
-                        'prferenceTime': "1700~1800",
-                        'prferenceLoc': "loc",
-                        'gender': _selectedGender.toString(),
-                        'sportList': FieldValue.arrayUnion(updateList),
-                        // It can update array type field
-                      });
+                      crudObj.updateData(
+                        'user',
+                        widget.userDocID,
+                        {
+                          'info_status': true,
+                          'prferenceTime': "1700~1800",
+                          'prferenceLoc': "loc",
+                          'gender': _selectedGender.toString(),
+                          'sportList': FieldValue.arrayUnion(updateList),
+                          // It can update array type field
+                        },
+                      );
                       Navigator.pop(context);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MainMenuPageScreen(
+                              builder: (context) => MainMenuPage(
                                     onSignedOut: widget.onSignedOut,
                                   )));
                     },
                     child: Center(
                       child: Text(
                         "Apply",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18,
-                            color: Colors.white),
+                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18, color: Colors.white),
                       ),
                     ),
                   ),
@@ -133,9 +132,7 @@ class _SettingUserState extends State<SettingUser> {
     return Container(
       child: Row(
         children: <Widget>[
-          new Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Icon(Icons.wc, color: Colors.grey)),
+          new Padding(padding: const EdgeInsets.all(16.0), child: Icon(Icons.wc, color: Colors.grey)),
           Container(
             height: 30.0,
             width: 1.0,
@@ -146,9 +143,11 @@ class _SettingUserState extends State<SettingUser> {
             value: Gender.MALE,
             groupValue: _selectedGender,
             onChanged: (Gender value) {
-              setState(() {
-                _selectedGender = value;
-              });
+              setState(
+                () {
+                  _selectedGender = value;
+                },
+              );
             },
           ),
           Text("Male", style: TextStyle(color: Colors.grey, fontSize: 16)),
@@ -156,9 +155,11 @@ class _SettingUserState extends State<SettingUser> {
             value: Gender.FEMALE,
             groupValue: _selectedGender,
             onChanged: (Gender value) {
-              setState(() {
-                _selectedGender = value;
-              });
+              setState(
+                () {
+                  _selectedGender = value;
+                },
+              );
             },
           ),
           Text("Female", style: TextStyle(color: Colors.grey, fontSize: 16)),
@@ -166,9 +167,11 @@ class _SettingUserState extends State<SettingUser> {
             value: Gender.ALL,
             groupValue: _selectedGender,
             onChanged: (Gender value) {
-              setState(() {
-                _selectedGender = value;
-              });
+              setState(
+                () {
+                  _selectedGender = value;
+                },
+              );
             },
           ),
           Text("All", style: TextStyle(color: Colors.grey, fontSize: 16)),
@@ -183,15 +186,12 @@ class _SettingUserState extends State<SettingUser> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding:
-              const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+          padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
           child: Text(
             "Distance from city center",
             textAlign: TextAlign.left,
             style: TextStyle(
-                color: Colors.grey,
-                fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16,
-                fontWeight: FontWeight.normal),
+                color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
           ),
         ),
         SliderView(
@@ -213,15 +213,12 @@ class _SettingUserState extends State<SettingUser> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding:
-              const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+          padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
           child: Text(
             "선호 종목",
             textAlign: TextAlign.left,
             style: TextStyle(
-                color: Colors.grey,
-                fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16,
-                fontWeight: FontWeight.normal),
+                color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
           ),
         ),
         Padding(
@@ -246,55 +243,58 @@ class _SettingUserState extends State<SettingUser> {
       for (var i = 0; i < columCount; i++) {
         try {
           final sport = sportListData[cout];
-          listUI.add(Expanded(
-            child: Row(
-              children: <Widget>[
-                Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                    onTap: () {
-                      setState(() {
-                        sport.isSelected = !sport.isSelected;
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            sport.isSelected
-                                ? Icons.check_box
-                                : Icons.check_box_outline_blank,
-                            color: sport.isSelected
-                                ? GameJoinTheme.buildLightTheme().primaryColor
-                                : Colors.grey.withOpacity(0.6),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            sport.titleTxt,
-                          ),
-                        ],
+          listUI.add(
+            Expanded(
+              child: Row(
+                children: <Widget>[
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                      onTap: () {
+                        setState(
+                          () {
+                            sport.isSelected = !sport.isSelected;
+                          },
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: <Widget>[
+                            Icon(
+                              sport.isSelected ? Icons.check_box : Icons.check_box_outline_blank,
+                              color:
+                                  sport.isSelected ? GameJoinTheme.buildLightTheme().primaryColor : Colors.grey.withOpacity(0.6),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              sport.titleTxt,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ));
+          );
           cout += 1;
         } catch (e) {
           print(e);
         }
       }
-      noList.add(Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: listUI,
-      ));
+      noList.add(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: listUI,
+        ),
+      );
     }
     return noList;
   }
@@ -325,7 +325,6 @@ class _SettingUserState extends State<SettingUser> {
       ],
     );
   }
-
   */
 
   Widget getAppBarUI() {
@@ -333,15 +332,11 @@ class _SettingUserState extends State<SettingUser> {
       decoration: BoxDecoration(
         color: GameJoinTheme.buildLightTheme().primaryColor,
         boxShadow: <BoxShadow>[
-          BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              offset: Offset(0, 2),
-              blurRadius: 4.0),
+          BoxShadow(color: Colors.grey.withOpacity(0.2), offset: Offset(0, 2), blurRadius: 4.0),
         ],
       ),
       child: Padding(
-        padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top, left: 8, right: 8),
+        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top, left: 8, right: 8),
         child: Row(
           children: <Widget>[
             Container(

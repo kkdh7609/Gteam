@@ -11,10 +11,8 @@ class GameFilterScreen extends StatefulWidget {
 }
 
 class _GameFilterScreenState extends State<GameFilterScreen> {
-  List<PopularFilterListData> popularFilterListData =
-      PopularFilterListData.popularFList;
-  List<PopularFilterListData> accomodationListData =
-      PopularFilterListData.accomodationList;
+  List<PopularFilterListData> popularFilterListData = PopularFilterListData.popularFList;
+  List<PopularFilterListData> accomodationListData = PopularFilterListData.accomodationList;
 
   RangeValues _values = RangeValues(100, 600);
   double distValue = 50.0;
@@ -53,8 +51,7 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
               height: 1,
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                  left: 16, right: 16, bottom: 16, top: 8),
+              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 8),
               child: Container(
                 height: 48,
                 decoration: BoxDecoration(
@@ -79,16 +76,13 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
                     child: Center(
                       child: Text(
                         "Apply",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18,
-                            color: Colors.white),
+                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18, color: Colors.white),
                       ),
                     ),
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -101,15 +95,12 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding:
-              const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+          padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
           child: Text(
             "Type of Accommodation",
             textAlign: TextAlign.left,
             style: TextStyle(
-                color: Colors.grey,
-                fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16,
-                fontWeight: FontWeight.normal),
+                color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
           ),
         ),
         Padding(
@@ -150,9 +141,7 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
                     ),
                   ),
                   CupertinoSwitch(
-                    activeColor: date.isSelected
-                        ? GameJoinTheme.buildLightTheme().primaryColor
-                        : Colors.grey.withOpacity(0.6),
+                    activeColor: date.isSelected ? GameJoinTheme.buildLightTheme().primaryColor : Colors.grey.withOpacity(0.6),
                     onChanged: (value) {
                       setState(() {
                         checkAppPosition(i);
@@ -187,8 +176,7 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
         });
       }
     } else {
-      accomodationListData[index].isSelected =
-          !accomodationListData[index].isSelected;
+      accomodationListData[index].isSelected = !accomodationListData[index].isSelected;
 
       var count = 0;
       for (var i = 0; i < accomodationListData.length; i++) {
@@ -214,15 +202,12 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding:
-              const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+          padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
           child: Text(
             "Distance from city center",
             textAlign: TextAlign.left,
             style: TextStyle(
-                color: Colors.grey,
-                fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16,
-                fontWeight: FontWeight.normal),
+                color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
           ),
         ),
         SliderView(
@@ -244,15 +229,12 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding:
-              const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+          padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
           child: Text(
             "Popular filters",
             textAlign: TextAlign.left,
             style: TextStyle(
-                color: Colors.grey,
-                fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16,
-                fontWeight: FontWeight.normal),
+                color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
           ),
         ),
         Padding(
@@ -294,12 +276,8 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
                       child: Row(
                         children: <Widget>[
                           Icon(
-                            date.isSelected
-                                ? Icons.check_box
-                                : Icons.check_box_outline_blank,
-                            color: date.isSelected
-                                ? GameJoinTheme.buildLightTheme().primaryColor
-                                : Colors.grey.withOpacity(0.6),
+                            date.isSelected ? Icons.check_box : Icons.check_box_outline_blank,
+                            color: date.isSelected ? GameJoinTheme.buildLightTheme().primaryColor : Colors.grey.withOpacity(0.6),
                           ),
                           SizedBox(
                             width: 4,
@@ -320,12 +298,14 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
           print(e);
         }
       }
-      noList.add(Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: listUI,
-      ));
+      noList.add(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: listUI,
+        ),
+      );
     }
     return noList;
   }
@@ -341,9 +321,7 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
             "Price (for 1 night)",
             textAlign: TextAlign.left,
             style: TextStyle(
-                color: Colors.grey,
-                fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16,
-                fontWeight: FontWeight.normal),
+                color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
           ),
         ),
         RangeSliderView(
@@ -354,7 +332,7 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
         ),
         SizedBox(
           height: 8,
-        )
+        ),
       ],
     );
   }
@@ -364,15 +342,11 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
       decoration: BoxDecoration(
         color: GameJoinTheme.buildLightTheme().backgroundColor,
         boxShadow: <BoxShadow>[
-          BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              offset: Offset(0, 2),
-              blurRadius: 4.0),
+          BoxShadow(color: Colors.grey.withOpacity(0.2), offset: Offset(0, 2), blurRadius: 4.0),
         ],
       ),
       child: Padding(
-        padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top, left: 8, right: 8),
+        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top, left: 8, right: 8),
         child: Row(
           children: <Widget>[
             Container(

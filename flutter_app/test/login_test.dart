@@ -5,8 +5,9 @@ import 'package:gteams/login/login_auth.dart';
 import 'package:gteams/login/login.dart';
 import 'dart:io';
 
-class AuthMock implements Auth{
+class AuthMock implements Auth {
   AuthMock({this.userId});
+
   String userId;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
@@ -14,26 +15,26 @@ class AuthMock implements Auth{
   bool didrequestCreateUser = false;
   bool didRequestLogout = false;
 
-  Future<String> signIn(String email, String password) async{
+  Future<String> signIn(String email, String password) async {
     didRequestSignIn = true;
     return _userIdOrError();
   }
 
-  Future<String> signUp(String email, String password) async{
+  Future<String> signUp(String email, String password) async {
     FirebaseUser user = (await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password)).user;
     return user.uid;
   }
 
-  Future<FirebaseUser> getCurrentUser() async{
+  Future<FirebaseUser> getCurrentUser() async {
     FirebaseUser user = await _firebaseAuth.currentUser();
     return user;
   }
 
-  Future<void> signOut() async{
+  Future<void> signOut() async {
     return _firebaseAuth.signOut();
   }
 
-  Future<String> signInWithGoogle() async{
+  Future<String> signInWithGoogle() async {
     didRequestSignIn = true;
     return _userIdOrError();
   }
@@ -41,24 +42,22 @@ class AuthMock implements Auth{
   Future<String> _userIdOrError() {
     if (userId != null) {
       return Future.value(userId);
-    }
-    else {
+    } else {
       throw StateError('no user');
     }
   }
 }
 
-void main(){
-  Widget buildTestableWidget(Widget widget){
-    return new MediaQuery(data: new MediaQueryData(),
-        child: new MaterialApp(home: widget));
+void main() {
+  Widget buildTestableWidget(Widget widget) {
+    return new MediaQuery(data: new MediaQueryData(), child: new MaterialApp(home: widget));
   }
 
-  void _onSignedIn(){
+  void _onSignedIn() {
     print("11");
   }
 
-  testWidgets('cannot use empty email and password', (WidgetTester tester) async{
+  testWidgets('cannot use empty email and password', (WidgetTester tester) async {
     AuthMock mock = new AuthMock(userId: 'uid');
     LoginPage loginPage = new LoginPage(auth: mock);
     await tester.pumpWidget(buildTestableWidget(loginPage));
@@ -74,9 +73,12 @@ void main(){
     expect(mock.didRequestSignIn, false);
   });
 
-  testWidgets('non-empty email and password, valid account, calls sign in, succeeds', (WidgetTester tester) async{
+  testWidgets('non-empty email and password, valid account, calls sign in, succeeds', (WidgetTester tester) async {
     AuthMock mock = new AuthMock(userId: 'uid');
-    LoginPage loginPage = new LoginPage(auth: mock, onSignedIn: _onSignedIn,);
+    LoginPage loginPage = new LoginPage(
+      auth: mock,
+      onSignedIn: _onSignedIn,
+    );
     await tester.pumpWidget(buildTestableWidget(loginPage));
 
     Finder emailField = find.byKey(new Key('email'));

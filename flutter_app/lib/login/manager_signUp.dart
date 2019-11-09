@@ -50,15 +50,10 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
             key: _formKey,
             child: Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height >= 775.0
-                  ? MediaQuery.of(context).size.height
-                  : 775.0,
+              height: MediaQuery.of(context).size.height >= 775.0 ? MediaQuery.of(context).size.height : 775.0,
               decoration: new BoxDecoration(
                 gradient: new LinearGradient(
-                    colors: [
-                      LoginTheme.loginGradientStart,
-                      LoginTheme.loginGradientEnd
-                    ],
+                    colors: [LoginTheme.loginGradientStart, LoginTheme.loginGradientEnd],
                     begin: const FractionalOffset(0.0, 0.0),
                     end: const FractionalOffset(1.0, 1.0),
                     stops: [0.0, 1.0],
@@ -73,17 +68,11 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Text("G-TEAM",
-                            style: TextStyle(
-                                fontFamily: 'Dosis',
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                                fontSize: 50)),
+                            style:
+                                TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w600, color: Colors.white, fontSize: 50)),
                         Text("Facility Manager Sign Up",
-                            style: TextStyle(
-                                fontFamily: 'Dosis',
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white,
-                                fontSize: 25)),
+                            style:
+                                TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w400, color: Colors.white, fontSize: 25)),
                       ],
                     ),
                   ),
@@ -124,17 +113,13 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
                     children: <Widget>[
                       /* Name */
                       Padding(
-                        padding: EdgeInsets.only(
-                            top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
+                        padding: EdgeInsets.only(top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
                         child: TextFormField(
                             focusNode: myFocusNodeName,
                             controller: signUpNameController,
                             keyboardType: TextInputType.text,
                             textCapitalization: TextCapitalization.words,
-                            style: TextStyle(
-                                fontFamily: "Dosis",
-                                fontSize: 16.0,
-                                color: Colors.black),
+                            style: TextStyle(fontFamily: "Dosis", fontSize: 16.0, color: Colors.black),
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               icon: Icon(
@@ -142,13 +127,10 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
                                 color: Colors.black,
                               ),
                               hintText: "Name",
-                              hintStyle: TextStyle(
-                                  fontFamily: "Dosis", fontSize: 16.0),
+                              hintStyle: TextStyle(fontFamily: "Dosis", fontSize: 16.0),
                             ),
                             validator: (value) {
-                              return value.isEmpty
-                                  ? "Name can\'t be empty"
-                                  : null;
+                              return value.isEmpty ? "Name can\'t be empty" : null;
                             },
                             onSaved: (value) {
                               _managerSignUpName = value;
@@ -162,16 +144,12 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
                       ),
                       /* Email */
                       Padding(
-                        padding: EdgeInsets.only(
-                            top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
+                        padding: EdgeInsets.only(top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
                         child: TextFormField(
                           focusNode: myFocusNodeEmail,
                           controller: signUpEmailController,
                           keyboardType: TextInputType.emailAddress,
-                          style: TextStyle(
-                              fontFamily: "Dosis",
-                              fontSize: 16.0,
-                              color: Colors.black),
+                          style: TextStyle(fontFamily: "Dosis", fontSize: 16.0, color: Colors.black),
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -179,13 +157,10 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
                               color: Colors.black,
                             ),
                             hintText: "Email Address",
-                            hintStyle:
-                                TextStyle(fontFamily: "Dosis", fontSize: 16.0),
+                            hintStyle: TextStyle(fontFamily: "Dosis", fontSize: 16.0),
                           ),
                           validator: (value) {
-                            return value.isEmpty
-                                ? "Email can\'t be empty"
-                                : null;
+                            return value.isEmpty ? "Email can\'t be empty" : null;
                           },
                           onSaved: (value) {
                             print(value);
@@ -201,16 +176,12 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
                       ),
                       /* Password */
                       Padding(
-                        padding: EdgeInsets.only(
-                            top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
+                        padding: EdgeInsets.only(top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
                         child: TextFormField(
                           focusNode: myFocusNodePassword,
                           controller: signUpPasswordController,
                           obscureText: _obscureTextSignUp,
-                          style: TextStyle(
-                              fontFamily: "Dosis",
-                              fontSize: 16.0,
-                              color: Colors.black),
+                          style: TextStyle(fontFamily: "Dosis", fontSize: 16.0, color: Colors.black),
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -218,23 +189,18 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
                               color: Colors.black,
                             ),
                             hintText: "Password",
-                            hintStyle:
-                                TextStyle(fontFamily: "Dosis", fontSize: 16.0),
+                            hintStyle: TextStyle(fontFamily: "Dosis", fontSize: 16.0),
                             suffixIcon: GestureDetector(
                               onTap: _toggleSignUp,
                               child: Icon(
-                                _obscureTextSignUp
-                                    ? FontAwesomeIcons.eye
-                                    : FontAwesomeIcons.eyeSlash,
+                                _obscureTextSignUp ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash,
                                 size: 15.0,
                                 color: Colors.black,
                               ),
                             ),
                           ),
                           validator: (value) {
-                            return value.isEmpty
-                                ? "Password can\'t be empty"
-                                : null;
+                            return value.isEmpty ? "Password can\'t be empty" : null;
                           },
                           onSaved: (value) {
                             print(value);
@@ -250,16 +216,12 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
                       ),
                       /* Business Number */
                       Padding(
-                        padding: EdgeInsets.only(
-                            top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
+                        padding: EdgeInsets.only(top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
                         child: TextFormField(
                           focusNode: myFocusNodeBusinessNum,
                           controller: signUpBusinessNumController,
                           obscureText: _obscureTextSignUp,
-                          style: TextStyle(
-                              fontFamily: "Dosis",
-                              fontSize: 16.0,
-                              color: Colors.black),
+                          style: TextStyle(fontFamily: "Dosis", fontSize: 16.0, color: Colors.black),
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -267,13 +229,10 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
                               color: Colors.black,
                             ),
                             hintText: "Business Number",
-                            hintStyle:
-                                TextStyle(fontFamily: "Dosis", fontSize: 16.0),
+                            hintStyle: TextStyle(fontFamily: "Dosis", fontSize: 16.0),
                           ),
                           validator: (value) {
-                            return value.isEmpty
-                                ? "Bussiness Number can\'t be empty"
-                                : null;
+                            return value.isEmpty ? "Bussiness Number can\'t be empty" : null;
                           },
                           onSaved: (value) {
                             print(value);
@@ -308,10 +267,7 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
                     ),
                   ],
                   gradient: new LinearGradient(
-                      colors: [
-                        LoginTheme.loginGradientEnd,
-                        LoginTheme.loginGradientStart
-                      ],
+                      colors: [LoginTheme.loginGradientEnd, LoginTheme.loginGradientStart],
                       begin: const FractionalOffset(0.2, 0.2),
                       end: const FractionalOffset(1.0, 1.0),
                       stops: [0.0, 1.0],
@@ -322,8 +278,7 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
                     splashColor: LoginTheme.loginGradientEnd,
                     //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 42.0),
+                      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 42.0),
                       child: Text(
                         "SIGN UP",
                         style: TextStyle(
@@ -334,19 +289,12 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
                       ),
                     ),
                     onPressed: () {
-                      if (_formKey.currentState.validate())
-                        _formKey.currentState.save();
-                      widget.auth
-                          .signUp(_managerSignUpEmail, _managerSignUpPassword)
-                          .then((user) {
+                      if (_formKey.currentState.validate()) _formKey.currentState.save();
+                      widget.auth.signUp(_managerSignUpEmail, _managerSignUpPassword).then((user) {
                         managerId = user.toString();
                         print("Signed Up: $managerId");
-                        ManagerManagement().storeNewManager(
-                            _managerSignUpEmail,
-                            context,
-                            _managerSignUpName,
-                            _managerSignUpBusinessNum,
-                            false);
+                        ManagerManagement()
+                            .storeNewManager(_managerSignUpEmail, context, _managerSignUpName, _managerSignUpBusinessNum, false);
                       }).catchError((e) {
                         print(e);
                       });
@@ -357,17 +305,14 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
           Padding(
             padding: EdgeInsets.only(top: 5.0),
             child: FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  "you are G-TEAM User? click here.",
-                  style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      color: Colors.white,
-                      fontSize: 16.0,
-                      fontFamily: "Dosis"),
-                )),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                "you are G-TEAM User? click here.",
+                style: TextStyle(decoration: TextDecoration.underline, color: Colors.white, fontSize: 16.0, fontFamily: "Dosis"),
+              ),
+            ),
           ),
         ],
       ),

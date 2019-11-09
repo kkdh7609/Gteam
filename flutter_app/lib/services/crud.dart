@@ -28,8 +28,7 @@ class crudMedthods {
     return await _db.collection(collection).getDocuments();
   }
 
-  Future<DocumentSnapshot> getDocumentById(
-      String collection, String docId) async {
+  Future<DocumentSnapshot> getDocumentById(String collection, String docId) async {
     return await _db.collection(collection).document(docId).get();
   }
 
@@ -43,28 +42,23 @@ class crudMedthods {
 
 */
 
-  Future<QuerySnapshot> getDocumentByWhere(
-      String collection, String field, String where) async {
-    return await _db
-        .collection(collection)
-        .where(field, isEqualTo: where)
-        .limit(1)
-        .getDocuments();
+  Future<QuerySnapshot> getDocumentByWhere(String collection, String field, String where) async {
+    return await _db.collection(collection).where(field, isEqualTo: where).limit(1).getDocuments();
   }
 
   Future<void> updateData(String collection, String docId, newValues) {
-    _db
-        .collection(collection)
-        .document(docId)
-        .updateData(newValues)
-        .catchError((e) {
-      print(e);
-    });
+    _db.collection(collection).document(docId).updateData(newValues).catchError(
+      (e) {
+        print(e);
+      },
+    );
   }
 
   Future<void> deleteData(String collection, String docId) {
-    _db.collection(collection).document(docId).delete().catchError((e) {
-      print(e);
-    });
+    _db.collection(collection).document(docId).delete().catchError(
+      (e) {
+        print(e);
+      },
+    );
   }
 }

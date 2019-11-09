@@ -28,23 +28,27 @@ class _RootPageState extends State<RootPage> {
 
   AuthStatus authStatus = AuthStatus.NOT_DETERMINED;
   String _userId = "";
-  String _user_mail = "";
-  String _user_docID = "";
-  bool _info_status = false;
+  String _userMail = "";
+  String _userDocID = "";
+  bool _infoStatus = false;
 
   @override
   void initState() {
     //print("initState");
     super.initState();
-    widget.auth.getCurrentUser().then((user) {
-      setState(() {
-        if (user != null) {
-          _userId = user?.uid;
-        }
-        authStatus = AuthStatus.NOT_LOGGED_IN;
-        //user?.uid == null ? AuthStatus.NOT_LOGGED_IN : AuthStatus.LOGGED_IN;
-      });
-    });
+    widget.auth.getCurrentUser().then(
+      (user) {
+        setState(
+          () {
+            if (user != null) {
+              _userId = user?.uid;
+            }
+            authStatus = AuthStatus.NOT_LOGGED_IN;
+            //user?.uid == null ? AuthStatus.NOT_LOGGED_IN : AuthStatus.LOGGED_IN;
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -71,16 +75,16 @@ class _RootPageState extends State<RootPage> {
 
       case AuthStatus.LOGGED_IN_USER:
         print('user check in');
-        if (!_info_status) {
+        if (!_infoStatus) {
           // 초기로그인 일때
-          print("info_status : $_info_status");
+          print("info_status : $_infoStatus");
           return new SettingUser(
             onSignedOut: _onSignedOut,
-            user_docID: _user_docID,
+            userDocID: _userDocID,
           );
         } else {
           //초기로그인이 아닐때
-          print("info_status : $_info_status");
+          print("info_status : $_infoStatus");
           return MainMenuPage(
             onSignedOut: _onSignedOut,
           );
@@ -102,48 +106,64 @@ class _RootPageState extends State<RootPage> {
 
   void onLoggedIn() {
     //print("ON_LOGGED_IN");
-    widget.auth.getCurrentUser().then((user) {
-      setState(() {
-        _userId = user.uid.toString();
-        _user_mail = user.email.toString();
-      });
-    });
+    widget.auth.getCurrentUser().then(
+      (user) {
+        setState(
+          () {
+            _userId = user.uid.toString();
+            _userMail = user.email.toString();
+          },
+        );
+      },
+    );
     setState(() {
       authStatus = AuthStatus.LOGGED_IN_CHECK;
     });
   }
 
   void _onSignedOut() {
-    setState(() {
-      authStatus = AuthStatus.NOT_LOGGED_IN;
-      _userId = "";
-      _user_mail = "";
-    });
+    setState(
+      () {
+        authStatus = AuthStatus.NOT_LOGGED_IN;
+        _userId = "";
+        _userMail = "";
+      },
+    );
   }
 
   void _isUser() {
     // Check User or Admin
     if (_userId.length > 0 && _userId != null) {
-      var userQuery = crudObj.getDocumentByWhere('user', 'email', _user_mail);
-      setState(() {
-        userQuery.then((data) {
-          if (data.documents[0].data['isUser']) {
-            print('set authstatus user');
-            setState(() {
-              authStatus = AuthStatus.LOGGED_IN_USER;
-            });
-          } else {
-            print('set authstatus admin');
-            setState(() {
-              authStatus = AuthStatus.LOGGED_IN_ADMIN;
-            });
-          }
-          setState(() {
-            _info_status = data.documents[0].data['info_status'];
-            _user_docID = data.documents[0].documentID;
-          });
-        });
-      });
+      var userQuery = crudObj.getDocumentByWhere('user', 'email', _userMail);
+      setState(
+        () {
+          userQuery.then(
+            (data) {
+              if (data.documents[0].data['isUser']) {
+                print('set authstatus user');
+                setState(
+                  () {
+                    authStatus = AuthStatus.LOGGED_IN_USER;
+                  },
+                );
+              } else {
+                print('set authstatus manager');
+                setState(
+                  () {
+                    authStatus = AuthStatus.LOGGED_IN_ADMIN;
+                  },
+                );
+              }
+              setState(
+                () {
+                  _infoStatus = data.documents[0].data['info_status'];
+                  _userDocID = data.documents[0].documentID;
+                },
+              );
+            },
+          );
+        },
+      );
     }
   }
 

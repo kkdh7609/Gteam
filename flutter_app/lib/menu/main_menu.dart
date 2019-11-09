@@ -57,23 +57,29 @@ class _MainMenuPageState extends State<MainMenuPage> {
     if (drawerIndex != drawerIndexData) {
       drawerIndex = drawerIndexData;
       if (drawerIndex == DrawerIndex.HOME) {
-        setState(() {
-          screenView = MainHomePageScreen();
-        });
+        setState(
+          () {
+            screenView = MainHomePageScreen();
+          },
+        );
       } else if (drawerIndex == DrawerIndex.Help) {
-        setState(() {
-          screenView = MainHomePageScreen();
-        });
+        setState(
+          () {
+            screenView = MainHomePageScreen();
+          },
+        );
       } else if (drawerIndex == DrawerIndex.FeedBack) {
-        setState(() {
-          screenView = MainHomePageScreen();
-        });
+        setState(
+          () {
+            screenView = MainHomePageScreen();
+          },
+        );
       } else if (drawerIndex == DrawerIndex.Invite) {
-        setState(() {
-          screenView = MainHomePageScreen();
-        });
-      } else {
-        //do in your way......
+        setState(
+          () {
+            screenView = MainHomePageScreen();
+          },
+        );
       }
     }
   }

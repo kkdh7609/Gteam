@@ -25,8 +25,7 @@ class MainMenuPageScreen extends StatelessWidget {
 
 class MainHomePageScreen extends StatelessWidget {
   MainHomePageScreen() {
-    SystemChrome.setPreferredOrientations(
-        <DeviceOrientation>[DeviceOrientation.portraitUp]);
+    SystemChrome.setPreferredOrientations(<DeviceOrientation>[DeviceOrientation.portraitUp]);
   }
 
   @override

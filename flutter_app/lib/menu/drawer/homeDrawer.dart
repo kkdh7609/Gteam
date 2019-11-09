@@ -7,12 +7,7 @@ class HomeDrawer extends StatefulWidget {
   final DrawerIndex screenIndex;
   final Function(DrawerIndex) callBackIndex;
 
-  HomeDrawer(
-      {Key key,
-      this.screenIndex,
-      this.iconAnimationController,
-      this.callBackIndex})
-      : super(key: key);
+  HomeDrawer({Key key, this.screenIndex, this.iconAnimationController, this.callBackIndex}) : super(key: key);
 
   @override
   _HomeDrawerState createState() => _HomeDrawerState();
@@ -74,14 +69,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     animation: widget.iconAnimationController,
                     builder: (BuildContext context, Widget child) {
                       return new ScaleTransition(
-                        scale: new AlwaysStoppedAnimation(
-                            1.0 - (widget.iconAnimationController.value) * 0.2),
+                        scale: new AlwaysStoppedAnimation(1.0 - (widget.iconAnimationController.value) * 0.2),
                         child: RotationTransition(
-                          turns: new AlwaysStoppedAnimation(Tween(
-                                      begin: 0.0, end: 24.0)
-                                  .animate(CurvedAnimation(
-                                      parent: widget.iconAnimationController,
-                                      curve: Curves.fastOutSlowIn))
+                          turns: new AlwaysStoppedAnimation(Tween(begin: 0.0, end: 24.0)
+                                  .animate(CurvedAnimation(parent: widget.iconAnimationController, curve: Curves.fastOutSlowIn))
                                   .value /
                               360),
                           child: Container(
@@ -90,15 +81,11 @@ class _HomeDrawerState extends State<HomeDrawer> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               boxShadow: <BoxShadow>[
-                                BoxShadow(
-                                    color: DrawerTheme.grey.withOpacity(0.6),
-                                    offset: Offset(2.0, 4.0),
-                                    blurRadius: 8),
+                                BoxShadow(color: DrawerTheme.grey.withOpacity(0.6), offset: Offset(2.0, 4.0), blurRadius: 8),
                               ],
                             ),
                             child: ClipRRect(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(60.0)),
+                              borderRadius: BorderRadius.all(Radius.circular(60.0)),
                               child: Image.asset("assets/image/userImage.png"),
                             ),
                           ),
@@ -119,9 +106,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                             fontSize: 18,
                           ),
                         ),
-                        Padding(
-                            padding: const EdgeInsets.only(left: 15),
-                            child: InkWell(onTap: () {}, child: Text("Edit")))
+                        Padding(padding: const EdgeInsets.only(left: 15), child: InkWell(onTap: () {}, child: Text("Edit")))
                       ],
                     ),
                   )
@@ -197,9 +182,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     width: 6.0,
                     height: 46.0,
                     decoration: BoxDecoration(
-                      color: widget.screenIndex == listData.index
-                          ? Colors.black
-                          : Colors.transparent,
+                      color: widget.screenIndex == listData.index ? Colors.black : Colors.transparent,
                       borderRadius: new BorderRadius.only(
                         topLeft: Radius.circular(0),
                         topRight: Radius.circular(16),
@@ -216,14 +199,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           width: 24,
                           height: 24,
                           child: Image.asset(listData.imageName,
-                              color: widget.screenIndex == listData.index
-                                  ? DrawerTheme.primaryColor
-                                  : DrawerTheme.nearlyBlack),
+                              color: widget.screenIndex == listData.index ? DrawerTheme.primaryColor : DrawerTheme.nearlyBlack),
                         )
                       : new Icon(listData.icon.icon,
-                          color: widget.screenIndex == listData.index
-                              ? DrawerTheme.primaryColor
-                              : DrawerTheme.nearlyBlack),
+                          color: widget.screenIndex == listData.index ? DrawerTheme.primaryColor : DrawerTheme.nearlyBlack),
                   Padding(
                     padding: EdgeInsets.all(4.0),
                   ),
@@ -233,9 +212,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                       fontFamily: 'Dosis',
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
-                      color: widget.screenIndex == listData.index
-                          ? DrawerTheme.primaryColor
-                          : DrawerTheme.nearlyBlack,
+                      color: widget.screenIndex == listData.index ? DrawerTheme.primaryColor : DrawerTheme.nearlyBlack,
                     ),
                     textAlign: TextAlign.left,
                   ),
@@ -248,17 +225,13 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     builder: (BuildContext context, Widget child) {
                       return new Transform(
                         transform: new Matrix4.translationValues(
-                            (MediaQuery.of(context).size.width * 0.75 - 64) *
-                                (1.0 -
-                                    widget.iconAnimationController.value -
-                                    1.0),
+                            (MediaQuery.of(context).size.width * 0.75 - 64) * (1.0 - widget.iconAnimationController.value - 1.0),
                             0.0,
                             0.0),
                         child: Padding(
                           padding: EdgeInsets.only(top: 8, bottom: 8),
                           child: Container(
-                            width:
-                                MediaQuery.of(context).size.width * 0.75 - 64,
+                            width: MediaQuery.of(context).size.width * 0.75 - 64,
                             height: 46,
                             decoration: BoxDecoration(
                               color: DrawerTheme.primaryColor.withOpacity(0.1),

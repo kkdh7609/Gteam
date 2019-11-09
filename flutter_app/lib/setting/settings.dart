@@ -16,14 +16,18 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: AppBar(title: Text("Setting"), actions: <Widget>[
-          new IconButton(
+        appBar: AppBar(
+          title: Text("Setting"),
+          actions: <Widget>[
+            new IconButton(
               icon: new Icon(Icons.arrow_back),
               onPressed: () {
                 widget.onSignedOut();
                 new RootPage(auth: new Auth());
-              })
-        ]),
+              },
+            )
+          ],
+        ),
         body: Center(child: TempButton()));
   }
 }
@@ -37,8 +41,7 @@ class TempButton extends StatelessWidget {
         child: Text('게임 생성'),
       ),
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => GameCreatePage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => GameCreatePage()));
       },
     );
   }
