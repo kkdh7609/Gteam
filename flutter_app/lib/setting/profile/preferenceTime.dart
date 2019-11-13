@@ -44,8 +44,7 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
     ));
 
     this.preferList = PreferListData.preferList;
-    animationController = AnimationController(
-        duration: Duration(milliseconds: 1000), vsync: this);
+    animationController = AnimationController(duration: Duration(milliseconds: 1000), vsync: this);
   }
 
   @override
@@ -61,17 +60,14 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
           return AlertDialog(
             content: Container(
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text("추가 되었습니다.",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w900),
-                    )
-                  ],
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "추가 되었습니다.",
+                  style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w900),
                 )
-            ),
+              ],
+            )),
             actions: <Widget>[
               FlatButton(
                   onPressed: () {
@@ -90,19 +86,18 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
           margin: const EdgeInsets.all(5),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(width: 3, color: Colors.blueGrey),
-            color: dayListData[idx].isSelected
-                ? Color(0xff3B5998)
-                : Colors.white12,
+            border: Border.all(width: 2, color: Colors.blueGrey),
+            color: dayListData[idx].isSelected ? Color(0xff3B5998) : Colors.white12,
           ),
           child: new FlatButton(
-            shape: RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(30.0)),
+            shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
             child: Text("$day",
                 style: TextStyle(
-                    color: Colors.black,
+                    color: dayListData[idx].isSelected ? Colors.white : Colors.black,
                     fontSize: 16,
-                    fontWeight: FontWeight.w900),
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Dosis'
+                ),
                 textAlign: TextAlign.center),
             onPressed: () {
               setState(() {
@@ -123,46 +118,44 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
   Widget _addButton() {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
-      child: RaisedButton(
-        color: Color(0xff3B5998),
-        child: Text("추가",
-            style: TextStyle(
-                color: Colors.black, fontSize: 16, fontWeight: FontWeight.w900),
-            textAlign: TextAlign.center),
-        shape: RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(30.0)),
-        onPressed: () {
-          // 수정 필요: 선호 시간 추가시킬 부분
-          PreferListData newpreferdata = new PreferListData();
+      child: ButtonTheme(
+        minWidth: 250.0,
+        child: RaisedButton(
+          color: Color(0xff3B5998),
+          child: Text("추가",
+              style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w900), textAlign: TextAlign.center),
+          shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+          onPressed: () {
+            // 수정 필요: 선호 시간 추가시킬 부분
+            PreferListData newpreferdata = new PreferListData();
 
-          for (var idx = 0; idx < dayListData.length; idx++) {
-            if (dayListData[idx].isSelected == true) {
-
+            for (var idx = 0; idx < dayListData.length; idx++) {
+              if (dayListData[idx].isSelected == true) {
 /*  add failed
               newpreferdata.dayText.add(dayListData[idx].titleTxt);
 */
 
-              setState(() {
-                dayListData[idx].isSelected = !(dayListData[idx].isSelected);
-                _startTimeText = "Start Time";
-                _endTimeText = "End Time";
-              });
+                setState(() {
+                  dayListData[idx].isSelected = !(dayListData[idx].isSelected);
+                  _startTimeText = "Start Time";
+                  _endTimeText = "End Time";
+                });
+              }
             }
-          }
 
-          newpreferdata.time_start = _startTimeText;
-          newpreferdata.time_end = _endTimeText;
+            newpreferdata.time_start = _startTimeText;
+            newpreferdata.time_end = _endTimeText;
 //            preferList.add(newpreferdata);
 
-          _showMaterialDialog();  // 알람 창
-        },
+            _showMaterialDialog(); // 알람 창
+          },
+        )
       ),
     );
   }
 
   Future<Null> _selectStart(BuildContext context) async {
-    final TimeOfDay _pickedStart =
-    await showTimePicker(context: context, initialTime: _startTime);
+    final TimeOfDay _pickedStart = await showTimePicker(context: context, initialTime: _startTime);
 
     if (_pickedStart != null && _pickedStart != _startTime) {
       setState(() {
@@ -173,8 +166,7 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
   }
 
   Future<Null> _selectEnd(BuildContext context) async {
-    final TimeOfDay _pickedEnd =
-    await showTimePicker(context: context, initialTime: _endTime);
+    final TimeOfDay _pickedEnd = await showTimePicker(context: context, initialTime: _endTime);
 
     if (_pickedEnd != null && _pickedEnd != _endTime) {
       setState(() {
@@ -193,38 +185,22 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
             width: (MediaQuery.of(context).size.width / 4) + 12,
             height: 40,
             child: FlatButton(
-              color: GameCreateTheme.buildLightTheme()
-                  .primaryColor
-                  .withOpacity(0.2),
-              child: Text(_startTimeText,
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'Dosis',
-                      fontWeight: FontWeight.w700)),
+              color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.2),
+              child: Text(_startTimeText, style: TextStyle(fontSize: 16, fontFamily: 'Dosis', fontWeight: FontWeight.w700)),
               onPressed: () {
                 _selectStart(context);
               },
             ),
           ),
           SizedBox(width: 5),
-          Text("~",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontFamily: 'Dosis',
-                  fontWeight: FontWeight.w400)),
+          Text("~", style: TextStyle(fontSize: 16, fontFamily: 'Dosis', fontWeight: FontWeight.w400)),
           SizedBox(width: 5),
           SizedBox(
             width: (MediaQuery.of(context).size.width / 4) + 12,
             height: 40,
             child: FlatButton(
-              color: GameCreateTheme.buildLightTheme()
-                  .primaryColor
-                  .withOpacity(0.1),
-              child: Text(_endTimeText,
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'Dosis',
-                      fontWeight: FontWeight.w700)),
+              color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.2),
+              child: Text(_endTimeText, style: TextStyle(fontSize: 16, fontFamily: 'Dosis', fontWeight: FontWeight.w700)),
               onPressed: () {
                 _selectEnd(context);
               },
@@ -272,20 +248,19 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
                     });
                   }
                 },
-                isExpanded: _isExpanded
-            ),
+                isExpanded: _isExpanded),
             Flexible(
                 child: Stack(
-                  overflow: Overflow.clip,
-                  children: <Widget>[
-                    Positioned(
-                      top: 0.0,
-                      left: 0.0,
-                      right: 0.0,
-                      child: _addList(),
-                    )
-                  ],
-                )),
+              overflow: Overflow.clip,
+              children: <Widget>[
+                Positioned(
+                  top: 0.0,
+                  left: 0.0,
+                  right: 0.0,
+                  child: _addList(),
+                )
+              ],
+            )),
           ],
         ),
       ),
@@ -293,27 +268,24 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
     );
   }
 
-  Widget _buildBody(){
+  Widget _buildBody() {
     return StreamBuilder<QuerySnapshot>(
 //        stream: Firestore.instance.collection('game3').snapshots(),
-        builder: (context, snapshot){
-          if(!snapshot.hasData) return LinearProgressIndicator();
-          return _showPreferList(context,snapshot.data.documents);
-        }
-    );
+        builder: (context, snapshot) {
+      if (!snapshot.hasData) return LinearProgressIndicator();
+      return _showPreferList(context, snapshot.data.documents);
+    });
   }
 
-  Widget _showPreferList(BuildContext context, List<DocumentSnapshot> snapshot){
+  Widget _showPreferList(BuildContext context, List<DocumentSnapshot> snapshot) {
     return Container(
-      child:  ListView.builder(
+      child: ListView.builder(
         itemCount: snapshot.length,
         scrollDirection: Axis.vertical,
         itemBuilder: (context, index) {
           var count = snapshot.length > 10 ? 10 : snapshot.length;
-          var animation = Tween(begin: 0.0, end: 1.0).animate(
-              CurvedAnimation(
-                  parent: animationController,
-                  curve: Interval((1 / count) * index, 1.0, curve: Curves.fastOutSlowIn)));
+          var animation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+              parent: animationController, curve: Interval((1 / count) * index, 1.0, curve: Curves.fastOutSlowIn)));
           animationController.forward();
           return PreferListView(
             callback: () {},
@@ -328,52 +300,49 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: NestedScrollView(
-            controller: _scrollController,
-            headerSliverBuilder:
-                (BuildContext context, bool innerBoxIsScrolled) {
-              return <Widget>[
-                AnimatedBuilder(
-                  animation: _bottomSize,
-                  builder: (BuildContext context, Widget child) {
-                    return SliverAppBar(
-                      backgroundColor: Color(0xff3B5998),
-                      pinned: true,
-                      floating: true,
-                      title: Text('선호 시간 목록',
-                          style: TextStyle(
-                              color: Colors.black, fontWeight: FontWeight.w900),
-                          textAlign: TextAlign.center),
-                      bottom: _buildBottom(),
-                    );
-                  },
-                ),
-              ];
-            },
-            // firebase 구현 시, body: _buildBody()
-            body: Container(
-                child: ListView.builder(
-                  itemCount: preferList.length,
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) {
-                    var count = preferList.length > 10 ? 10 : preferList.length;
-                    var animation = Tween(begin: 0.0, end: 1.0).animate(
-                        CurvedAnimation(
-                            parent: animationController,
-                            curve: Interval((1 / count) * index, 1.0,
-                                curve: Curves.fastOutSlowIn)));
-                    animationController.forward();
-                    return PreferListView(
-                      callback: () {},
-                      preferData: preferList[index],
-                      animation: animation,
-                      animationController: animationController,
-                    );
-                  },
-                )
-            )
-        )
+    return Theme(
+      data: ThemeData(
+        fontFamily: 'Dosis'
+      ),
+      child: Scaffold(
+          body: NestedScrollView(
+              controller: _scrollController,
+              headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                return <Widget>[
+                  AnimatedBuilder(
+                    animation: _bottomSize,
+                    builder: (BuildContext context, Widget child) {
+                      return SliverAppBar(
+                        centerTitle: true,
+                        backgroundColor: Color(0xff3B5998),
+                        pinned: true,
+                        floating: true,
+                        title: Text('선호 시간 목록',
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontFamily: 'Dosis'), textAlign: TextAlign.center),
+                        bottom: _buildBottom(),
+                      );
+                    },
+                  ),
+                ];
+              },
+              // firebase 구현 시, body: _buildBody()
+              body: Container(
+                  child: ListView.builder(
+                    itemCount: preferList.length,
+                    scrollDirection: Axis.vertical,
+                    itemBuilder: (context, index) {
+                      var count = preferList.length > 10 ? 10 : preferList.length;
+                      var animation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+                          parent: animationController, curve: Interval((1 / count) * index, 1.0, curve: Curves.fastOutSlowIn)));
+                      animationController.forward();
+                      return PreferListView(
+                        callback: () {},
+                        preferData: preferList[index],
+                        animation: animation,
+                        animationController: animationController,
+                      );
+                    },
+                  ))))
     );
   }
 }
@@ -397,10 +366,7 @@ class FilterBar extends StatelessWidget {
             child: new Row(
               children: <Widget>[
                 new Text('추가',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w900),
+                    style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w900),
                     textAlign: TextAlign.center),
                 new Icon(isExpanded ? Icons.expand_less : Icons.expand_more),
               ],

@@ -77,6 +77,7 @@ class PreferListView extends StatelessWidget {
                                                                         Text(
                                                                             preferData.time_start,
                                                                             style: TextStyle(
+                                                                              fontFamily: 'Dosis',
                                                                               fontWeight: FontWeight.w600,
                                                                               fontSize: 22,
                                                                             )
@@ -84,6 +85,7 @@ class PreferListView extends StatelessWidget {
                                                                         Text(
                                                                             " ~ ",
                                                                             style: TextStyle(
+                                                                              fontFamily: 'Dosis',
                                                                               fontWeight: FontWeight.w600,
                                                                               fontSize: 22,
                                                                             )
@@ -91,6 +93,7 @@ class PreferListView extends StatelessWidget {
                                                                         Text(
                                                                             preferData.time_end,
                                                                             style: TextStyle(
+                                                                              fontFamily: 'Dosis',
                                                                               fontWeight: FontWeight.w600,
                                                                               fontSize: 22,
                                                                             )

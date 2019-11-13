@@ -47,6 +47,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
               changeIndex(drawerIndexData);
             },
             screenView: screenView,
+            onSignedOut: widget.onSignedOut,
           ),
         ),
       ),

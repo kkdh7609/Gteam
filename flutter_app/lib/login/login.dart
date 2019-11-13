@@ -27,7 +27,6 @@ enum FormMode { LOGIN, GOOGLE, SIGNUP }
 
 class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
   final _formKey = new GlobalKey<FormState>();
-
   String _loginEmail;
   String _loginPassword;
   String _errorMessage;

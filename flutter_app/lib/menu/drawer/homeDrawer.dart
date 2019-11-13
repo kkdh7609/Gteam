@@ -7,8 +7,9 @@ class HomeDrawer extends StatefulWidget {
   final AnimationController iconAnimationController;
   final DrawerIndex screenIndex;
   final Function(DrawerIndex) callBackIndex;
+  final VoidCallback onSignedOut;
 
-  HomeDrawer({Key key, this.screenIndex, this.iconAnimationController, this.callBackIndex}) : super(key: key);
+  HomeDrawer({Key key, this.screenIndex, this.iconAnimationController, this.callBackIndex, this.onSignedOut}) : super(key: key);
 
   @override
   _HomeDrawerState createState() => _HomeDrawerState();
@@ -43,7 +44,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
       ),
       DrawerList(
         index: DrawerIndex.About,
-        labelName: 'Contact G-TEAM',
+        labelName: 'Contact G-TEAMs',
         icon: new Icon(Icons.info),
       ),
     ];
@@ -155,7 +156,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   Icons.power_settings_new,
                   color: Colors.red,
                 ),
-                onTap: () {},
+                onTap: () { widget.onSignedOut(); },
               ),
               SizedBox(
                 height: MediaQuery.of(context).padding.bottom,
