@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "806182701911",
+    "firebase_url": "https://gteam-18931.firebaseio.com",
+    "project_id": "gteam-18931",
+    "storage_bucket": "gteam-18931.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:806182701911:android:9122d51c25996c6bdb8c12",
+        "android_client_info": {
+          "package_name": "com.example.gteams"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "806182701911-lr54b5aomnapb23f6eufn56qni5jnl08.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gteams",
+            "certificate_hash": "81b7514e8b58b2327646bd38cf8a3b928ef2ab99"
+          }
+        },
+        {
+          "client_id": "806182701911-e8p0d62jgnijmv8nbqj1qvegme0tvga8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCleGA_7BDMzxEP8diUyl1R7Pqt8ELqRf0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "806182701911-e8p0d62jgnijmv8nbqj1qvegme0tvga8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
