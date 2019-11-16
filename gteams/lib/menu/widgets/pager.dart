@@ -107,3 +107,20 @@ class _MenuPagerState extends State<MenuPager> {
     );
   }
 }
+
+Widget _showBackground(LinearGradient gradient2) {
+  return Positioned.fill(
+    child: Container(
+      decoration: BoxDecoration(
+        gradient: gradient2,
+      ),
+    ),
+  );
+}
+
+
+
+
+
+
+

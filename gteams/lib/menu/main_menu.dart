@@ -3,6 +3,7 @@ import 'package:gteams/menu/MainMenuScreen.dart';
 import 'package:gteams/menu/drawer/homeDrawer.dart';
 import 'package:gteams/menu/drawer/DrawerTheme.dart';
 import 'package:gteams/menu/drawer/drawerUserController.dart';
+import 'package:gteams/pay/pay.dart';
 
 class MainMenuPage extends StatefulWidget {
   MainMenuPage({
@@ -47,6 +48,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
               changeIndex(drawerIndexData);
             },
             screenView: screenView,
+            onSignedOut: widget.onSignedOut,
           ),
         ),
       ),
@@ -65,7 +67,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
       } else if (drawerIndex == DrawerIndex.Help) {
         setState(
           () {
-            screenView = MainHomePageScreen();
+            screenView = PayPage();
           },
         );
       } else if (drawerIndex == DrawerIndex.FeedBack) {

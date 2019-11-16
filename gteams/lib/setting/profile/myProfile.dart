@@ -34,6 +34,7 @@ class _UserProfileState extends State<UserProfile> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Radio(
+            activeColor: Color(0xff20253d),
             value: Gender.MALE,
             groupValue: _selectedGender,
             onChanged: (Gender value) {
@@ -42,11 +43,12 @@ class _UserProfileState extends State<UserProfile> {
               });
             },
           ),
-          Text("남성", style: TextStyle(fontSize: 16)),
+          Text("남성", style: TextStyle(fontSize: 16, fontFamily: 'Dosis')),
           SizedBox(
             width: 20,
           ),
           Radio(
+            activeColor : Color(0xff20253d),
             value: Gender.FEMALE,
             groupValue: _selectedGender,
             onChanged: (Gender value) {
@@ -55,7 +57,7 @@ class _UserProfileState extends State<UserProfile> {
               });
             },
           ),
-          Text("여성", style: TextStyle(fontSize: 16)),
+          Text("여성", style: TextStyle(fontSize: 16, fontFamily: 'Dosis')),
         ],
       ),
     );
@@ -65,9 +67,7 @@ class _UserProfileState extends State<UserProfile> {
     return Container(
       child: Row(
         children: <Widget>[
-          new Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
-              child: Icon(Icons.date_range, color: Color(0xFF364A54))),
+          new Padding(padding: EdgeInsets.symmetric(horizontal: 20.0), child: Icon(Icons.date_range, color: Color(0xFF364A54))),
           Container(
             height: 30.0,
             width: 1.0,
@@ -77,14 +77,10 @@ class _UserProfileState extends State<UserProfile> {
           FlatButton(
               child: Text(
                 "현재 $idx개의 목록이 있습니다.",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16.0),
+                style: TextStyle(color: Colors.black, fontFamily:'Dosis', fontWeight: FontWeight.w500, fontSize: 16.0),
               ),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => PreferenceTime()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => PreferenceTime()));
               }),
         ],
       ),
@@ -108,17 +104,10 @@ class _UserProfileState extends State<UserProfile> {
           FlatButton(
               child: Text(
                 _loc_name,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16.0),
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 16.0),
               ),
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            MapTest(onSelected: _change_loc_name)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MapTest(onSelected: _change_loc_name)));
               }),
         ],
       ),
@@ -130,8 +119,7 @@ class _UserProfileState extends State<UserProfile> {
       padding: const EdgeInsets.only(top: 20.0),
       child: Text(
         title,
-        style: TextStyle(
-            color: Colors.black, fontWeight: FontWeight.w700, fontSize: 18.0),
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 18.0),
       ),
     );
   }
@@ -177,22 +165,15 @@ class _UserProfileState extends State<UserProfile> {
                       child: Row(
                         children: <Widget>[
                           Icon(
-                            sport.isSelected
-                                ? Icons.check_box
-                                : Icons.check_box_outline_blank,
-                            color: sport.isSelected
-                                ? GameJoinTheme.buildLightTheme().primaryColor
-                                : Colors.grey.withOpacity(0.6),
+                            sport.isSelected ? Icons.check_box : Icons.check_box_outline_blank,
+                            color: sport.isSelected ? GameJoinTheme.buildLightTheme().primaryColor : Colors.grey.withOpacity(0.6),
                           ),
                           SizedBox(
                             width: 10,
                           ),
                           Text(
                             sport.titleTxt,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16.0),
+                            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 16.0),
                           ),
                         ],
                       ),
@@ -219,117 +200,122 @@ class _UserProfileState extends State<UserProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text("프로필 수정",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900),
-              textAlign: TextAlign.center),
-          backgroundColor: Color(0xff3B5998),
-          elevation: 1.5,
-          leading: Builder(
-            builder: (context) => IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: Colors.black,
-                ),
-                onPressed: () => Navigator.of(context).pop()),
+    return Theme(
+      data: ThemeData(
+        fontFamily: 'Dosis'
+      ),
+      child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: Text("프로필 수정",
+                style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: 'Dosis', fontWeight: FontWeight.w600),
+                textAlign: TextAlign.center),
+            backgroundColor: Color(0xff20253d),
+            elevation: 1.5,
+            leading: Builder(
+              builder: (context) => IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => Navigator.of(context).pop()),
+            ),
           ),
-        ),
-        body: Container(
-            child: Form(
-                key: _formKey,
-                child: SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                            padding: EdgeInsets.all(10),
-                            child: Card(
-                                elevation: 5,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Container(
-                                      height: 100,
-                                      width: 100,
-                                      margin: EdgeInsets.only(top: 10),
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.orangeAccent),
-                                      padding: EdgeInsets.all(5),
-                                      child: CircleAvatar(
-                                        minRadius: 10,
-                                        backgroundColor: Colors.transparent,
-                                        backgroundImage: AssetImage(
-                                          "assets/image/userImage.png",
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 100,
-                                      alignment: Alignment.center,
-                                      child: TextFormField(
-                                        textAlign: TextAlign.center,
-                                        keyboardType: TextInputType.text,
-                                        decoration: InputDecoration(
-                                          hintText: _userName,
-                                          hintStyle: TextStyle(color: Colors.grey),
-                                        ),
-                                        style: TextStyle(fontSize: 18),
-                                        validator: (value) {
-                                          return value.isEmpty ? "Your name can\'t be empty" : null;
-                                        },
-                                        onSaved: (value) {
-                                          _userName = value;
-                                        },
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    _my_gender(),
-                                    ////////////////
-                                  ],
-                                ))),
-                        Container(
-                            height: 300,
-                            padding: EdgeInsets.all(10),
-                            child: Card(
-                              elevation: 5,
-                              child: SingleChildScrollView(
+          body: Container(
+              child: Form(
+                  key: _formKey,
+                  child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                              padding: EdgeInsets.all(10),
+                              child: Card(
+                                  elevation: 5,
                                   child: Column(
+                                    mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
-                                      _title("선호 종목"),
-                                      _preferenceSport(),
-                                      _title("선호 시간"),
-                                      _preferenceTime(preferList.length),
-                                      _title("선호 위치"),
-                                      _my_location(),
+                                      Container(
+                                        height: 100,
+                                        width: 100,
+                                        margin: EdgeInsets.only(top: 10),
+                                        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.orangeAccent),
+                                        padding: EdgeInsets.all(5),
+                                        child: CircleAvatar(
+                                          minRadius: 10,
+                                          backgroundColor: Colors.transparent,
+                                          backgroundImage: AssetImage(
+                                            "assets/image/userImage.png",
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 100,
+                                        alignment: Alignment.center,
+                                        child: TextFormField(
+                                          textAlign: TextAlign.center,
+                                          keyboardType: TextInputType.text,
+                                          decoration: InputDecoration(
+                                            hintText: _userName,
+                                            hintStyle: TextStyle(color: Colors.grey, fontFamily:'Dosis'),
+                                          ),
+                                          style: TextStyle(fontSize: 18),
+                                          validator: (value) {
+                                            return value.isEmpty ? "Your name can\'t be empty" : null;
+                                          },
+                                          onSaved: (value) {
+                                            _userName = value;
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      _my_gender(),
+                                      ////////////////
                                     ],
-                                  )),
-                            )),
-                        Container(
-                          padding: EdgeInsets.only(
-                              left: 20, right: 20, top: 10, bottom: 10),
-                          width: double.infinity,
-                          child: MaterialButton(
-                            child: Text("Edit Profile"),
-                            color: Color(0xff3B5998),
-                            onPressed: () {
-                              if(_formKey.currentState.validate()){
-                                _formKey.currentState.save();
+                                  ))),
+                          Container(
+                              height: 300,
+                              padding: EdgeInsets.all(10),
+                              child: Card(
+                                elevation: 5,
+                                child: SingleChildScrollView(
+                                    child: Column(
+                                      children: <Widget>[
+                                        _title("선호 종목"),
+                                        _preferenceSport(),
+                                        _title("선호 시간"),
+                                        _preferenceTime(preferList.length),
+                                        _title("선호 위치"),
+                                        _my_location(),
+                                      ],
+                                    )),
+                              )),
+                          Container(
+                            padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                            width: double.infinity,
+                            child: RaisedButton(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(24.0)),
+                              ),
+                              child: Text("Edit Profile", style: TextStyle(fontFamily: 'Dosis', color: Colors.white)),
+                              color: Color(0xff20253d),
+                              onPressed: () {
+                                if (_formKey.currentState.validate()) {
+                                  _formKey.currentState.save();
 
-                                // 데이터 갱신
-
-                                Navigator.pop(context);
-                              }
-                            },
-                          ),
-                        )
-                      ],
-                    )))));
+                                  // 데이터 갱신
+                                  Navigator.pop(context);
+                                }
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                  ),
+              ),
+          ),
+      )
+    );
   }
 }

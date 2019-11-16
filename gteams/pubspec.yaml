@@ -54,6 +54,7 @@ flutter:
     - assets/image/game/room/footsal_club.jpg
     - assets/image/hotel/
     - assets/image/menu/
+    - assets/image/pay/
     - assets/image/
 
   fonts:

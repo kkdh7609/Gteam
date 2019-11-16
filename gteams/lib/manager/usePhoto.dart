@@ -38,18 +38,18 @@ class _ImageCaptureState extends State<ImageCapture>{
   @override
   Widget build(BuildContext context){
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Select Photo",
+      appBar: AppBar(
+        title: Text("Select Photo",
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22)),
-          centerTitle: true,
-          backgroundColor: Color(0xff3B5998),
-        ),
-        body: Column(
+        centerTitle: true,
+        backgroundColor: Color(0xff3B5998),
+      ),
+      body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              InkWell(
+          children: <Widget>[
+            InkWell(
                 onTap:(){
-                    _pickImage(ImageSource.gallery);
+                  _pickImage(ImageSource.gallery);
                 },
                 child: Container(
                     width: MediaQuery
@@ -68,43 +68,43 @@ class _ImageCaptureState extends State<ImageCapture>{
                         )
                     )
                 )),
-              if(_imageFile != null) ...[
-                Row(
+            if(_imageFile != null) ...[
+              Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      FlatButton(
-                        child: Icon(Icons.crop),
-                        onPressed: _cropImage,
-                      ),
-                      FlatButton(
-                        child: Icon(IconData(58829, fontFamily: "MaterialIcons")),
-                        onPressed: _clear,
-                      )
-                    ]
-                )
-              ],
-
-              FlatButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0)
-                  ),
-                  child: SizedBox(
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width * 2 / 3,
-                      child: Center(
-                          child: Text("Confirm", style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 22,
-                              color: Colors.white)))),
-                  onPressed: () {},
-                  color: Color(0xff3B5998)
+                  children: <Widget>[
+                    FlatButton(
+                      child: Icon(Icons.crop),
+                      onPressed: _cropImage,
+                    ),
+                    FlatButton(
+                      child: Icon(IconData(58829, fontFamily: "MaterialIcons")),
+                      onPressed: _clear,
+                    )
+                  ]
               )
-        ]),
+            ],
+
+            FlatButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0)
+                ),
+                child: SizedBox(
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 2 / 3,
+                    child: Center(
+                        child: Text("Confirm", style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 22,
+                            color: Colors.white)))),
+                onPressed: () {},
+                color: Color(0xff3B5998)
+            )
+          ]),
 
 
-     /* bottomNavigationBar: BottomAppBar(
+      /* bottomNavigationBar: BottomAppBar(
           child: Row(
             children: <Widget>[
               IconButton(
@@ -116,5 +116,4 @@ class _ImageCaptureState extends State<ImageCapture>{
     );
   }
 }
-
 

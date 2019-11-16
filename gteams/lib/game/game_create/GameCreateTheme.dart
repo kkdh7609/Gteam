@@ -23,7 +23,7 @@ class GameCreateTheme {
   }
 
   static ThemeData buildLightTheme() {
-    Color primaryColor = Color(0xff3B5998);
+    Color primaryColor = Color(0xff20253d);
     Color secondaryColor = Color(0xff3B5998);
     final ColorScheme colorScheme = const ColorScheme.light().copyWith(
       primary: primaryColor,

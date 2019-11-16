@@ -88,7 +88,6 @@ class _RootPageState extends State<RootPage> {
           return MainMenuPage(
             onSignedOut: _onSignedOut,
           );
-          //return new HomePage(onSignedOut: _onSignedOut,);
         }
         break;
 
