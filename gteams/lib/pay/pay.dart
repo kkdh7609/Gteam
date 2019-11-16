@@ -92,7 +92,7 @@ class _PayPageState extends State<PayPage> {
               ),
               /* Select Charge Point View */
               Positioned(
-                  top: 220,
+                  top: MediaQuery.of(context).size.height * 0.32,
                   left: 30,
                   child: Container(
                     width: MediaQuery.of(context).size.width - 30,
@@ -137,7 +137,7 @@ class _PayPageState extends State<PayPage> {
                     ),
                   )),
               Positioned(
-                  top: 270,
+                  top: MediaQuery.of(context).size.height * 0.39,
                   left: 30,
                   child: Container(
                     width: MediaQuery.of(context).size.width - 30,
@@ -150,7 +150,7 @@ class _PayPageState extends State<PayPage> {
                     ),
                   )),
               Positioned(
-                top: 300,
+                top: MediaQuery.of(context).size.height * 0.43,
                 bottom: 0,
                 left: 0,
                 right: 0,
@@ -168,7 +168,7 @@ class _PayPageState extends State<PayPage> {
                     InkWell(
                       onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => IamPortPayment(chargeType:_selectedCost))); },
                       child: Container(
-                        height: 82,
+                        height: MediaQuery.of(context).size.height * 0.13,
                         margin: EdgeInsets.symmetric(vertical: 9.0, horizontal: 21.0),
                         decoration: BoxDecoration(
                           color: Color(0xff20253d),

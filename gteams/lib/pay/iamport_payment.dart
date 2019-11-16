@@ -25,7 +25,7 @@ class _IamPortPaymentState extends State<IamPortPayment> {
     super.initState();
     setState(() {
       if(widget.chargeType == Cost.ONE_THOUSANDS)
-        chargeAmount = 1000;
+        chargeAmount = 100;
       else if(widget.chargeType == Cost.FIVE_THOUSANDS)
         chargeAmount = 5000;
       else if(widget.chargeType == Cost.TEN_THOUSANDS)
@@ -36,6 +36,7 @@ class _IamPortPaymentState extends State<IamPortPayment> {
   @override
   Widget build(BuildContext context) {
     return IamportPayment(
+
       appBar: new AppBar(
         backgroundColor: Color(0xff20253d),
         title: new Text('G-TEAM Point Chrage'),
@@ -56,11 +57,11 @@ class _IamPortPaymentState extends State<IamPortPayment> {
         ),
       ),
       /* [필수입력] 가맹점 식별코드 */
-      userCode: 'iamport',
+      userCode: 'imp89644193',// 'iamport',
       /* [필수입력] 결제 데이터 */
       data: PaymentData.fromJson({
         'pg': 'html5_inicis',                                          // PG사
-        'payMethod': 'card',                                           // 결제수단
+        'payMethod': 'card',                                            // 결제수단
         'name': '아임포트 결제데이터 분석',                                  // 주문명
         'merchantUid': 'mid_${DateTime.now().millisecondsSinceEpoch}', // 주문번호
         'amount': chargeAmount,                                             // 결제금액
