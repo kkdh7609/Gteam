@@ -5,6 +5,7 @@ import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:gteams/util/customGeocoder.dart';
+import 'package:gteams/map/mapDialog.dart';
 import 'package:gteams/map/forSecure.dart';
 import 'package:gteams/map/tempStadium.dart'; // just for testing
 
@@ -43,16 +44,14 @@ class _MapTestState extends State<MapTest> {
       (index, element) {
         String nowLoc =
             [element.locationCoords.latitude.toStringAsFixed(6), element.locationCoords.longitude.toStringAsFixed(6)].toString();
+        final coordinates = Coordinates(element.locationCoords.latitude, element.locationCoords.longitude);
         _markers.add(Marker(
             markerId: MarkerId(nowLoc),
             draggable: false,
             infoWindow: InfoWindow(title: element.shopName, snippet: element.address),
             position: element.locationCoords,
-            onTap: (){
-              if(_pageController.page.toInt() == index)      _goToNewPosition(makePosition(tempStadiums[index].locationCoords));
-              _pageController.animateToPage(index, duration: Duration(seconds: 1), curve: Curves.ease);
-              // _pageController.jumpToPage(index);
-            }));
+            onTap: () => _onMarkerPressed(coordinates, index))
+        );
       },
     );
   }
@@ -109,6 +108,31 @@ class _MapTestState extends State<MapTest> {
     );
   }
 
+  _doPop(){
+    Navigator.pop(context);
+    Navigator.pop(context);
+  }
+
+  _onMarkerPressed(coordinates, index){
+    if(_pageController.page.toInt() == index)      _goToNewPosition(makePosition(tempStadiums[index].locationCoords));
+    _pageController.animateToPage(index, duration: Duration(seconds: 1), curve: Curves.ease);
+
+    // 아래는 해당 정보 전으로 이동시키는 것. 추후 코드 다른 메소드로 필요
+   NewGeocoder(kGoogleApiKey, language: 'ko-KR,ko;').findAddressFromCoordinates(coordinates).then((results) {
+      var first = results.first;
+      print("${first.featureName} : ${first.addressLine}");
+      showDialog(
+          context: context,
+          builder: (context){
+            return CustomDialog(location: first.addressLine, onSelected: widget.onSelected, onPop: _doPop);
+          }
+      );
+      // widget.onSelected(first.addressLine);
+      // Navigator.pop(context);
+    });
+  }
+
+
   _onAddMarkerButtonPressed() {
     String nowLoc = [_lastMapPosition.latitude.toStringAsFixed(6), _lastMapPosition.longitude.toStringAsFixed(6)].toString();
     String title = "This is a title";
@@ -131,31 +155,10 @@ class _MapTestState extends State<MapTest> {
             onTap: () {
               // print(nowLoc);
               final coordinates = new Coordinates(latitude, longtitude);
-              /*
-              Geocoder.google(kGoogleApiKey, language: 'kr').findAddressesFromCoordinates(coordinates).then((addresses){
-                var first = addresses.first;
-                print("${first.featureName} : ${first.addressLine}");
-                }
-              );
-              */
-              NewGeocoder(kGoogleApiKey, language: 'ko-KR,ko;').findAddressFromCoordinates(coordinates).then((results) {
-                var first = results.first;
-                print("${first.featureName} : ${first.addressLine}");
-                widget.onSelected(first.addressLine);
+              /*_getAddress(coordinates).then((results) {
+                widget.onSelected(results);
                 Navigator.pop(context);
-              });
-              // var addresses = await Geocoder.google(kGoogleApiKey).findAddressesFromCoordinates(coordinates);
-              // print(addresses);
-              /*
-              Geocoder.local.findAddressesFromCoordinates(coordinates).then((addresses){
-                  print(addresses);
-                  var first = addresses.first;
-                  print("${first.featureName} : ${first.addressLine}");
-                  widget.onSelected(title);
-                  Navigator.pop(context);
-                  }
-                );
-              */
+              });*/
             },
             icon: BitmapDescriptor.defaultMarker,
           ),

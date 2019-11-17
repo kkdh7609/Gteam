@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gteams/map/tempStadium.dart';
 import 'package:gteams/services/user_mangement.dart';
 import 'package:gteams/login/loginTheme.dart';
 import 'package:gteams/login/painter.dart';
@@ -11,6 +12,7 @@ import 'package:gteams/login/manager_signUp.dart';
 import 'package:gteams/login/signUpWaitingPage.dart';
 import 'package:gteams/validator/login_validator.dart';
 import 'package:gteams/manager/usePhoto.dart';
+import 'package:gteams/manager/addStadium.dart';
 import 'package:gteams/manager/managerSetTime.dart';
 
 class LoginPage extends StatefulWidget {
@@ -341,7 +343,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             padding: EdgeInsets.only(top: 10.0),
             child: FlatButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ImageCapture()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => StadiumCreatePage()));
                 },
                 child: Text(
                   "Forgot Password?",
