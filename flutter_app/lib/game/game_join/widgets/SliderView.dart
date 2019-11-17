@@ -6,6 +6,7 @@ class SliderView extends StatefulWidget {
   final double distValue;
 
   const SliderView({Key key, this.onChnagedistValue, this.distValue}) : super(key: key);
+
   @override
   _SliderViewState createState() => _SliderViewState();
 }
@@ -86,17 +87,17 @@ class CustomThumbShape extends SliderComponentShape {
 
   @override
   void paint(
-      PaintingContext context,
-      Offset thumbCenter, {
-        Animation<double> activationAnimation,
-        Animation<double> enableAnimation,
-        bool isDiscrete,
-        TextPainter labelPainter,
-        RenderBox parentBox,
-        SliderThemeData sliderTheme,
-        TextDirection textDirection,
-        double value,
-      }) {
+    PaintingContext context,
+    Offset thumbCenter, {
+    Animation<double> activationAnimation,
+    Animation<double> enableAnimation,
+    bool isDiscrete,
+    TextPainter labelPainter,
+    RenderBox parentBox,
+    SliderThemeData sliderTheme,
+    TextDirection textDirection,
+    double value,
+  }) {
     final Canvas canvas = context.canvas;
     final ColorTween colorTween = ColorTween(
       begin: sliderTheme.disabledThumbColor,
@@ -104,7 +105,8 @@ class CustomThumbShape extends SliderComponentShape {
     );
     canvas.drawPath(
         Path()
-          ..addOval(Rect.fromPoints(Offset(thumbCenter.dx + 12, thumbCenter.dy + 12), Offset(thumbCenter.dx - 12, thumbCenter.dy - 12)))
+          ..addOval(
+              Rect.fromPoints(Offset(thumbCenter.dx + 12, thumbCenter.dy + 12), Offset(thumbCenter.dx - 12, thumbCenter.dy - 12)))
           ..fillType = PathFillType.evenOdd,
         Paint()
           ..color = Colors.black.withOpacity(0.5)

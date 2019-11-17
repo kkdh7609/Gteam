@@ -15,14 +15,15 @@ class CalendarPopupView extends StatefulWidget {
 
   const CalendarPopupView(
       {Key key,
-        this.initialStartDate,
-        this.initialEndDate,
-        this.onApplyClick,
-        this.onCancelClick,
-        this.barrierDismissible = true,
-        this.minimumDate,
-        this.maximumDate})
+      this.initialStartDate,
+      this.initialEndDate,
+      this.onApplyClick,
+      this.onCancelClick,
+      this.barrierDismissible = true,
+      this.minimumDate,
+      this.maximumDate})
       : super(key: key);
+
   @override
   _CalendarPopupViewState createState() => _CalendarPopupViewState();
 }
@@ -99,7 +100,8 @@ class _CalendarPopupViewState extends State<CalendarPopupView> with TickerProvid
                                       Text(
                                         "From",
                                         textAlign: TextAlign.left,
-                                        style: TextStyle(fontWeight: FontWeight.w100, fontSize: 16, color: Colors.grey.withOpacity(0.8)),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w100, fontSize: 16, color: Colors.grey.withOpacity(0.8)),
                                       ),
                                       SizedBox(
                                         height: 4,
@@ -126,7 +128,8 @@ class _CalendarPopupViewState extends State<CalendarPopupView> with TickerProvid
                                     children: <Widget>[
                                       Text(
                                         "To",
-                                        style: TextStyle(fontWeight: FontWeight.w100, fontSize: 16, color: Colors.grey.withOpacity(0.8)),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w100, fontSize: 16, color: Colors.grey.withOpacity(0.8)),
                                       ),
                                       SizedBox(
                                         height: 4,

@@ -1,12 +1,14 @@
-//To add user account to firestore 'user' collection
+//To add manager account to firestore 'user' collection
 import 'package:flutter/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class UserManagement {
-  storeNewUser(email, context, name, isUser) {
+class ManagerManagement {
+  // Modify Please
+  storeNewManager(email, context, name, businessNum, isUser) {
     Firestore.instance.collection('/user').add({
       'email': email,
       'name': name,
+      'businessNum': businessNum,
       'isUser': isUser,
       'info_status': false,
       // To check basic information about user[ True=> setting complete] ex) gender , age etc..

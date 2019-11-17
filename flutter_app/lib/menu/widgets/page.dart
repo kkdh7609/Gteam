@@ -6,12 +6,11 @@ class Page extends StatelessWidget {
   final String icon;
   final Widget child;
 
-  const Page({
-    @required this.title,
-    @required this.background,
-    @required this.icon,
-    @required this.child
-  });
+  const Page(
+      {@required this.title,
+      @required this.background,
+      @required this.icon,
+      @required this.child});
 
   @override
   Widget build(BuildContext context) {

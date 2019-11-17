@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
@@ -6,11 +7,10 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:gteams/util/customGeocoder.dart';
 import 'package:gteams/map/forSecure.dart';
-//import 'package:gteams/map/tempStadium.dart';   // just for testing
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gteams/map/StadiumListData.dart';
-import 'package:gteams/map/StadiumListView.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 
 typedef selectFunc = void Function(String);
 
@@ -20,11 +20,12 @@ GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 enum mapReq { mapCheck, findLocation, newLocation }
 
 class MapTest extends StatefulWidget {
-  MapTest({this.onSelected, this.nowReq,this.stadiumList,this.changeState});
-  final List<StadiumListData> stadiumList;
+  MapTest({this.onSelected, this.nowReq,this.stadiumData,this.stadiumList,this.docId});
+  List<StadiumListData> stadiumList;
+  final StadiumListData stadiumData; // GameRoom에서 한가지 방정보만 가지고 왔을때..
   final selectFunc onSelected;
   final mapReq nowReq;
-  final VoidCallback changeState;
+  final String docId; // 무엇을 위한 DocId 인교..?
 
   @override
   _MapTestState createState() => _MapTestState();
@@ -34,7 +35,6 @@ class _MapTestState extends State<MapTest> {
   Completer<GoogleMapController> _controller = Completer();
   static const LatLng _center = const LatLng(37.26222, 127.02889);
   final Set<Marker> _markers = {};
-
   LatLng _lastMapPosition = _center;
   MapType _currentMapType = MapType.normal;
   String _tempMarker = null;
@@ -44,33 +44,29 @@ class _MapTestState extends State<MapTest> {
 
   @override
   void initState(){
-    //_getStadiumList();
-    widget.stadiumList.forEach((element){
-      String nowLoc = [
-        element.locationCoords.latitude.toStringAsFixed(6),
-        element.locationCoords.longitude.toStringAsFixed(6)
-      ].toString();
+    super.initState();
+    _pageController = PageController(initialPage: 1, viewportFraction: 0.8)..addListener(_onScroll);
+    if(widget.stadiumData != null ) {widget.stadiumList = [widget.stadiumData];}
+    widget.stadiumList.asMap().forEach(
+            (index,element){
+      element.locationCoords = new LatLng(element.lat, element.lng) ;
+      String nowLoc =
+      [element.locationCoords.latitude.toStringAsFixed(6), element.locationCoords.longitude.toStringAsFixed(6)].toString();
       _markers.add(Marker(
         markerId: MarkerId(nowLoc),
         draggable: false,
-        infoWindow:
-          InfoWindow(title: element.stadiumName, snippet: element.location),
-        position: element.locationCoords
-      ));
-      _pageController = PageController(initialPage: 1, viewportFraction: 0.8)
-      ..addListener(_onScroll);
+        infoWindow: InfoWindow(title: element.stadiumName, snippet: element.location),
+        position: element.locationCoords,
+        onTap: (){
+      if(_pageController.page.toInt() == index) _goToNewPosition(makePosition(widget.stadiumList[index].locationCoords));
+      _pageController.animateToPage(index, duration: Duration(seconds: 1), curve: Curves.ease);
+      }));
     });
-    super.initState();
   }
 
-  @override
-  void deactivate() {
-    widget.changeState();
-    super.deactivate();
-  }
-
-  void _onScroll(){
-    if(_pageController.page.toInt() != prevPage){
+  void _onScroll() {
+    //print(_pageController.page);
+    if (_pageController.page.toInt() != prevPage) {
       prevPage = _pageController.page.toInt();
       _goToNewPosition(makePosition(widget.stadiumList[prevPage].locationCoords));
     }
@@ -84,9 +80,11 @@ class _MapTestState extends State<MapTest> {
   Future<void> _goToPosition1() async {
     final GoogleMapController controller = await _controller.future;
     if (_tempMarker != null) {
-      setState(() {
-        _markers.remove(Marker(markerId: MarkerId(_tempMarker)));
-      });
+      setState(
+        () {
+          _markers.remove(Marker(markerId: MarkerId(_tempMarker)));
+        },
+      );
     }
     controller.animateCamera(CameraUpdate.newCameraPosition(_position1));
   }
@@ -112,121 +110,107 @@ class _MapTestState extends State<MapTest> {
   }
 
   _onMapTypeButtonPressed() {
-    setState(() {
-      _currentMapType = _currentMapType == MapType.normal
-          ? MapType.satellite
-          : MapType.normal;
-    });
+    setState(
+      () {
+        _currentMapType = _currentMapType == MapType.normal ? MapType.satellite : MapType.normal;
+      },
+    );
   }
 
   _onAddMarkerButtonPressed() {
-    String nowLoc = [
-      _lastMapPosition.latitude.toStringAsFixed(6),
-      _lastMapPosition.longitude.toStringAsFixed(6)
-    ].toString();
+    String nowLoc = [_lastMapPosition.latitude.toStringAsFixed(6), _lastMapPosition.longitude.toStringAsFixed(6)].toString();
     String title = "This is a title";
     double latitude = _lastMapPosition.latitude;
     double longtitude = _lastMapPosition.longitude;
-    setState(() {
-      if (_tempMarker == nowLoc) {
-        _tempMarker = null;
-        _markers.remove(Marker(markerId: MarkerId(nowLoc)));
-      }
-      _markers.add(Marker(
-        markerId: MarkerId(nowLoc),
-        position: _lastMapPosition,
-        infoWindow: InfoWindow(
-          title: title,
-          snippet: "This is snippet",
-        ),
-        onTap: () {
-          // print(nowLoc);
-          final coordinates = new Coordinates(latitude, longtitude);
-          /*Geocoder.google(kGoogleApiKey, language: 'kr').findAddressesFromCoordinates(coordinates).then((addresses){
-            var first = addresses.first;
-            print("${first.featureName} : ${first.addressLine}");
-          });*/
-          NewGeocoder(kGoogleApiKey, language: 'ko-KR,ko;')
-              .findAddressFromCoordinates(coordinates)
-              .then((results) {
-            var first = results.first;
-            print("${first.featureName} : ${first.addressLine}");
-            widget.onSelected(first.addressLine);
-            Navigator.pop(context);
-          });
-          // var addresses = await Geocoder.google(kGoogleApiKey).findAddressesFromCoordinates(coordinates);
-          // print(addresses);
-          /*Geocoder.local.findAddressesFromCoordinates(coordinates).then((addresses){
-            print(addresses);
-            var first = addresses.first;
-            print("${first.featureName} : ${first.addressLine}");
-            widget.onSelected(title);
-            Navigator.pop(context);
-          });*/
-        },
-        icon: BitmapDescriptor.defaultMarker,
-      ));
-    });
+    setState(
+      () {
+        if (_tempMarker == nowLoc) {
+          _tempMarker = null;
+          _markers.remove(Marker(markerId: MarkerId(nowLoc)));
+        }
+        _markers.add(
+          Marker(
+            markerId: MarkerId(nowLoc),
+            position: _lastMapPosition,
+            infoWindow: InfoWindow(
+              title: title,
+              snippet: "This is snippet",
+            ),
+            onTap: () {
+              // print(nowLoc);
+              final coordinates = new Coordinates(latitude, longtitude);
+              /*
+              Geocoder.google(kGoogleApiKey, language: 'kr').findAddressesFromCoordinates(coordinates).then((addresses){
+                var first = addresses.first;
+                print("${first.featureName} : ${first.addressLine}");
+                }
+              );
+              */
+              NewGeocoder(kGoogleApiKey, language: 'ko-KR,ko;').findAddressFromCoordinates(coordinates).then((results) {
+                var first = results.first;
+                print("${first.featureName} : ${first.addressLine}");
+                widget.onSelected(first.addressLine);
+                Navigator.pop(context);
+              });
+              // var addresses = await Geocoder.google(kGoogleApiKey).findAddressesFromCoordinates(coordinates);
+              // print(addresses);
+              /*
+              Geocoder.local.findAddressesFromCoordinates(coordinates).then((addresses){
+                  print(addresses);
+                  var first = addresses.first;
+                  print("${first.featureName} : ${first.addressLine}");
+                  widget.onSelected(title);
+                  Navigator.pop(context);
+                  }
+                );
+              */
+            },
+            icon: BitmapDescriptor.defaultMarker,
+          ),
+        );
+      },
+    );
   }
 
   _onAddMarkerButtonPressed2() {
-    String nowLoc = [
-      _lastMapPosition.latitude.toStringAsFixed(6),
-      _lastMapPosition.longitude.toStringAsFixed(6)
-    ].toString();
+    String nowLoc = [_lastMapPosition.latitude.toStringAsFixed(6), _lastMapPosition.longitude.toStringAsFixed(6)].toString();
 
     // print(_markers);
     String title = "This is a title";
-    setState(() {
-      if (!_markers.contains(Marker(markerId: MarkerId(nowLoc)))) {
-        // print(11);
-        // print(_lastMapPosition);
-        _tempMarker = nowLoc;
-        _markers.add(Marker(
-          markerId: MarkerId(nowLoc),
-          position: _lastMapPosition,
-          infoWindow: InfoWindow(
-            title: title,
-            snippet: "This is snippet",
-          ),
-          onTap: () {
-            // print(nowLoc);
-            widget.onSelected(title);
-            Navigator.pop(context);
-          },
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-        ));
-      }
-    });
+    setState(
+      () {
+        if (!_markers.contains(Marker(markerId: MarkerId(nowLoc)))) {
+          // print(11);
+          // print(_lastMapPosition);
+          _tempMarker = nowLoc;
+          _markers.add(
+            Marker(
+              markerId: MarkerId(nowLoc),
+              position: _lastMapPosition,
+              infoWindow: InfoWindow(
+                title: title,
+                snippet: "This is snippet",
+              ),
+              onTap: () {
+                // print(nowLoc);
+                widget.onSelected(title);
+                Navigator.pop(context);
+              },
+              icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+            ),
+          );
+        }
+      },
+    );
   }
 
   _onSearchButtonPressed() async {
     Prediction p = await PlacesAutocomplete.show(
-        context: context,
-        apiKey: kGoogleApiKey,
-        language: "kr",
-        components: [new Component(Component.country, "kr")]);
+        context: context, apiKey: kGoogleApiKey, language: "kr", components: [new Component(Component.country, "kr")]);
     displayPrediction(p);
   }
 
-  /*Widget _getStadiumList(){
-    print("1111113232323");
-    StreamBuilder temp =  StreamBuilder<QuerySnapshot>(
-       //stadium정보를  가져온다
-        stream: Firestore.instance.collection("stadium").snapshots(),
-        builder: (BuildContext context, AsyncSnapshot snapshot){
-          print("빌더빌더빌더");
-          if(!snapshot.hasData) return Text(
-            'No Data...',
-          );
-            stadiumList=snapshot.data.documents.map((data) => StadiumListData.fromJson(data.data)).toList();
-        }
-    );
-    print("124124124124124");
-    return temp;
-  }*/
-/*
-  Widget _stadiumList(BuildContext context,index,List<DocumentSnapshot> snapshot){
+  _stadiumList(index) {
     return AnimatedBuilder(
       animation: _pageController,
       builder: (BuildContext context, Widget widget){
@@ -238,108 +222,229 @@ class _MapTestState extends State<MapTest> {
         return Center(
           child: SizedBox(
             height: Curves.easeInOut.transform(value) * 300.0,
-            width: Curves.easeInOut.transform(value) * 500.0,
+            width: Curves.easeInOut.transform(value) * 600.0,
             child: widget,
           ),
         );
       },
 
-      child: InkWell(
-        child: Stack(
-          children: [
-            Center(
-              child: Container(
-                margin: EdgeInsets.symmetric(
-                  horizontal: 10.0,
-                  vertical: 20.0,
+      child: _buildContainer(index),
+    );
+  }
+
+  _buildContainer(int index){
+    return Stack(
+      children: <Widget>[
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 20.0),
+            height: 200.0,
+            child: ListView(
+              //scrollDirection: Axis.horizontal,
+              children: <Widget>[
+                SizedBox(width: 10.0),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: _boxes(
+                      widget.stadiumList[index].imagePath,
+                      widget.stadiumList[index].locationCoords.latitude, widget.stadiumList[index].locationCoords.longitude,widget.stadiumList[index].stadiumName,index),
                 ),
-                height: 125.0,
-                width: 275.0,
-                decoration: BoxDecoration(
-                  // borderRadius: BorderRadius.circular(1.0),
-                  boxShadow:[
-                    BoxShadow(
-                      color: Colors.black54,
-                      offset: Offset(0.0, 10.0),
-                      blurRadius: 10.0,
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+
+  }
+
+  _boxes(String _image, double lat,double long,String stadiumName,int index) {
+    //return  GestureDetector(
+      return Container(
+        child: new FittedBox(
+          child: Material(
+              color: Colors.white,
+              elevation: 14.0,
+              borderRadius: BorderRadius.circular(24.0),
+              shadowColor: Color(0x802196F3),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    width: 180,
+                    height: 200,
+                    child: ClipRRect(
+                      borderRadius: new BorderRadius.circular(24.0),
+                      child: Image(
+                        fit: BoxFit.fill,
+                        image: NetworkImage(_image),
+                      ),
+                    ),),
+                  Container(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: myDetailsContainer1(stadiumName,index),
+                    ),
+                  ),
+
+                ],)
+          ),
+        ),
+      );
+   // );
+  }
+
+  myDetailsContainer1(String stadiumName, int index) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Container(
+              child: Text(stadiumName,
+                style: TextStyle(
+                    color: Color(0xff6200ee),
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold),
+              )),
+        ),
+        SizedBox(height:5.0),
+        Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Container(
+                    child: Text(
+                      widget.stadiumList[index].location.substring(0,widget.stadiumList[index].location.lastIndexOf("구")+1),
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 18.0,
+                      ),
+                    )),
+                Container(
+                    child: Text(
+                      " ",
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 18.0,
+                      ),
+                    )),
+              ],
+            )),
+        SizedBox(height:5.0),
+        Container(
+            child: Text(
+              "시간당 "+widget.stadiumList[index].price.toString()+" 원",
+              style: TextStyle(
+                color: Colors.black54,
+                fontSize: 18.0,
+              ),
+            )),
+        SizedBox(height:5.0),
+        Container(
+            child: Text(
+              "전화번호 : " + widget.stadiumList[index].telephone,
+              style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold),
+            )),
+        Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 17),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      widget.stadiumList[index].isClothes ? Icon(FontAwesomeIcons.tshirt,
+                          color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
+                      Icon(FontAwesomeIcons.tshirt,
+                          color: Colors.grey, size: 25) ,
+                      SizedBox(height: 5),
+                      Text(
+                        "옷 대여",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            color: Colors.black.withOpacity(0.7),
+                            fontFamily: 'Dosis'),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 20),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    widget.stadiumList[index].isClothes ? Icon(FontAwesomeIcons.shoePrints,
+                        color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
+                    Icon(FontAwesomeIcons.shoePrints,
+                        color: Colors.grey, size: 25) ,
+                    SizedBox(height: 5),
+                    Text(
+                      "신발 대여",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                          color: Colors.black.withOpacity(0.7),
+                          fontFamily: 'Dosis'),
                     ),
                   ],
-                  border: Border(
-                    bottom: BorderSide(color: Color(0xff3B5998), width: 2.0),
-                    left: BorderSide(color: Color(0xff3B5998), width: 2.0),
-                    right: BorderSide(color: Color(0xff3B5998), width: 2.0),
-                    top:  BorderSide(color: Color(0xff3B5998), width: 2.0)
-                  )
                 ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5.0),
-                    color: Colors.white),
-                  child: Row(
-                    children:[
-                      SizedBox(width: 10.0),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children:[
-                          Container(
-                            width: 250.0,
-                            child: Text(
-                                stadiumList[index].stadiumName,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    color: Color(0xff3B5998),
-                                    fontSize: 22.5,
-                                    fontWeight: FontWeight.bold
-                                )
-                            )
-                          ),
-                          Container(
-                            width: 250.0,
-                            child:Text(
-                                stadiumList[index].location,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                                style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.bold
-                                )
-                              ),
-                              padding: EdgeInsets.symmetric(vertical: 5.0),
-                              decoration: BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(color: Colors.blueGrey),
-                                  )
-                              )
-                          ),
-                          Container(
-                            width: 250.0,
-                            child: Text(
-                              stadiumList[index].etc,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines:3,
-                              style: TextStyle(
-                                fontSize: 11.0,
-                                fontWeight: FontWeight.w400
-                              )
-                            ),
-                      )]
-                      )
-                    ]
-                  )
-                )
-              )
-            )
-          ]
-        )
-      )
+                SizedBox(width: 20),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    widget.stadiumList[index].isParking ? Icon(FontAwesomeIcons.parking,
+                        color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
+                    Icon(FontAwesomeIcons.parking,
+                        color: Colors.grey, size: 25) ,
+                    SizedBox(height: 5),
+                    Text("주차장",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            color: Colors.black.withOpacity(0.7),
+                            fontFamily: 'Dosis')),
+                  ],
+                ),
+                SizedBox(width: 20),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    widget.stadiumList[index].isShower ? Icon(FontAwesomeIcons.shower,
+                        color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
+                    Icon(FontAwesomeIcons.shower,
+                        color: Colors.grey, size: 25) ,
+                    SizedBox(height: 5),
+                    Text(
+                      "샤워실 이용",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                          color: Colors.black.withOpacity(0.7),
+                          fontFamily: 'Dosis'),
+                    ),
+                  ],
+                ),
+                SizedBox(width: 20),
+
+              ],
+            )),
+      ],
     );
-  }*/
+  }
 
   Future<Null> displayPrediction(Prediction p) async {
     if (p != null) {
-      PlacesDetailsResponse detail =
-      await _places.getDetailsByPlaceId(p.placeId);
+      PlacesDetailsResponse detail = await _places.getDetailsByPlaceId(p.placeId);
 
       double lat = detail.result.geometry.location.lat;
       double lng = detail.result.geometry.location.lng;
@@ -356,19 +461,19 @@ class _MapTestState extends State<MapTest> {
 
   Widget button(Function function, IconData icon, index) {
     return Theme(
-        data: ThemeData(primaryColor: Color(0xff3B5998)),
-        child: FloatingActionButton(
-          heroTag: "btn$index",
-          onPressed: function,
-          materialTapTargetSize: MaterialTapTargetSize.padded,
-          backgroundColor: Color(0xff3B5998),
-          child: Icon(icon, size: 36.0),
-        ));
+      data: ThemeData(primaryColor: Color(0xff3B5998)),
+      child: FloatingActionButton(
+        heroTag: "btn$index",
+        onPressed: function,
+        materialTapTargetSize: MaterialTapTargetSize.padded,
+        backgroundColor: Color(0xff3B5998),
+        child: Icon(icon, size: 36.0),
+      ),
+    );
   }
 
   Widget mapButtons() {
-    if (widget.nowReq == mapReq.mapCheck ||
-        widget.nowReq == mapReq.findLocation) {
+    if (widget.nowReq == mapReq.mapCheck || widget.nowReq == mapReq.findLocation) {
       return Column(
         children: <Widget>[
           button(_onSearchButtonPressed, Icons.search, 0),
@@ -393,10 +498,13 @@ class _MapTestState extends State<MapTest> {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(children: <Widget>[
+      body: Stack(
+        children: <Widget>[
           GoogleMap(
               onMapCreated: _onMapCreated,
               initialCameraPosition: CameraPosition(
@@ -416,18 +524,14 @@ class _MapTestState extends State<MapTest> {
                 controller: _pageController,
                 itemCount: widget.stadiumList.length,
                 itemBuilder: (BuildContext context, int index){
-                  return StadiumListView(
-                      stadiumList : widget.stadiumList[index],
-                      index : index,
-                    pageController: _pageController,
-                  );
+                return _stadiumList(index);
                 }
               )
             )
           ),
-          Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Align(alignment: Alignment.topRight, child: mapButtons()))
-        ]));
+          Padding(padding: EdgeInsets.all(16.0), child: Align(alignment: Alignment.topRight, child: mapButtons()))
+        ],
+      ),
+    );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class StadiumListData {
@@ -7,7 +8,7 @@ class StadiumListData {
   int fieldNumber;
   String telephone;
   String webSite;
- // List<Map<dynamic,dynamic>> operationTime=[{"openTime":1,"endTime":1}];
+  List<dynamic> operationTime;
   bool isShower;
   bool isParking;
   bool isClothes;
@@ -15,6 +16,8 @@ class StadiumListData {
   String etc;
   int price;
   int addPrice;
+  double lat;
+  double lng;
   LatLng locationCoords;
 
   StadiumListData({
@@ -31,11 +34,12 @@ class StadiumListData {
     this.etc="",
     this.parkingHours=0,
     this.price=0,
-    //this.operationTime,
-    this.locationCoords=const LatLng(37.26222, 127.02889),
+    this.operationTime,
+    this.lat = 0.0,
+    this.lng = 0.0,
   });
 
-  factory StadiumListData.fromJson(Map<String, dynamic> json){
+  factory StadiumListData.fromJson(Map<dynamic, dynamic> json){
     return StadiumListData(
       imagePath: json['imagePath'],
       stadiumName: json['stadiumName'],
@@ -50,10 +54,12 @@ class StadiumListData {
       etc: json['etc'],
       parkingHours: json['parkingHours'],
       price: json['price'],
-      //operationTime: json['operationTime'],
-      locationCoords: LatLng(37.26222, 127.02889),
+      operationTime: json['operationTime'], // operationTime의 각요소접근 방법 => operationTime['openTime'] .operationTime['endTime'] .
+      lat: json['lat'],
+      lng : json['lng'],
     );
   }
+
   static List<StadiumListData> stadiumList = [
   ];
 

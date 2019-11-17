@@ -7,31 +7,26 @@ import 'package:gteams/setting/popularFilterList.dart';
 import 'package:gteams/game/game_join/widgets/SliderView.dart';
 import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 
-
 class SettingUser extends StatefulWidget {
+  SettingUser({Key key, this.onSignedOut, this.userDocID}) : super(key: key);
 
-  SettingUser({Key key,this.onSignedOut,this.user_docID}):super(key: key);
-
-  final String user_docID;
+  final String userDocID;
   final VoidCallback onSignedOut;
 
   @override
   _SettingUserState createState() => _SettingUserState();
 }
 
-enum Gender{
-  MALE,
-  FEMALE,
-  ALL
-}
+enum Gender { MALE, FEMALE, ALL }
 
 class _SettingUserState extends State<SettingUser> {
   List<SettingListData> sportListData = SettingListData.sportList;
+
   //List<SettingListData> accomodationListData = SettingListData.dayList;
 
   RangeValues _values = RangeValues(0, 24);
   double distValue = 50.0;
-  Gender _selectedGender =null;
+  Gender _selectedGender = null;
   List<int> checNum;
 
   crudMedthods crudObj = new crudMedthods();
@@ -86,25 +81,36 @@ class _SettingUserState extends State<SettingUser> {
                 ),
                 child: Material(
                   color: Colors.transparent,
-                    child: InkWell(
+                  child: InkWell(
                     borderRadius: BorderRadius.all(Radius.circular(24.0)),
                     highlightColor: Colors.transparent,
-                    onTap: () { // When pressed apply button update Database about user
-                      List<String> updateList =[]; // List for get select sport list
-                      for(var i = 0; i < sportListData.length; i++){
-                        if(sportListData[i].isSelected){
+                    onTap: () {
+                      // When pressed apply button update Database about user
+                      List<String> updateList = []; // List for get select sport list
+                      for (var i = 0; i < sportListData.length; i++) {
+                        if (sportListData[i].isSelected) {
                           updateList.add(sportListData[i].titleTxt);
                         }
                       }
-                      crudObj.updateData('user', widget.user_docID, {
-                        'info_status':true,
-                        'prferenceTime':"1700~1800",
-                        'prferenceLoc':"loc",
-                        'gender':_selectedGender.toString(),
-                        'sportList':FieldValue.arrayUnion(updateList), // It can update array type field
-                      });
+                      crudObj.updateData(
+                        'user',
+                        widget.userDocID,
+                        {
+                          'info_status': true,
+                          'prferenceTime': "1700~1800",
+                          'prferenceLoc': "loc",
+                          'gender': _selectedGender.toString(),
+                          'sportList': FieldValue.arrayUnion(updateList),
+                          // It can update array type field
+                        },
+                      );
                       Navigator.pop(context);
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>MainMenuPage(onSignedOut: widget.onSignedOut,)));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MainMenuPage(
+                                    onSignedOut: widget.onSignedOut,
+                                  )));
                     },
                     child: Center(
                       child: Text(
@@ -126,9 +132,7 @@ class _SettingUserState extends State<SettingUser> {
     return Container(
       child: Row(
         children: <Widget>[
-          new Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Icon(Icons.wc, color: Colors.grey)),
+          new Padding(padding: const EdgeInsets.all(16.0), child: Icon(Icons.wc, color: Colors.grey)),
           Container(
             height: 30.0,
             width: 1.0,
@@ -139,32 +143,38 @@ class _SettingUserState extends State<SettingUser> {
             value: Gender.MALE,
             groupValue: _selectedGender,
             onChanged: (Gender value) {
-              setState(() {
-                _selectedGender = value;
-              });
+              setState(
+                () {
+                  _selectedGender = value;
+                },
+              );
             },
           ),
-          Text("Male", style: TextStyle(color: Colors.grey,fontSize: 16)),
+          Text("Male", style: TextStyle(color: Colors.grey, fontSize: 16)),
           Radio(
             value: Gender.FEMALE,
             groupValue: _selectedGender,
             onChanged: (Gender value) {
-              setState(() {
-                _selectedGender = value;
-              });
+              setState(
+                () {
+                  _selectedGender = value;
+                },
+              );
             },
           ),
-          Text("Female", style: TextStyle(color: Colors.grey,fontSize: 16)),
+          Text("Female", style: TextStyle(color: Colors.grey, fontSize: 16)),
           Radio(
             value: Gender.ALL,
             groupValue: _selectedGender,
             onChanged: (Gender value) {
-              setState(() {
-                _selectedGender = value;
-              });
+              setState(
+                () {
+                  _selectedGender = value;
+                },
+              );
             },
           ),
-          Text("All", style: TextStyle(color: Colors.grey,fontSize: 16)),
+          Text("All", style: TextStyle(color: Colors.grey, fontSize: 16)),
         ],
       ),
     );
@@ -180,7 +190,8 @@ class _SettingUserState extends State<SettingUser> {
           child: Text(
             "Distance from city center",
             textAlign: TextAlign.left,
-            style: TextStyle(color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
+            style: TextStyle(
+                color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
           ),
         ),
         SliderView(
@@ -206,7 +217,8 @@ class _SettingUserState extends State<SettingUser> {
           child: Text(
             "선호 종목",
             textAlign: TextAlign.left,
-            style: TextStyle(color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
+            style: TextStyle(
+                color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
           ),
         ),
         Padding(
@@ -231,54 +243,62 @@ class _SettingUserState extends State<SettingUser> {
       for (var i = 0; i < columCount; i++) {
         try {
           final sport = sportListData[cout];
-          listUI.add(Expanded(
-            child: Row(
-              children: <Widget>[
-                Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                    onTap: () {
-                      setState(() {
-                        sport.isSelected = !sport.isSelected;
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            sport.isSelected ? Icons.check_box : Icons.check_box_outline_blank,
-                            color: sport.isSelected ? GameJoinTheme.buildLightTheme().primaryColor : Colors.grey.withOpacity(0.6),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            sport.titleTxt,
-                          ),
-                        ],
+          listUI.add(
+            Expanded(
+              child: Row(
+                children: <Widget>[
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                      onTap: () {
+                        setState(
+                          () {
+                            sport.isSelected = !sport.isSelected;
+                          },
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: <Widget>[
+                            Icon(
+                              sport.isSelected ? Icons.check_box : Icons.check_box_outline_blank,
+                              color:
+                                  sport.isSelected ? GameJoinTheme.buildLightTheme().primaryColor : Colors.grey.withOpacity(0.6),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              sport.titleTxt,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ));
+          );
           cout += 1;
         } catch (e) {
           print(e);
         }
       }
-      noList.add(Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: listUI,
-      ));
+      noList.add(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: listUI,
+        ),
+      );
     }
     return noList;
   }
+
   /* unused..
   Widget timeRangeBar() {
     return Column(
@@ -305,7 +325,6 @@ class _SettingUserState extends State<SettingUser> {
       ],
     );
   }
-
   */
 
   Widget getAppBarUI() {
@@ -360,5 +379,4 @@ class _SettingUserState extends State<SettingUser> {
       ),
     );
   }
-
 }

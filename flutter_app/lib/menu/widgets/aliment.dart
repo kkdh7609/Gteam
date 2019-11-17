@@ -11,12 +11,7 @@ class AlimentWidget extends StatelessWidget {
   final VoidCallback decrement;
 
   // 생성자
-  AlimentWidget({
-    @required this.aliment,
-    @required this.theme,
-    this.increment,
-    this.decrement
-  });
+  AlimentWidget({@required this.aliment, @required this.theme, this.increment, this.decrement});
 
   @override
   Widget build(BuildContext context) {
@@ -31,19 +26,12 @@ class AlimentWidget extends StatelessWidget {
         Container(
           child: Column(
             children: <Widget>[
-              Text(aliment.name,
-                  style: TextStyle(
-                      fontSize: 60.0,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: 'Qwigley')),
+              Text(aliment.name, style: TextStyle(fontSize: 60.0, fontWeight: FontWeight.w700, fontFamily: 'Qwigley')),
               Padding(
                 padding: EdgeInsets.only(top: 15.0),
-                child: Text("• " + aliment.subtitle + " •",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 17.0,
-                      fontFamily: 'Dosis',
-                      fontWeight: FontWeight.w400),
+                child: Text(
+                  "• " + aliment.subtitle + " •",
+                  style: TextStyle(color: Colors.black, fontSize: 17.0, fontFamily: 'Dosis', fontWeight: FontWeight.w400),
                 ),
               ),
             ],
@@ -53,9 +41,7 @@ class AlimentWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
-              decoration: BoxDecoration(
-                  color: theme.colors[0]
-              ),
+              decoration: BoxDecoration(color: theme.colors[0]),
               width: 70,
               height: 1.0,
             ),
@@ -69,19 +55,13 @@ class AlimentWidget extends StatelessWidget {
                   height: 45.0,
                   child: Center(
                       child: Text('${aliment.totalCalories.toInt()}' + " Games",
-                          style: TextStyle(
-                              color: theme.colors[0],
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w400
-                          ),
+                          style: TextStyle(color: theme.colors[0], fontSize: 14.0, fontWeight: FontWeight.w400),
                           textAlign: TextAlign.center)),
                 ),
               ),
             ),
             Container(
-              decoration: BoxDecoration(
-                  color: theme.colors[0]
-              ),
+              decoration: BoxDecoration(color: theme.colors[0]),
               width: 70,
               height: 1.0,
             ),
@@ -89,51 +69,55 @@ class AlimentWidget extends StatelessWidget {
         ),
         Container(
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                InkWell(
-                  onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>GameCreatePage())); },
-                  child: Column(
-                    children: <Widget>[
-                      SvgPicture.asset(
-                        "assets/image/menu/calendar.svg",
-                        width: 50.0,
-                        height: 50.0,
-                      ),
-                      Padding(
-                          padding: EdgeInsets.only(top: 8.0),
-                          child: Text('Create',
-                            style : TextStyle(
-                              fontSize: 20.0,
-                            ),
-                          )
-                      ),
-                    ],
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            InkWell(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => GameCreatePage()));
+              },
+              child: Column(
+                children: <Widget>[
+                  SvgPicture.asset(
+                    "assets/image/menu/calendar.svg",
+                    width: 50.0,
+                    height: 50.0,
                   ),
-                ),
-                InkWell(
-                  onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>GameJoinPage())); },
-                  child: Column(
-                    children: <Widget>[
-                      SvgPicture.asset(
-                        "assets/image/menu/magnifying-glass.svg",
-                        width: 50.0,
-                        height: 50.0,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 8.0),
-                        child: Text('Join',
-                          style : TextStyle(
-                            fontSize: 20.0,
-                          ),
+                  Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        'Create',
+                        style: TextStyle(
+                          fontSize: 20.0,
                         ),
-                      ),
-                    ],
+                      )),
+                ],
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => GameJoinPage()));
+              },
+              child: Column(
+                children: <Widget>[
+                  SvgPicture.asset(
+                    "assets/image/menu/magnifying-glass.svg",
+                    width: 50.0,
+                    height: 50.0,
                   ),
-                ),
-              ],
-            )
-        ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      'Join',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        )),
       ],
     );
   }

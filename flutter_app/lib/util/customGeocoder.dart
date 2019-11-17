@@ -3,18 +3,18 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:geocoder/geocoder.dart';
 
-class NewGeocoder{
+class NewGeocoder {
   static const _host = 'https://maps.google.com/maps/api/geocode/json';
   final String apiKey;
   final String language;
 
   final HttpClient _httpClient;
 
-  NewGeocoder(this.apiKey, {this.language}):
-        _httpClient = HttpClient(),
+  NewGeocoder(this.apiKey, {this.language})
+      : _httpClient = HttpClient(),
         assert(apiKey != null, "apiKey must not be null");
 
-  Future<List<Address>> findAddressFromCoordinates(Coordinates coordinates) async{
+  Future<List<Address>> findAddressFromCoordinates(Coordinates coordinates) async {
     final url = '$_host?key=$apiKey&latlng=${coordinates.latitude},${coordinates.longitude}';
     return _send(url, language);
   }
@@ -23,7 +23,7 @@ class NewGeocoder{
     //print("Sending $url...");
     final uri = Uri.parse(url);
     final request = await this._httpClient.getUrl(uri);
-    if(language != null) {
+    if (language != null) {
       request.headers.add("accept-language", language);
     }
     final response = await request.close();
@@ -33,29 +33,24 @@ class NewGeocoder{
 
     var results = data["results"];
 
-    if(results == null)
-      return null;
+    if (results == null) return null;
 
-    return results.map(_convertAddress)
-        .map<Address>((map) => Address.fromMap(map))
-        .toList();
+    return results.map(_convertAddress).map<Address>((map) => Address.fromMap(map)).toList();
   }
 
   Map _convertCoordinates(dynamic geometry) {
-    if(geometry == null)
-      return null;
+    if (geometry == null) return null;
 
     var location = geometry["location"];
-    if(location == null)
-      return null;
+    if (location == null) return null;
 
     return {
-      "latitude" : location["lat"],
-      "longitude" : location["lng"],
+      "latitude": location["lat"],
+      "longitude": location["lng"],
     };
   }
-  Map _convertAddress(dynamic data) {
 
+  Map _convertAddress(dynamic data) {
     Map result = Map();
 
     result["coordinates"] = _convertCoordinates(data["geometry"]);
@@ -63,47 +58,36 @@ class NewGeocoder{
 
     var addressComponents = data["address_components"];
 
-    addressComponents.forEach((item) {
+    addressComponents.forEach(
+      (item) {
+        List types = item["types"];
 
-      List types = item["types"];
+        if (types.contains("route")) {
+          result["thoroughfare"] = item["long_name"];
+        } else if (types.contains("street_number")) {
+          result["subThoroughfare"] = item["long_name"];
+        } else if (types.contains("country")) {
+          result["countryName"] = item["long_name"];
+          result["countryCode"] = item["short_name"];
+        } else if (types.contains("locality")) {
+          result["locality"] = item["long_name"];
+        } else if (types.contains("postal_code")) {
+          result["postalCode"] = item["long_name"];
+        } else if (types.contains("postal_code")) {
+          result["postalCode"] = item["long_name"];
+        } else if (types.contains("administrative_area_level_1")) {
+          result["adminArea"] = item["long_name"];
+        } else if (types.contains("administrative_area_level_2")) {
+          result["subAdminArea"] = item["long_name"];
+        } else if (types.contains("sublocality") || types.contains("sublocality_level_1")) {
+          result["subLocality"] = item["long_name"];
+        } else if (types.contains("premise")) {
+          result["featureName"] = item["long_name"];
+        }
 
-      if(types.contains("route")) {
-
-        result["thoroughfare"] = item["long_name"];
-      }
-      else if(types.contains("street_number")) {
-
-        result["subThoroughfare"] = item["long_name"];
-      }
-      else if(types.contains("country")) {
-        result["countryName"] = item["long_name"];
-        result["countryCode"] = item["short_name"];
-      }
-      else if(types.contains("locality")) {
-        result["locality"] = item["long_name"];
-      }
-      else if(types.contains("postal_code")) {
-        result["postalCode"] = item["long_name"];
-      }
-      else if(types.contains("postal_code")) {
-        result["postalCode"] = item["long_name"];
-      }
-      else if(types.contains("administrative_area_level_1")) {
-        result["adminArea"] = item["long_name"];
-      }
-      else if(types.contains("administrative_area_level_2")) {
-        result["subAdminArea"] = item["long_name"];
-      }
-      else if(types.contains("sublocality") || types.contains("sublocality_level_1")) {
-        result["subLocality"] = item["long_name"];
-      }
-      else if(types.contains("premise")) {
-        result["featureName"] = item["long_name"];
-      }
-
-      result["featureName"] = result["featureName"] ?? result["addressLine"];
-
-    });
+        result["featureName"] = result["featureName"] ?? result["addressLine"];
+      },
+    );
 
     return result;
   }

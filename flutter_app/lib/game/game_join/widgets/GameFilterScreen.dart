@@ -82,7 +82,7 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -99,7 +99,8 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
           child: Text(
             "Type of Accommodation",
             textAlign: TextAlign.left,
-            style: TextStyle(color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
+            style: TextStyle(
+                color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
           ),
         ),
         Padding(
@@ -205,7 +206,8 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
           child: Text(
             "Distance from city center",
             textAlign: TextAlign.left,
-            style: TextStyle(color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
+            style: TextStyle(
+                color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
           ),
         ),
         SliderView(
@@ -231,7 +233,8 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
           child: Text(
             "Popular filters",
             textAlign: TextAlign.left,
-            style: TextStyle(color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
+            style: TextStyle(
+                color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
           ),
         ),
         Padding(
@@ -295,12 +298,14 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
           print(e);
         }
       }
-      noList.add(Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: listUI,
-      ));
+      noList.add(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: listUI,
+        ),
+      );
     }
     return noList;
   }
@@ -315,7 +320,8 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
           child: Text(
             "Price (for 1 night)",
             textAlign: TextAlign.left,
-            style: TextStyle(color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
+            style: TextStyle(
+                color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
           ),
         ),
         RangeSliderView(
@@ -326,7 +332,7 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
         ),
         SizedBox(
           height: 8,
-        )
+        ),
       ],
     );
   }

@@ -2,8 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 class GameJoinTheme {
-
-  static TextTheme _buildTextTheme(TextTheme base){
+  static TextTheme _buildTextTheme(TextTheme base) {
     var fontName = "WorkSans";
 
     return base.copyWith(
@@ -32,25 +31,38 @@ class GameJoinTheme {
     );
     final ThemeData base = ThemeData.light();
     return base.copyWith(
-      colorScheme: colorScheme,
-      primaryColor: primaryColor,
-      buttonColor: primaryColor,
-      indicatorColor: Colors.white,
-      splashColor: Colors.white24,
-      splashFactory: InkRipple.splashFactory,
-      accentColor: secondaryColor,
-      canvasColor: Colors.white,
-      backgroundColor: const Color(0xFFFFFFFF),
-      scaffoldBackgroundColor: const Color(0xFFF6F6F6),
-      errorColor: const Color(0xFFB00020),
-      buttonTheme: ButtonThemeData(
         colorScheme: colorScheme,
-        textTheme: ButtonTextTheme.primary,
-      ),
-      textTheme: _buildTextTheme(base.textTheme),
-      primaryTextTheme: _buildTextTheme(base.primaryTextTheme),
-      accentTextTheme: _buildTextTheme(base.accentTextTheme),
-      platform: TargetPlatform.iOS
-    );
+        primaryColor: primaryColor,
+        buttonColor: primaryColor,
+        indicatorColor: Colors.white,
+        splashColor: Colors.white24,
+        splashFactory: InkRipple.splashFactory,
+        accentColor: secondaryColor,
+        canvasColor: Colors.white,
+        backgroundColor: const Color(0xFFFFFFFF),
+        scaffoldBackgroundColor: const Color(0xFFF6F6F6),
+        errorColor: const Color(0xFFB00020),
+        buttonTheme: ButtonThemeData(
+          colorScheme: colorScheme,
+          textTheme: ButtonTextTheme.primary,
+        ),
+        textTheme: _buildTextTheme(base.textTheme),
+        primaryTextTheme: _buildTextTheme(base.primaryTextTheme),
+        accentTextTheme: _buildTextTheme(base.accentTextTheme),
+        platform: TargetPlatform.iOS);
   }
+
+  static const TextTheme textTheme = TextTheme(
+    display1: display1,
+  );
+
+  static const TextStyle display1 = TextStyle(
+    // h4 -> display1
+    fontFamily: 'WorkSans',
+    fontWeight: FontWeight.bold,
+    fontSize: 36,
+    letterSpacing: 0.4,
+    height: 0.9,
+    color: Color(0xFF213333),
+  );
 }
