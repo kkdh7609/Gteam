@@ -1,14 +1,12 @@
 import 'package:gteams/menu/drawer/DrawerTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gteams/menu/drawer/UserData.dart';
-import 'package:gteams/setting/currentRoomMenu/currentRoomList.dart';
 import 'package:gteams/setting/profile/myProfile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gteams/root_page.dart';
+import 'package:gteams/menu/drawer/UserData.dart';
 
 class HomeDrawer extends StatefulWidget {
-
   final AnimationController iconAnimationController;
   final DrawerIndex screenIndex;
   final Function(DrawerIndex) callBackIndex;
@@ -23,7 +21,6 @@ class HomeDrawer extends StatefulWidget {
 class _HomeDrawerState extends State<HomeDrawer> {
   List<DrawerList> drawerList;
   UserData _userData;
-
   @override
   void initState() {
     setDrawerList();
@@ -56,13 +53,13 @@ class _HomeDrawerState extends State<HomeDrawer> {
     ];
   }
 
-  Widget _userInfo(){
+  Widget userInfo(){
     return StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection('user').where('email', isEqualTo: RootPage.user_email).limit(1).snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) return LinearProgressIndicator();
-          this._userData = snapshot.data.documents.map((data) => UserData.fromJson(data.data)).elementAt(0);
-          return Container(
+        stream : Firestore.instance.collection("user").where('email',isEqualTo: RootPage.user_email).snapshots(),
+        builder: (context, snapshot){
+          if(!snapshot.hasData) return LinearProgressIndicator();
+          this._userData = snapshot.data.documents.map((data) => UserData.fromJson(data.data)).elementAt(0) ;
+          return  Container(
             width: double.infinity,
             padding: EdgeInsets.only(top: 40.0),
             child: Container(
@@ -104,7 +101,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     child: Row(
                       children: <Widget>[
                         Text(
-                          _userData.name,  // <= login user name
+                          _userData.name,
                           style: TextStyle(
                             fontFamily: 'Dosis',
                             fontWeight: FontWeight.w600,
@@ -127,6 +124,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
     );
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,7 +134,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          _userInfo(),
+          userInfo(),
           SizedBox(
             height: 4,
           ),
@@ -149,9 +148,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 padding: EdgeInsets.all(0.0),
                 itemCount: drawerList.length,
                 itemBuilder: (context, index) {
-                  return inkwell(
-                    drawerList[index],
-                  );
+                  return inkwell(drawerList[index]);
                 },
               )),
           Divider(
@@ -194,12 +191,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
         splashColor: Colors.grey.withOpacity(0.1),
         highlightColor: Colors.transparent,
         onTap: () {
-          navigationtoScreen(DrawerIndex.HOME);
-          if(listData.index == DrawerIndex.Invite){
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => CurrentRoomListPage()));
-          }
-
+          navigationtoScreen(listData.index);
         },
         child: Stack(
           children: <Widget>[

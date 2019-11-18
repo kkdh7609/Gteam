@@ -258,7 +258,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  widget.currentUserList.contains(RootPage.user_mail) ?
+                  widget.currentUserList.contains(RootPage.user_email) ?
                   InkWell(
                     onTap:(){
                       Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(), fullscreenDialog: true),
@@ -292,7 +292,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                   ) : InkWell(
                     onTap:(){
                       List<dynamic> newList = widget.currentUserList.toList();
-                      newList.add(RootPage.user_mail);
+                      newList.add(RootPage.user_email);
                       print(newList);
                       print(widget.docId);
                       crudObj.updateData(

@@ -123,14 +123,15 @@ class _DrawerUserControllerState extends State<DrawerUserController> with Ticker
                           height: MediaQuery.of(context).size.height,
                           width: widget.drawerWidth,
                           child: HomeDrawer(
-                            screenIndex: widget.screenIndex == null ? DrawerIndex.HOME : widget.screenIndex,
-                            iconAnimationController: iconAnimationController,
-                            callBackIndex: (DrawerIndex indexType) {
-                              onDrawerClick();
-                              try {
-                                widget.onDrawerCall(indexType);
-                              } catch (e) {}
-                            },
+                              screenIndex: widget.screenIndex == null ? DrawerIndex.HOME : widget.screenIndex,
+                              iconAnimationController: iconAnimationController,
+                              callBackIndex: (DrawerIndex indexType) {
+                                onDrawerClick();
+                                try {
+                                  widget.onDrawerCall(indexType);
+                                } catch (e) {}
+                              },
+                              onSignedOut: widget.onSignedOut
                           ),
                         ),
                       );

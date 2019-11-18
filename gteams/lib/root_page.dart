@@ -9,7 +9,7 @@ import 'package:gteams/login/login.dart';
 class RootPage extends StatefulWidget {
   RootPage({this.auth});
 
-  static String user_mail ="";
+  static String user_email ="";
   final BaseAuth auth;
 
   @override
@@ -43,6 +43,7 @@ class _RootPageState extends State<RootPage> {
               () {
             if (user != null) {
               _userId = user?.uid;
+              RootPage.user_email = user?.email;
             }
             authStatus = AuthStatus.NOT_LOGGED_IN;
             //user?.uid == null ? AuthStatus.NOT_LOGGED_IN : AuthStatus.LOGGED_IN;
