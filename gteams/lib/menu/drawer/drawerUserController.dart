@@ -15,15 +15,15 @@ class DrawerUserController extends StatefulWidget {
 
   const DrawerUserController(
       {Key key,
-      this.drawerWidth: 250,
-      this.onDrawerCall,
-      this.screenView,
-      this.animationController,
-      this.animatedIconData: AnimatedIcons.arrow_menu,
-      this.menuView,
-      this.drawerIsOpen,
-      this.screenIndex,
-      this.onSignedOut})
+        this.drawerWidth: 250,
+        this.onDrawerCall,
+        this.screenView,
+        this.animationController,
+        this.animatedIconData: AnimatedIcons.arrow_menu,
+        this.menuView,
+        this.drawerIsOpen,
+        this.screenIndex,
+        this.onSignedOut})
       : super(key: key);
 
   @override
@@ -46,7 +46,7 @@ class _DrawerUserControllerState extends State<DrawerUserController> with Ticker
     scrollController = ScrollController(initialScrollOffset: widget.drawerWidth);
     scrollController
       ..addListener(
-        () {
+            () {
           if (scrollController.offset <= 0) {
             if (scrollOffset != 1.0) {
               setState(() {
@@ -63,7 +63,7 @@ class _DrawerUserControllerState extends State<DrawerUserController> with Ticker
           } else if (scrollController.offset <= widget.drawerWidth) {
             if (scrollOffset != 0.0) {
               setState(
-                () {
+                    () {
                   scrollOffset = 0.0;
                   try {
                     widget.drawerIsOpen(false);
@@ -89,7 +89,7 @@ class _DrawerUserControllerState extends State<DrawerUserController> with Ticker
       widget.drawerWidth,
     );
     setState(
-      () {
+          () {
         isSetDrawer = true;
       },
     );
@@ -131,7 +131,6 @@ class _DrawerUserControllerState extends State<DrawerUserController> with Ticker
                                 widget.onDrawerCall(indexType);
                               } catch (e) {}
                             },
-                            onSignedOut: widget.onSignedOut
                           ),
                         ),
                       );
@@ -154,14 +153,14 @@ class _DrawerUserControllerState extends State<DrawerUserController> with Ticker
                           ignoring: scrollOffset == 1 ? true : false,
                           child: widget.screenView == null
                               ? Container(
-                                  color: Colors.white,
-                                )
+                            color: Colors.white,
+                          )
                               : widget.screenView,
                         ),
                         scrollOffset == 1.0
                             ? InkWell(onTap: () {
-                                onDrawerClick();
-                              })
+                          onDrawerClick();
+                        })
                             : SizedBox(),
                         Padding(
                           padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 8, left: 8),
@@ -176,11 +175,11 @@ class _DrawerUserControllerState extends State<DrawerUserController> with Ticker
                                   child: widget.menuView != null
                                       ? widget.menuView
                                       : AnimatedIcon(
-                                          color: Colors.white,
-                                          icon: widget.animatedIconData != null
-                                              ? widget.animatedIconData
-                                              : AnimatedIcons.arrow_menu,
-                                          progress: iconAnimationController),
+                                      color: Colors.white,
+                                      icon: widget.animatedIconData != null
+                                          ? widget.animatedIconData
+                                          : AnimatedIcons.arrow_menu,
+                                      progress: iconAnimationController),
                                 ),
                                 onTap: () {
                                   FocusScope.of(context).requestFocus(FocusNode());

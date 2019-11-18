@@ -1,321 +1,403 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
-import 'package:gteams/map/google_map.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gteams/setting/popularFilterList.dart';
-import 'package:gteams/setting/profile/preferenceTime.dart';
-import 'package:gteams/setting/profile/PreferListData.dart';
+import 'package:gteams/setting/profile/PreferListView.dart';
+import 'package:gteams/menu/drawer/UserData.dart';
+import 'package:gteams/game/game_create/GameCreateTheme.dart';
 
-class UserProfile extends StatefulWidget {
+class PreferenceTime extends StatefulWidget {
+  PreferenceTime({this.userData, this.userDocID});
+
+  final UserData userData;
+  final String userDocID;
+
   @override
-  _UserProfileState createState() => _UserProfileState();
+  _PreferenceTimeState createState() => _PreferenceTimeState();
 }
 
-enum Gender { MALE, FEMALE }
+class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStateMixin {
+  String _startTimeText = "Start Time";
+  String _endTimeText = "End Time";
 
-class _UserProfileState extends State<UserProfile> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  var preferList = PreferListData.preferList;
+  TimeOfDay _startTime = TimeOfDay.now();
+  TimeOfDay _endTime = TimeOfDay.now();
 
-  String _userName = "My name"; // 기존 이름으로
-  Gender _selectedGender = null;
-  List<SettingListData> sportListData = SettingListData.sportList;
+  List<SettingListData> dayListData = SettingListData.dayList;
+  bool _isExpanded = false;
 
-  // 시간 데이터 //
-  String _loc_name = "주소";
+  AnimationController _expandAnimationController;
+  AnimationController animationController;
+  Animation<Size> _bottomSize;
 
-  void _change_loc_name(String new_name) {
-    _loc_name = new_name;
-  }
+  ScrollController _scrollController = new ScrollController();
 
-  Widget _my_gender() {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Radio(
-            activeColor: Color(0xff20253d),
-            value: Gender.MALE,
-            groupValue: _selectedGender,
-            onChanged: (Gender value) {
-              setState(() {
-                _selectedGender = value;
-              });
-            },
-          ),
-          Text("남성", style: TextStyle(fontSize: 16, fontFamily: 'Dosis')),
-          SizedBox(
-            width: 20,
-          ),
-          Radio(
-            activeColor : Color(0xff20253d),
-            value: Gender.FEMALE,
-            groupValue: _selectedGender,
-            onChanged: (Gender value) {
-              setState(() {
-                _selectedGender = value;
-              });
-            },
-          ),
-          Text("여성", style: TextStyle(fontSize: 16, fontFamily: 'Dosis')),
-        ],
-      ),
+  @override
+  void initState() {
+    super.initState();
+    _expandAnimationController = new AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
     );
+
+    _bottomSize = new SizeTween(
+      begin: new Size.fromHeight(kTextTabBarHeight),
+      end: new Size.fromHeight(kTextTabBarHeight + 220),
+    ).animate(new CurvedAnimation(
+      parent: _expandAnimationController,
+      curve: Curves.ease,
+    ));
+
+    animationController = AnimationController(
+        duration: Duration(milliseconds: 1000), vsync: this);
   }
 
-  Widget _preferenceTime(idx) {
-    return Container(
-      child: Row(
-        children: <Widget>[
-          new Padding(padding: EdgeInsets.symmetric(horizontal: 20.0), child: Icon(Icons.date_range, color: Color(0xFF364A54))),
-          Container(
-            height: 30.0,
-            width: 1.0,
-            color: Colors.grey.withOpacity(0.5),
-            margin: const EdgeInsets.only(right: 10.0),
-          ),
-          FlatButton(
-              child: Text(
-                "현재 $idx개의 목록이 있습니다.",
-                style: TextStyle(color: Colors.black, fontFamily:'Dosis', fontWeight: FontWeight.w500, fontSize: 16.0),
-              ),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => PreferenceTime()));
-              }),
-        ],
-      ),
-    );
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
   }
 
-  Widget _my_location() {
-    return Container(
-      child: Row(
-        children: <Widget>[
-          new Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
-            child: Icon(Icons.not_listed_location, color: Color(0xFF364A54)),
-          ),
-          Container(
-            height: 30.0,
-            width: 1.0,
-            color: Colors.grey.withOpacity(0.5),
-            margin: const EdgeInsets.only(right: 10.0),
-          ),
-          FlatButton(
-              child: Text(
-                _loc_name,
-                style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 16.0),
-              ),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MapTest(onSelected: _change_loc_name)));
-              }),
-        ],
-      ),
-    );
-  }
-
-  Widget _title(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20.0),
-      child: Text(
-        title,
-        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 18.0),
-      ),
-    );
-  }
-
-  Widget _preferenceSport() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(right: 16, left: 16),
-          child: Column(
-            children: getPList(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  List<Widget> getPList() {
-    List<Widget> noList = List<Widget>();
-    var cout = 0;
-    final columCount = 2;
-    for (var i = 0; i < sportListData.length / columCount; i++) {
-      List<Widget> listUI = List<Widget>();
-      for (var i = 0; i < columCount; i++) {
-        try {
-          final sport = sportListData[cout];
-          listUI.add(Expanded(
-            child: Row(
-              children: <Widget>[
-                Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                    onTap: () {
-                      setState(() {
-                        sport.isSelected = !sport.isSelected;
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            sport.isSelected ? Icons.check_box : Icons.check_box_outline_blank,
-                            color: sport.isSelected ? GameJoinTheme.buildLightTheme().primaryColor : Colors.grey.withOpacity(0.6),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            sport.titleTxt,
-                            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 16.0),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+  void _showMaterialDialog(String show) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(show,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w900),
+                    )
+                  ],
+                )
             ),
-          ));
-          cout += 1;
-        } catch (e) {
-          print(e);
-        }
-      }
-      noList.add(Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: listUI,
-      ));
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('확인')),
+            ],
+          );
+        });
+  }
+
+  Widget _button(day, idx) {
+    return Expanded(
+        flex: 1,
+        child: Container(
+          margin: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(width: 3, color: Colors.blueGrey),
+            color: dayListData[idx].isSelected
+                ? Color(0xff3B5998)
+                : Colors.white12,
+          ),
+          child: new FlatButton(
+            shape: RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(30.0)),
+            child: Text("$day",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900),
+                textAlign: TextAlign.center),
+            onPressed: () {
+              setState(() {
+                dayListData[idx].isSelected = !(dayListData[idx].isSelected);
+              });
+            },
+          ),
+        ));
+  }
+
+  List<Widget> _buildButtons() {
+    List<Widget> listButtons = List.generate(dayListData.length, (i) {
+      return _button(dayListData[i].titleTxt, i);
+    });
+    return listButtons;
+  }
+
+  Widget _addButton() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      child: RaisedButton(
+        color: Color(0xff3B5998),
+        child: Text("추가",
+            style: TextStyle(
+                color: Colors.black, fontSize: 16, fontWeight: FontWeight.w900),
+            textAlign: TextAlign.center),
+        shape: RoundedRectangleBorder(
+            borderRadius: new BorderRadius.circular(30.0)),
+        onPressed: () {
+          PreferListData newpreferdata = new PreferListData();
+          List<String> newDayList = [];
+
+          for (var idx = 0; idx < dayListData.length; idx++) {
+            if (dayListData[idx].isSelected == true) {
+              newDayList.add(dayListData[idx].titleTxt);
+
+              setState(() {
+                dayListData[idx].isSelected = !(dayListData[idx].isSelected);
+              });
+            }
+          }
+          newpreferdata.startTime = _startTimeText;
+          newpreferdata.endTime = _endTimeText;
+
+          if(newDayList.length!=0&&newpreferdata.startTime!="Start Time"&&newpreferdata.endTime!="End Time") {
+            // add new list to firebase
+            Firestore.instance.collection('user').document(widget.userDocID).collection("preferenceTime").add({
+              'startTime': newpreferdata.startTime,
+              'endTime': newpreferdata.endTime,
+              'dayList': newDayList,
+            });
+            // add complete message dialog
+            _showMaterialDialog("추가 되었습니다");
+            setState(() {
+              _startTimeText = "Start Time";
+              _endTimeText = "End Time";
+            });
+          }else{
+            _showMaterialDialog("값을 입력하세요");
+          }
+        },
+      ),
+    );
+  }
+
+  Future<Null> _selectStart(BuildContext context) async {
+    final TimeOfDay _pickedStart =
+    await showTimePicker(context: context, initialTime: _startTime);
+
+    if (_pickedStart != null && _pickedStart != _startTime) {
+      setState(() {
+        _startTime = _pickedStart;
+        _startTimeText = _startTime.toString().split("(")[1].split(")")[0];
+      });
     }
-    return noList;
+  }
+
+  Future<Null> _selectEnd(BuildContext context) async {
+    final TimeOfDay _pickedEnd =
+    await showTimePicker(context: context, initialTime: _endTime);
+
+    if (_pickedEnd != null && _pickedEnd != _endTime) {
+      setState(() {
+        _endTime = _pickedEnd;
+        _endTimeText = _endTime.toString().split("(")[1].split(")")[0];
+      });
+    }
+  }
+
+  Widget _showGameTime() {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(
+            width: (MediaQuery.of(context).size.width / 4) + 12,
+            height: 40,
+            child: FlatButton(
+              color: GameCreateTheme.buildLightTheme()
+                  .primaryColor
+                  .withOpacity(0.2),
+              child: Text(_startTimeText,
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Dosis',
+                      fontWeight: FontWeight.w700)),
+              onPressed: () {
+                _selectStart(context);
+              },
+            ),
+          ),
+          SizedBox(width: 5),
+          Text("~",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontFamily: 'Dosis',
+                  fontWeight: FontWeight.w400)),
+          SizedBox(width: 5),
+          SizedBox(
+            width: (MediaQuery.of(context).size.width / 4) + 12,
+            height: 40,
+            child: FlatButton(
+              color: GameCreateTheme.buildLightTheme()
+                  .primaryColor
+                  .withOpacity(0.1),
+              child: Text(_endTimeText,
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Dosis',
+                      fontWeight: FontWeight.w700)),
+              onPressed: () {
+                _selectEnd(context);
+              },
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _addList() {
+    return Container(
+        padding: EdgeInsets.all(10),
+        child: Card(
+          elevation: 5,
+          child: Column(
+            children: <Widget>[
+              Row(children: _buildButtons()),
+              _showGameTime(),
+              _addButton(),
+            ],
+          ),
+        ));
+  }
+
+  Widget _buildBottom() {
+    return PreferredSize(
+      child: Container(
+        color: Colors.white,
+        height: _bottomSize.value.height,
+        child: Column(
+          children: <Widget>[
+            FilterBar(
+                onExpandedChanged: (bool value) async {
+                  if (value && _expandAnimationController.isDismissed) {
+                    await _expandAnimationController.forward();
+                    setState(() {
+                      _isExpanded = true;
+                    });
+                  } else if (!value && _expandAnimationController.isCompleted) {
+                    await _expandAnimationController.reverse();
+                    setState(() {
+                      _isExpanded = false;
+                    });
+                  }
+                },
+                isExpanded: _isExpanded
+            ),
+            Flexible(
+                child: Stack(
+                  overflow: Overflow.clip,
+                  children: <Widget>[
+                    Positioned(
+                      top: 0.0,
+                      left: 0.0,
+                      right: 0.0,
+                      child: _addList(),
+                    )
+                  ],
+                )),
+          ],
+        ),
+      ),
+      preferredSize: _bottomSize.value,
+    );
+  }
+
+  Widget _buildBody(){
+    return StreamBuilder<QuerySnapshot>(
+        stream: Firestore.instance.collection('user').document(widget.userDocID).collection("preferenceTime").snapshots(),
+        builder: (context, snapshot){
+          if(!snapshot.hasData) return LinearProgressIndicator();
+          return _showPreferList(context,snapshot.data.documents);
+        }
+    );
+  }
+
+  Widget _showPreferList(BuildContext context, List<DocumentSnapshot> snapshot){
+    return Container(
+      child:  ListView.builder(
+        itemCount: snapshot.length,
+        scrollDirection: Axis.vertical,
+        itemBuilder: (context, index) {
+          var count = snapshot.length > 10 ? 10 : snapshot.length;
+          var animation = Tween(begin: 0.0, end: 1.0).animate(
+              CurvedAnimation(
+                  parent: animationController,
+                  curve: Interval((1 / count) * index, 1.0, curve: Curves.fastOutSlowIn)));
+          animationController.forward();
+
+          return PreferListView(
+            callback: () {},
+            preferData: snapshot.map((data) => PreferListData.fromJson(data.data)).toList()[index],
+            animation: animation,
+            animationController: animationController,
+          );
+        },
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: ThemeData(
-        fontFamily: 'Dosis'
-      ),
-      child: Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text("프로필 수정",
-                style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: 'Dosis', fontWeight: FontWeight.w600),
-                textAlign: TextAlign.center),
-            backgroundColor: Color(0xff20253d),
-            elevation: 1.5,
-            leading: Builder(
-              builder: (context) => IconButton(
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: Colors.white,
-                  ),
-                  onPressed: () => Navigator.of(context).pop()),
+    return Scaffold(
+        body: NestedScrollView(
+            controller: _scrollController,
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                AnimatedBuilder(
+                  animation: _bottomSize,
+                  builder: (BuildContext context, Widget child) {
+                    return SliverAppBar(
+                      backgroundColor: Color(0xff3B5998),
+                      pinned: true,
+                      floating: true,
+                      title: Text('선호 시간 목록',
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.w900),
+                          textAlign: TextAlign.center),
+                      bottom: _buildBottom(),
+                    );
+                  },
+                ),
+              ];
+            },
+            body: _buildBody()
+        )
+    );
+  }
+}
+
+class FilterBar extends StatelessWidget {
+  FilterBar({this.isExpanded, this.onExpandedChanged});
+
+  final bool isExpanded;
+  final ValueChanged<bool> onExpandedChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+      color: Theme.of(context).canvasColor,
+      child: new Row(
+        children: <Widget>[
+          new FlatButton(
+            onPressed: () {
+              onExpandedChanged(!isExpanded);
+            },
+            child: new Row(
+              children: <Widget>[
+                new Text('추가',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900),
+                    textAlign: TextAlign.center),
+                new Icon(isExpanded ? Icons.expand_less : Icons.expand_more),
+              ],
             ),
           ),
-          body: Container(
-              child: Form(
-                  key: _formKey,
-                  child: SingleChildScrollView(
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                              padding: EdgeInsets.all(10),
-                              child: Card(
-                                  elevation: 5,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      Container(
-                                        height: 100,
-                                        width: 100,
-                                        margin: EdgeInsets.only(top: 10),
-                                        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.orangeAccent),
-                                        padding: EdgeInsets.all(5),
-                                        child: CircleAvatar(
-                                          minRadius: 10,
-                                          backgroundColor: Colors.transparent,
-                                          backgroundImage: AssetImage(
-                                            "assets/image/userImage.png",
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        width: 100,
-                                        alignment: Alignment.center,
-                                        child: TextFormField(
-                                          textAlign: TextAlign.center,
-                                          keyboardType: TextInputType.text,
-                                          decoration: InputDecoration(
-                                            hintText: _userName,
-                                            hintStyle: TextStyle(color: Colors.grey, fontFamily:'Dosis'),
-                                          ),
-                                          style: TextStyle(fontSize: 18),
-                                          validator: (value) {
-                                            return value.isEmpty ? "Your name can\'t be empty" : null;
-                                          },
-                                          onSaved: (value) {
-                                            _userName = value;
-                                          },
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      _my_gender(),
-                                      ////////////////
-                                    ],
-                                  ))),
-                          Container(
-                              height: 300,
-                              padding: EdgeInsets.all(10),
-                              child: Card(
-                                elevation: 5,
-                                child: SingleChildScrollView(
-                                    child: Column(
-                                      children: <Widget>[
-                                        _title("선호 종목"),
-                                        _preferenceSport(),
-                                        _title("선호 시간"),
-                                        _preferenceTime(preferList.length),
-                                        _title("선호 위치"),
-                                        _my_location(),
-                                      ],
-                                    )),
-                              )),
-                          Container(
-                            padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-                            width: double.infinity,
-                            child: RaisedButton(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(24.0)),
-                              ),
-                              child: Text("Edit Profile", style: TextStyle(fontFamily: 'Dosis', color: Colors.white)),
-                              color: Color(0xff20253d),
-                              onPressed: () {
-                                if (_formKey.currentState.validate()) {
-                                  _formKey.currentState.save();
-
-                                  // 데이터 갱신
-                                  Navigator.pop(context);
-                                }
-                              },
-                            ),
-                          )
-                        ],
-                      ),
-                  ),
-              ),
-          ),
-      )
+        ],
+      ),
     );
   }
 }
