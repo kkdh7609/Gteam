@@ -12,6 +12,8 @@ class StadiumListData {
   int isShower;
   int isParking;
   int isClothes;
+  int isShoes;
+  int isBall;
   int parkingHours;
   String etc;
   int price;
@@ -30,6 +32,8 @@ class StadiumListData {
     this.isShower=0,
     this.isClothes=0,
     this.isParking=0,
+    this.isShoes=0,
+    this.isBall=0,
     this.addPrice=0,
     this.etc="",
     this.parkingHours=0,
@@ -50,6 +54,8 @@ class StadiumListData {
       isShower: json['isShower'],
       isClothes:json['isClothes'],
       isParking:json['isParking'],
+      isShoes: json['isShoes'],
+      isBall: json['isBall'],
       addPrice: json['addPrice'],
       etc: json['etc'],
       parkingHours: json['parkingHours'],
