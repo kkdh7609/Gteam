@@ -146,19 +146,19 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
               parent: animationController, curve: Interval((1 / count) * index, 1.0, curve: Curves.fastOutSlowIn)));
           animationController.forward();
           //GameData 및 stadium Data Setting
-          /*gameList[index].stadiumRef.get().then((document){
+          gameList[index].stadiumRef.get().then((document){
             if(this.mounted ){
               setState(() {
                 stadiumList[index] = StadiumListData.fromJson(document.data);
                // print(stadiumList[index].lat);
               });
             }
-          });*/
+          });
           // StadiumData를 받고 나서 GameListView를 출력해준다.
           return stadiumList[index] != null ?GameListView(
             callback: () {},
             gameData: gameList[index],
-            //stadiumData: stadiumList[index],
+            stadiumData: stadiumList[index],
             docId :snapshot[index].documentID,
             animation: animation,
             animationController: animationController,
