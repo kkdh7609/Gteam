@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gteams/setting/popularFilterList.dart';
 import 'package:gteams/setting/profile/PreferListView.dart';
-import 'package:gteams/setting/profile/PreferListData.dart';
+import 'package:gteams/menu/drawer/UserData.dart';
 import 'package:gteams/game/game_create/GameCreateTheme.dart';
 
 class PreferenceTime extends StatefulWidget {
+  PreferenceTime({this.userData, this.userDocID});
+
+  final UserData userData;
+  final String userDocID;
+
   @override
   _PreferenceTimeState createState() => _PreferenceTimeState();
 }
 
 class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStateMixin {
-  var preferList = PreferListData.preferList; // 선호 시간 리스트
   String _startTimeText = "Start Time";
   String _endTimeText = "End Time";
 
@@ -43,7 +47,6 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
       curve: Curves.ease,
     ));
 
-    this.preferList = PreferListData.preferList;
     animationController = AnimationController(
         duration: Duration(milliseconds: 1000), vsync: this);
   }
@@ -54,7 +57,7 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
     super.dispose();
   }
 
-  void _showMaterialDialog() {
+  void _showMaterialDialog(String show) {
     showDialog(
         context: context,
         builder: (context) {
@@ -63,7 +66,7 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text("추가 되었습니다.",
+                    Text(show,
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 16,
@@ -132,29 +135,37 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
         shape: RoundedRectangleBorder(
             borderRadius: new BorderRadius.circular(30.0)),
         onPressed: () {
-          // 수정 필요: 선호 시간 추가시킬 부분
           PreferListData newpreferdata = new PreferListData();
+          List<String> newDayList = [];
 
           for (var idx = 0; idx < dayListData.length; idx++) {
             if (dayListData[idx].isSelected == true) {
-
-/*  add failed
-              newpreferdata.dayText.add(dayListData[idx].titleTxt);
-*/
+              newDayList.add(dayListData[idx].titleTxt);
 
               setState(() {
                 dayListData[idx].isSelected = !(dayListData[idx].isSelected);
-                _startTimeText = "Start Time";
-                _endTimeText = "End Time";
               });
             }
           }
+          newpreferdata.startTime = _startTimeText;
+          newpreferdata.endTime = _endTimeText;
 
-          newpreferdata.time_start = _startTimeText;
-          newpreferdata.time_end = _endTimeText;
-//            preferList.add(newpreferdata);
-
-          _showMaterialDialog();  // 알람 창
+          if(newDayList.length!=0&&newpreferdata.startTime!="Start Time"&&newpreferdata.endTime!="End Time") {
+            // add new list to firebase
+            Firestore.instance.collection('user').document(widget.userDocID).collection("preferenceTime").add({
+              'startTime': newpreferdata.startTime,
+              'endTime': newpreferdata.endTime,
+              'dayList': newDayList,
+            });
+            // add complete message dialog
+            _showMaterialDialog("추가 되었습니다");
+            setState(() {
+              _startTimeText = "Start Time";
+              _endTimeText = "End Time";
+            });
+          }else{
+            _showMaterialDialog("값을 입력하세요");
+          }
         },
       ),
     );
@@ -243,7 +254,6 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
           child: Column(
             children: <Widget>[
               Row(children: _buildButtons()),
-//              _timeRangeBar(),
               _showGameTime(),
               _addButton(),
             ],
@@ -295,7 +305,7 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
 
   Widget _buildBody(){
     return StreamBuilder<QuerySnapshot>(
-//        stream: Firestore.instance.collection('game3').snapshots(),
+        stream: Firestore.instance.collection('user').document(widget.userDocID).collection("preferenceTime").snapshots(),
         builder: (context, snapshot){
           if(!snapshot.hasData) return LinearProgressIndicator();
           return _showPreferList(context,snapshot.data.documents);
@@ -315,6 +325,7 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
                   parent: animationController,
                   curve: Interval((1 / count) * index, 1.0, curve: Curves.fastOutSlowIn)));
           animationController.forward();
+
           return PreferListView(
             callback: () {},
             preferData: snapshot.map((data) => PreferListData.fromJson(data.data)).toList()[index],
@@ -351,28 +362,7 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
                 ),
               ];
             },
-            // firebase 구현 시, body: _buildBody()
-            body: Container(
-                child: ListView.builder(
-                  itemCount: preferList.length,
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) {
-                    var count = preferList.length > 10 ? 10 : preferList.length;
-                    var animation = Tween(begin: 0.0, end: 1.0).animate(
-                        CurvedAnimation(
-                            parent: animationController,
-                            curve: Interval((1 / count) * index, 1.0,
-                                curve: Curves.fastOutSlowIn)));
-                    animationController.forward();
-                    return PreferListView(
-                      callback: () {},
-                      preferData: preferList[index],
-                      animation: animation,
-                      animationController: animationController,
-                    );
-                  },
-                )
-            )
+            body: _buildBody()
         )
     );
   }

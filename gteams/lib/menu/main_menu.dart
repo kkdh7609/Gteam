@@ -3,6 +3,7 @@ import 'package:gteams/menu/MainMenuScreen.dart';
 import 'package:gteams/menu/drawer/homeDrawer.dart';
 import 'package:gteams/menu/drawer/DrawerTheme.dart';
 import 'package:gteams/menu/drawer/drawerUserController.dart';
+import 'package:gteams/pay/pay.dart';
 
 class MainMenuPage extends StatefulWidget {
   MainMenuPage({
@@ -47,6 +48,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
               changeIndex(drawerIndexData);
             },
             screenView: screenView,
+            onSignedOut: widget.onSignedOut,
           ),
         ),
       ),
@@ -62,19 +64,21 @@ class _MainMenuPageState extends State<MainMenuPage> {
             screenView = MainHomePageScreen();
           },
         );
-      } else if (drawerIndex == DrawerIndex.Help) {
+      } else if (drawerIndex == DrawerIndex.POINTCHARGE) {
+        setState(
+          () {
+            drawerIndex = DrawerIndex.HOME;
+            Navigator.push(context, MaterialPageRoute(builder: (context) => PayPage()));
+            screenView = MainHomePageScreen();
+          },
+        );
+      } else if (drawerIndex == DrawerIndex.CURRENTROOM) {
         setState(
           () {
             screenView = MainHomePageScreen();
           },
         );
-      } else if (drawerIndex == DrawerIndex.FeedBack) {
-        setState(
-          () {
-            screenView = MainHomePageScreen();
-          },
-        );
-      } else if (drawerIndex == DrawerIndex.Invite) {
+      } else if (drawerIndex == DrawerIndex.CONTACT) {
         setState(
           () {
             screenView = MainHomePageScreen();

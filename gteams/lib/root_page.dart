@@ -9,6 +9,7 @@ import 'package:gteams/login/login.dart';
 class RootPage extends StatefulWidget {
   RootPage({this.auth});
 
+  static String user_email ="";
   final BaseAuth auth;
 
   @override
@@ -37,11 +38,12 @@ class _RootPageState extends State<RootPage> {
     //print("initState");
     super.initState();
     widget.auth.getCurrentUser().then(
-      (user) {
+          (user) {
         setState(
-          () {
+              () {
             if (user != null) {
               _userId = user?.uid;
+              RootPage.user_email = user?.email;
             }
             authStatus = AuthStatus.NOT_LOGGED_IN;
             //user?.uid == null ? AuthStatus.NOT_LOGGED_IN : AuthStatus.LOGGED_IN;
@@ -59,7 +61,7 @@ class _RootPageState extends State<RootPage> {
         break;
 
       case AuthStatus.NOT_LOGGED_IN:
-        //print('NOT_LOGGED_IN');
+      //print('NOT_LOGGED_IN');
         _isUser();
         return new LoginPage(
           auth: widget.auth,
@@ -68,7 +70,7 @@ class _RootPageState extends State<RootPage> {
         break;
 
       case AuthStatus.LOGGED_IN_CHECK:
-        //print("LOGGED_IN_CHECK");
+      //print("LOGGED_IN_CHECK");
         _isUser();
         return _buildWaitingScreen();
         break;
@@ -88,7 +90,6 @@ class _RootPageState extends State<RootPage> {
           return MainMenuPage(
             onSignedOut: _onSignedOut,
           );
-          //return new HomePage(onSignedOut: _onSignedOut,);
         }
         break;
 
@@ -107,9 +108,9 @@ class _RootPageState extends State<RootPage> {
   void onLoggedIn() {
     //print("ON_LOGGED_IN");
     widget.auth.getCurrentUser().then(
-      (user) {
+          (user) {
         setState(
-          () {
+              () {
             _userId = user.uid.toString();
             _userMail = user.email.toString();
           },
@@ -123,7 +124,7 @@ class _RootPageState extends State<RootPage> {
 
   void _onSignedOut() {
     setState(
-      () {
+          () {
         authStatus = AuthStatus.NOT_LOGGED_IN;
         _userId = "";
         _userMail = "";
@@ -136,9 +137,9 @@ class _RootPageState extends State<RootPage> {
     if (_userId != null && _userId.length > 0) {
       var userQuery = crudObj.getDocumentByWhere('user', 'email', _userMail);
       setState(
-        () {
+            () {
           userQuery.then(
-            (data) {
+                (data) {
               if(data.documents.length >= 1) {
                 if (data.documents[0].data['isUser']) {
                   print('set authstatus user');
@@ -157,7 +158,7 @@ class _RootPageState extends State<RootPage> {
                 }
               }
               setState(
-                () {
+                    () {
                   if(data.documents.length >= 1){
                     _infoStatus = data.documents[0].data['info_status'];
                     _userDocID = data.documents[0].documentID;

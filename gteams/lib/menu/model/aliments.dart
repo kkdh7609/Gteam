@@ -8,7 +8,6 @@ class Aliments {
         background: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          //0xFFFD8183 // 0xFFFB425A 0xFF083663
           colors: [const Color(0xFF083663), const Color(0xFF6CD8F0)],
         ),
         subtitle: "Make Your Futsal Team",

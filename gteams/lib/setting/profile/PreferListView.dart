@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gteams/setting/profile/PreferListData.dart';
+import 'package:gteams/menu/drawer/UserData.dart';
 import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 
 class PreferListView extends StatelessWidget {
@@ -18,8 +18,8 @@ class PreferListView extends StatelessWidget {
   }
 
   List<Widget> _dayList() {
-    List<Widget> listDay = List.generate(preferData.dayText.length, (i) {
-      return _dayText(preferData.dayText[i]);
+    List<Widget> listDay = List.generate(preferData.dayList.length, (i) {
+      return _dayText(preferData.dayList[i]);
     });
     return listDay;
   }
@@ -75,7 +75,7 @@ class PreferListView extends StatelessWidget {
                                                                     Row(
                                                                       children: <Widget>[
                                                                         Text(
-                                                                            preferData.time_start,
+                                                                            preferData.startTime,
                                                                             style: TextStyle(
                                                                               fontWeight: FontWeight.w600,
                                                                               fontSize: 22,
@@ -89,7 +89,7 @@ class PreferListView extends StatelessWidget {
                                                                             )
                                                                         ),
                                                                         Text(
-                                                                            preferData.time_end,
+                                                                            preferData.endTime,
                                                                             style: TextStyle(
                                                                               fontWeight: FontWeight.w600,
                                                                               fontSize: 22,

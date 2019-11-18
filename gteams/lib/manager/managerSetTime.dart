@@ -162,13 +162,13 @@ class _SetTimeState extends State<SetTime> with TickerProviderStateMixin {
                                                 else {
                                                   int remain = (preNum % 8);
                                                   var minNum = (preNum >= index)
-                                                      ?
-                                                  (index - remain) ~/ 8
-                                                      : (preNum - remain) ~/ 8;
+                                                               ?
+                                                               (index - remain) ~/ 8
+                                                               : (preNum - remain) ~/ 8;
                                                   var maxNum = (preNum >= index)
-                                                      ?
-                                                  (preNum - remain) ~/ 8
-                                                      : (index - remain) ~/ 8;
+                                                               ?
+                                                               (preNum - remain) ~/ 8
+                                                               : (index - remain) ~/ 8;
 
                                                   for (var loopIndex = minNum; loopIndex <=
                                                       maxNum; loopIndex ++) {
@@ -203,13 +203,13 @@ class _SetTimeState extends State<SetTime> with TickerProviderStateMixin {
                                                 else {
                                                   int remain = (preNum % 8);
                                                   var minNum = (preNum >= index)
-                                                      ?
-                                                  (index - remain) ~/ 8
-                                                      : (preNum - remain) ~/ 8;
+                                                               ?
+                                                               (index - remain) ~/ 8
+                                                               : (preNum - remain) ~/ 8;
                                                   var maxNum = (preNum >= index)
-                                                      ?
-                                                  (preNum - remain) ~/ 8
-                                                      : (index - remain) ~/ 8;
+                                                               ?
+                                                               (preNum - remain) ~/ 8
+                                                               : (index - remain) ~/ 8;
 
                                                   for (var loopIndex = minNum; loopIndex <=
                                                       maxNum; loopIndex ++) {
@@ -243,14 +243,14 @@ class _SetTimeState extends State<SetTime> with TickerProviderStateMixin {
                                                       .all(
                                                       Radius.circular(12)),
                                                   border: borderArr[index]
-                                                      ? Border.all(
+                                                          ? Border.all(
                                                       color: (isClicked[index]
-                                                          ? Colors.red
-                                                          : Colors.blue),
+                                                              ? Colors.red
+                                                              : Colors.blue),
                                                       width: _resizableController
                                                           .value * 3)
-                                                      :
-                                                  Border(),
+                                                          :
+                                                          Border(),
                                                 ),
                                                 child: Center(
                                                     child: Text(""))

@@ -1,3 +1,5 @@
+// 지울 예정
+/*
 class PreferListData {
   List<String> dayText = List<String>();
   String time_start;
@@ -28,25 +30,5 @@ class PreferListData {
         time_start: '12:00',
         time_end: '13:00'
     ),
-    PreferListData(
-        dayText: ['수'],
-        time_start: '12:00',
-        time_end: '13:00'
-    ),
-    PreferListData(
-        dayText: ['목'],
-        time_start: '12:00',
-        time_end: '13:00'
-    ),
-    PreferListData(
-        dayText: ['금'],
-        time_start: '12:00',
-        time_end: '13:00'
-    ),
-    PreferListData(
-        dayText: ['토'],
-        time_start: '12:00',
-        time_end: '13:00'
-    ),
   ];
-}
+}*/

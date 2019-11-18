@@ -9,8 +9,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       theme: ThemeData(
-        primaryColor: Color(0xff3B5998),
-        accentColor: Color(0xff3B5998),
+        primaryColor: Color(0xff20253d),
+        accentColor: Color(0xff20253d),
         fontFamily: 'Dosis',
       ),
       home: new RootPage(auth: new Auth()),
