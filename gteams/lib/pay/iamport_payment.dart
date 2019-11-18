@@ -8,9 +8,10 @@ import 'package:gteams/pay/pay.dart';
 
 class IamPortPayment extends StatefulWidget {
 
-  IamPortPayment({this.chargeType});
+  IamPortPayment({this.chargeType, this.PayMethodType});
 
   Cost chargeType;
+  PayMethod PayMethodType;
 
   @override
   _IamPortPaymentState createState() => _IamPortPaymentState();
@@ -19,6 +20,7 @@ class IamPortPayment extends StatefulWidget {
 class _IamPortPaymentState extends State<IamPortPayment> {
 
   int chargeAmount;
+  var payMethod;
 
   @override
   initState(){
@@ -30,6 +32,11 @@ class _IamPortPaymentState extends State<IamPortPayment> {
         chargeAmount = 5000;
       else if(widget.chargeType == Cost.TEN_THOUSANDS)
         chargeAmount = 10000;
+
+      if(widget.PayMethodType == PayMethod.CARD)
+        payMethod = 'card';
+      else if(widget.PayMethodType == PayMethod.PHONE)
+        payMethod = 'phone';
     });
   }
 
@@ -60,8 +67,9 @@ class _IamPortPaymentState extends State<IamPortPayment> {
       userCode: 'imp89644193',// 'iamport',
       /* [필수입력] 결제 데이터 */
       data: PaymentData.fromJson({
+        'digital' : true,
         'pg': 'html5_inicis',                                          // PG사
-        'payMethod': 'card',                                            // 결제수단
+        'payMethod': payMethod,                                            // 결제수단
         'name': '아임포트 결제데이터 분석',                                  // 주문명
         'merchantUid': 'mid_${DateTime.now().millisecondsSinceEpoch}', // 주문번호
         'amount': chargeAmount,                                             // 결제금액

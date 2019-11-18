@@ -32,18 +32,18 @@ class _HomeDrawerState extends State<HomeDrawer> {
         icon: new Icon(Icons.home),
       ),
       DrawerList(
-        index: DrawerIndex.Help,
+        index: DrawerIndex.POINTCHARGE,
         labelName: 'Point Charge',
         //isAssetsImage: true,
         icon: new Icon(FontAwesomeIcons.coins, color: Colors.black),
       ),
       DrawerList(
-        index: DrawerIndex.Invite,
+        index: DrawerIndex.CURRENTROOM,
         labelName: 'Current Room',
         icon: new Icon(Icons.group),
       ),
       DrawerList(
-        index: DrawerIndex.About,
+        index: DrawerIndex.CONTACT,
         labelName: 'Contact G-TEAMs',
         icon: new Icon(Icons.info),
       ),
@@ -266,12 +266,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
 enum DrawerIndex {
   HOME,
-  FeedBack,
-  Help,
-  Share,
-  About,
-  Invite,
-  Testing,
+  POINTCHARGE,
+  CURRENTROOM,
+  CONTACT,
 }
 
 class DrawerList {
