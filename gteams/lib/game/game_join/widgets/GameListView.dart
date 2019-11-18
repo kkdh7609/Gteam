@@ -143,7 +143,7 @@ class GameListView extends StatelessWidget {
                                                         mainAxisAlignment: MainAxisAlignment.start,
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: <Widget>[
-                                                          stadiumData.isClothes == 0 ?
+                                                          stadiumData.isClothes != 0 ?
                                                           Icon(FontAwesomeIcons.tshirt, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
                                                           Icon(FontAwesomeIcons.tshirt, color: Colors.grey, size: 25),
                                                           SizedBox(height: 5),
@@ -163,7 +163,7 @@ class GameListView extends StatelessWidget {
                                                       mainAxisAlignment: MainAxisAlignment.center,
                                                       crossAxisAlignment: CrossAxisAlignment.center,
                                                       children: <Widget>[
-                                                        stadiumData.isClothes == 0 ?
+                                                        stadiumData.isClothes != 0 ?
                                                         Icon(FontAwesomeIcons.shoePrints, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35,) :
                                                         Icon(FontAwesomeIcons.shoePrints, color: Colors.grey, size: 25,),
                                                         SizedBox(height: 5),
@@ -182,7 +182,7 @@ class GameListView extends StatelessWidget {
                                                       mainAxisAlignment: MainAxisAlignment.center,
                                                       crossAxisAlignment: CrossAxisAlignment.center,
                                                       children: <Widget>[
-                                                        stadiumData.isParking == 0 ?
+                                                        stadiumData.isParking != 0 ?
                                                         Icon(FontAwesomeIcons.parking, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
                                                         Icon(FontAwesomeIcons.parking, color: Colors.grey, size: 25) ,
                                                         SizedBox(height: 5),
@@ -199,7 +199,7 @@ class GameListView extends StatelessWidget {
                                                       mainAxisAlignment: MainAxisAlignment.center,
                                                       crossAxisAlignment: CrossAxisAlignment.center,
                                                       children: <Widget>[
-                                                        stadiumData.isShower == 0 ?
+                                                        stadiumData.isShower != 0 ?
                                                         Icon(FontAwesomeIcons.shower, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
                                                         Icon(FontAwesomeIcons.shower, color: Colors.grey, size: 25) ,
                                                         SizedBox(height: 5),

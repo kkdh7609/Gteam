@@ -367,7 +367,7 @@ class _MapTestState extends State<MapTest> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      widget.stadiumList[index].isClothes == 0? Icon(FontAwesomeIcons.tshirt,
+                      widget.stadiumList[index].isClothes != 0? Icon(FontAwesomeIcons.tshirt,
                           color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
                       Icon(FontAwesomeIcons.tshirt,
                           color: Colors.grey, size: 25) ,
@@ -388,7 +388,7 @@ class _MapTestState extends State<MapTest> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    widget.stadiumList[index].isClothes == 0 ? Icon(FontAwesomeIcons.shoePrints,
+                    widget.stadiumList[index].isClothes != 0 ? Icon(FontAwesomeIcons.shoePrints,
                         color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
                     Icon(FontAwesomeIcons.shoePrints,
                         color: Colors.grey, size: 25) ,
@@ -408,7 +408,7 @@ class _MapTestState extends State<MapTest> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    widget.stadiumList[index].isParking == 0? Icon(FontAwesomeIcons.parking,
+                    widget.stadiumList[index].isParking != 0? Icon(FontAwesomeIcons.parking,
                         color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
                     Icon(FontAwesomeIcons.parking,
                         color: Colors.grey, size: 25) ,
