@@ -293,7 +293,6 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                     onTap:(){
                       List<dynamic> newList = widget.currentUserList.toList();
                       newList.add(RootPage.user_mail);
-                      print(111111111111111);
                       print(newList);
                       print(widget.docId);
                       crudObj.updateData(
