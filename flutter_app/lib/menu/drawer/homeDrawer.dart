@@ -2,12 +2,18 @@ import 'package:gteams/menu/drawer/DrawerTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gteams/setting/profile/myProfile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gteams/root_page.dart';
+import 'package:gteams/menu/drawer/UserData.dart';
 
 class HomeDrawer extends StatefulWidget {
   final AnimationController iconAnimationController;
   final DrawerIndex screenIndex;
   final Function(DrawerIndex) callBackIndex;
   final VoidCallback onSignedOut;
+
+  //yeongUn modify
+  String _user_email;
 
   HomeDrawer({Key key, this.screenIndex, this.iconAnimationController, this.callBackIndex, this.onSignedOut}) : super(key: key);
 
@@ -17,9 +23,11 @@ class HomeDrawer extends StatefulWidget {
 
 class _HomeDrawerState extends State<HomeDrawer> {
   List<DrawerList> drawerList;
-
+  UserData _userData;
   @override
   void initState() {
+    widget._user_email=RootPage.user_mail;
+
     setDrawerList();
     super.initState();
   }
@@ -50,15 +58,16 @@ class _HomeDrawerState extends State<HomeDrawer> {
     ];
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: DrawerTheme.notWhite.withOpacity(0.5),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Container(
+  Widget userInfo(){
+
+    return StreamBuilder<QuerySnapshot>(
+        stream : Firestore.instance.collection("user").where('email',isEqualTo: RootPage.user_mail).snapshots(),
+        builder: (context, snapshot){
+          if(!snapshot.hasData) return LinearProgressIndicator();
+           this._userData = snapshot.data.documents.map((data) => UserData.fromJson(data.data)).elementAt(0) ;
+
+          //return Text("adfas");
+           return  Container(
             width: double.infinity,
             padding: EdgeInsets.only(top: 40.0),
             child: Container(
@@ -74,8 +83,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                         scale: new AlwaysStoppedAnimation(1.0 - (widget.iconAnimationController.value) * 0.2),
                         child: RotationTransition(
                           turns: new AlwaysStoppedAnimation(Tween(begin: 0.0, end: 24.0)
-                                  .animate(CurvedAnimation(parent: widget.iconAnimationController, curve: Curves.fastOutSlowIn))
-                                  .value /
+                              .animate(CurvedAnimation(parent: widget.iconAnimationController, curve: Curves.fastOutSlowIn))
+                              .value /
                               360),
                           child: Container(
                             height: 120,
@@ -100,7 +109,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     child: Row(
                       children: <Widget>[
                         Text(
-                          "Yeongun Kim",
+                          _userData.name,
                           style: TextStyle(
                             fontFamily: 'Dosis',
                             fontWeight: FontWeight.w600,
@@ -118,7 +127,22 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 ],
               ),
             ),
-          ),
+          );
+        }
+    );
+  }
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: DrawerTheme.notWhite.withOpacity(0.5),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          userInfo(),
           SizedBox(
             height: 4,
           ),

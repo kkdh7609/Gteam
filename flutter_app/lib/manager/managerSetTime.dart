@@ -46,12 +46,6 @@ class _SetTimeState extends State<SetTime> with TickerProviderStateMixin {
   }
 
   @override
-  void dispose() {
-    _resizableController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context){
     return Scaffold(
         appBar: AppBar(title: Text("Available Times", style: TextStyle(
@@ -212,7 +206,7 @@ class _SetTimeState extends State<SetTime> with TickerProviderStateMixin {
                                                         remain] = true;
                                                     colorArr[8 * loopIndex +
                                                         remain] = Colors
-                                                        .teal; //Color(0xff3B5998);
+                                                        .grey; //Color(0xff3B5998);
                                                   }
                                                   borderArr[preNum] = false;
                                                   preNum = -1;
@@ -243,7 +237,7 @@ class _SetTimeState extends State<SetTime> with TickerProviderStateMixin {
                                                           ? Colors.red
                                                           : Colors.blue),
                                                       width: _resizableController
-                                                          .value * 3)
+                                                          .value * 10)
                                                       :
                                                   Border(),
                                                 ),

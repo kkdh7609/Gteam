@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class GameListData {
   String imagePath;
   String gameName;
@@ -8,6 +10,9 @@ class GameListData {
   String startTime;
   String endTime;
   String loc_name;
+  int dateNumber;
+  List<dynamic> userList;
+  DocumentReference stadiumRef;
 
   GameListData({
     this.imagePath = '',
@@ -17,8 +22,11 @@ class GameListData {
     this.dateText = "",
     this.endTime = "",
     this.loc_name = "",
-    this.gameLevel = 1,
-    this.groupSize = 1,
+    this.gameLevel=1,
+    this.groupSize=1,
+    this.dateNumber=1,
+    this.userList,
+    this.stadiumRef,
   });
 
   factory GameListData.fromJson(Map<String, dynamic> json) {
@@ -30,8 +38,11 @@ class GameListData {
       startTime: json['startTime'],
       endTime: json['endTime'],
       loc_name: json['loc_name'],
-      gameLevel: json['gameLevel'],
-      groupSize: json['groupSize'],
+      gameLevel:json['gameLevel'],
+      groupSize:json['groupSize'],
+      dateNumber: json['dateNumber'],
+      userList: json['userList'],
+      stadiumRef: json['stadiumRef'],
     );
   }
 

@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:gteams/services/crud.dart';
 import 'package:gteams/map/google_map.dart';
 import 'package:gteams/game/game_create/GameCreateTheme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gteams/map/StadiumListData.dart';
 
 class GameCreatePage extends StatefulWidget {
   @override
@@ -15,6 +17,7 @@ enum Gender { MALE, FEMALE, ALL }
 class _GameCreatePageState extends State<GameCreatePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   crudMedthods crudObj = new crudMedthods();
+  var stadiumList =StadiumListData.stadiumList;
 
   String _gameName;
   String _selectedSports = null;
@@ -26,6 +29,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
   int _groupSize;
   int _gameLevel;
   int _curStep = 0;
+  int _dateNumber;
 
   Gender _selectedGender = null;
 
@@ -52,9 +56,11 @@ class _GameCreatePageState extends State<GameCreatePage> {
         initialDate: _date,
         firstDate: DateTime.now().subtract(Duration(days: 1)),
         lastDate: _date.add(Duration(days: 100)));
+
     if (_pickedDate != null && _pickedDate != _date) {
       setState(() {
         _date = _pickedDate;
+        _dateNumber=_date.millisecondsSinceEpoch;
         _dateText = _date.toString().split(" ")[0];
       });
     }
@@ -342,30 +348,38 @@ class _GameCreatePageState extends State<GameCreatePage> {
     );
   }
 
-  Widget _showGameLoc() {
-    return Container(
-      child: Row(
-        children: <Widget>[
-          Padding(padding: EdgeInsets.symmetric(horizontal: 15.0), child: Icon(Icons.location_on, color: Colors.black)),
-          Container(
-            height: 30.0,
-            width: 1.0,
-            color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
-            margin: const EdgeInsets.only(right: 10.0),
-          ),
-          Expanded(
-            child: FlatButton(
-              child: Text(_loc_name),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => MapTest(onSelected: _change_loc_name, nowReq: mapReq.findLocation)));
-              },
+  Widget _showGameLoc(){
+    return StreamBuilder<QuerySnapshot>(
+        stream  : Firestore.instance.collection("stadium").snapshots(),
+        builder : (context, snapshot){
+          if(!snapshot.hasData) return LinearProgressIndicator();
+          return Container(
+            child: Row(
+              children: <Widget>[
+                Padding(padding: EdgeInsets.symmetric(horizontal: 15.0), child: Icon(Icons.location_on, color: Colors.black)),
+                Container(
+                  height: 30.0,
+                  width: 1.0,
+                  color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+                  margin: const EdgeInsets.only(right: 10.0),
+                ),
+                Expanded(
+                  child: FlatButton(
+                    child: Text(_loc_name),
+                    onPressed: () {
+                      this.stadiumList=snapshot.data.documents.map((data) => StadiumListData.fromJson(data.data)).toList();
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => MapTest(onSelected: _change_loc_name, nowReq: mapReq.findLocation,stadiumList: stadiumList,)));
+                    },
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
+          );
+        }
     );
   }
+
 
   Widget _showGameGender() {
     return Container(
@@ -513,15 +527,16 @@ class _GameCreatePageState extends State<GameCreatePage> {
                   if (_formKey.currentState.validate()) {
                     _formKey.currentState.save();
                     crudObj.addData('game3', {
-                      'gameName': _gameName,
-                      'selectedSport': _selectedSports,
-                      'dateText': _dateText,
-                      'startTime': _startTimeText,
-                      'endTime': _endTimeText,
-                      'groupSize': _groupSize,
-                      'gameLevel': _gameLevel,
-                      'Gender': _selectedGender.toString(),
-                      'loc_name': _loc_name,
+                      'gameName' : _gameName,
+                      'selectedSport':_selectedSports,
+                      'dateText':_dateText,
+                      'startTime':_startTimeText,
+                      'endTime':_endTimeText,
+                      'groupSize':_groupSize,
+                      'gameLevel':_gameLevel,
+                      'Gender':_selectedGender.toString(),
+                      'loc_name':_loc_name,
+                      'dateNumber':_dateNumber,
                     });
 
                     print(crudObj.getDataCollection('/game').then((data) {

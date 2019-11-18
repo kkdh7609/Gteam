@@ -10,6 +10,7 @@ class RootPage extends StatefulWidget {
   RootPage({this.auth});
 
   final BaseAuth auth;
+  static String user_mail ="";
 
   @override
   State<StatefulWidget> createState() => new _RootPageState();
@@ -42,6 +43,7 @@ class _RootPageState extends State<RootPage> {
           () {
             if (user != null) {
               _userId = user?.uid;
+              RootPage.user_mail = user?.email;
             }
             authStatus = AuthStatus.NOT_LOGGED_IN;
             //user?.uid == null ? AuthStatus.NOT_LOGGED_IN : AuthStatus.LOGGED_IN;
@@ -68,12 +70,14 @@ class _RootPageState extends State<RootPage> {
         break;
 
       case AuthStatus.LOGGED_IN_CHECK:
+        print(RootPage.user_mail);
         //print("LOGGED_IN_CHECK");
         _isUser();
         return _buildWaitingScreen();
         break;
 
       case AuthStatus.LOGGED_IN_USER:
+        print(RootPage.user_mail);
         print('user check in');
         if (!_infoStatus) {
           // 초기로그인 일때
@@ -132,41 +136,35 @@ class _RootPageState extends State<RootPage> {
 
   void _isUser() {
     // Check User or Admin
-    if (_userId != null && _userId.length > 0) {
+    if (_userId.length > 0 && _userId != null) {
       var userQuery = crudObj.getDocumentByWhere('user', 'email', _userMail);
-      setState(
-        () {
-          userQuery.then(
-            (data) {
-              if(data.documents.length >= 1) {
-                if (data.documents[0].data['isUser']) {
-                  print('set authstatus user');
-                  setState(
-                        () {
-                      authStatus = AuthStatus.LOGGED_IN_USER;
-                    },
-                  );
-                } else {
-                  print('set authstatus manager');
-                  setState(
-                        () {
-                      authStatus = AuthStatus.LOGGED_IN_ADMIN;
-                    },
-                  );
-                }
-              }
+      if(this.mounted){
+        userQuery.then(
+              (data) {
+            if (data.documents[0].data['isUser']) {
+              print('set authstatus user');
               setState(
-                () {
-                  if(data.documents.length >= 1){
-                    _infoStatus = data.documents[0].data['info_status'];
-                    _userDocID = data.documents[0].documentID;
-                  }
+                    () {
+                  authStatus = AuthStatus.LOGGED_IN_USER;
                 },
               );
-            },
-          );
-        },
-      );
+            } else {
+              print('set authstatus manager');
+              setState(
+                    () {
+                  authStatus = AuthStatus.LOGGED_IN_ADMIN;
+                },
+              );
+            }
+            setState(
+                  () {
+                _infoStatus = data.documents[0].data['info_status'];
+                _userDocID = data.documents[0].documentID;
+              },
+            );
+          },
+        );
+      }
     }
   }
 

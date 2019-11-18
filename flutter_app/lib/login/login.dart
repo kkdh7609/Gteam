@@ -10,7 +10,6 @@ import 'package:gteams/login/login_auth.dart';
 import 'package:gteams/login/manager_signUp.dart';
 import 'package:gteams/login/signUpWaitingPage.dart';
 import 'package:gteams/validator/login_validator.dart';
-import 'package:gteams/manager/usePhoto.dart';
 import 'package:gteams/manager/managerSetTime.dart';
 
 class LoginPage extends StatefulWidget {
@@ -340,7 +339,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             padding: EdgeInsets.only(top: 10.0),
             child: FlatButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ImageCapture()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SetTime()));
                 },
                 child: Text(
                   "Forgot Password?",

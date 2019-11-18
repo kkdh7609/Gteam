@@ -132,6 +132,7 @@ class _DrawerUserControllerState extends State<DrawerUserController> with Ticker
                               } catch (e) {}
                             },
                             onSignedOut: widget.onSignedOut
+
                           ),
                         ),
                       );

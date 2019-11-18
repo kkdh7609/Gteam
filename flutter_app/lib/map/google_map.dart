@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
@@ -6,7 +7,10 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:gteams/util/customGeocoder.dart';
 import 'package:gteams/map/forSecure.dart';
-import 'package:gteams/map/tempStadium.dart'; // just for testing
+
+import 'package:gteams/map/StadiumListData.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 
 typedef selectFunc = void Function(String);
 
@@ -16,10 +20,12 @@ GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 enum mapReq { mapCheck, findLocation, newLocation }
 
 class MapTest extends StatefulWidget {
-  MapTest({this.onSelected, this.nowReq});
-
+  MapTest({this.onSelected, this.nowReq,this.stadiumData,this.stadiumList,this.docId});
+  List<StadiumListData> stadiumList;
+  final StadiumListData stadiumData; // GameRoom에서 한가지 방정보만 가지고 왔을때..
   final selectFunc onSelected;
   final mapReq nowReq;
+  final String docId; // 무엇을 위한 DocId 인교..?
 
   @override
   _MapTestState createState() => _MapTestState();
@@ -35,32 +41,34 @@ class _MapTestState extends State<MapTest> {
   PageController _pageController;
   int prevPage;
 
+
   @override
-  void initState() {
+  void initState(){
     super.initState();
     _pageController = PageController(initialPage: 1, viewportFraction: 0.8)..addListener(_onScroll);
-    tempStadiums.asMap().forEach(
-      (index, element) {
-        String nowLoc =
-            [element.locationCoords.latitude.toStringAsFixed(6), element.locationCoords.longitude.toStringAsFixed(6)].toString();
-        _markers.add(Marker(
-            markerId: MarkerId(nowLoc),
-            draggable: false,
-            infoWindow: InfoWindow(title: element.shopName, snippet: element.address),
-            position: element.locationCoords,
-            onTap: (){
-              if(_pageController.page.toInt() == index)      _goToNewPosition(makePosition(tempStadiums[index].locationCoords));
-              _pageController.animateToPage(index, duration: Duration(seconds: 1), curve: Curves.ease);
-              // _pageController.jumpToPage(index);
-            }));
-      },
-    );
+    if(widget.stadiumData != null ) {widget.stadiumList = [widget.stadiumData];}
+    widget.stadiumList.asMap().forEach(
+            (index,element){
+      element.locationCoords = new LatLng(element.lat, element.lng) ;
+      String nowLoc =
+      [element.locationCoords.latitude.toStringAsFixed(6), element.locationCoords.longitude.toStringAsFixed(6)].toString();
+      _markers.add(Marker(
+        markerId: MarkerId(nowLoc),
+        draggable: false,
+        infoWindow: InfoWindow(title: element.stadiumName, snippet: element.location),
+        position: element.locationCoords,
+        onTap: (){
+      if(_pageController.page.toInt() == index) _goToNewPosition(makePosition(widget.stadiumList[index].locationCoords));
+      _pageController.animateToPage(index, duration: Duration(seconds: 1), curve: Curves.ease);
+      }));
+    });
   }
 
   void _onScroll() {
+    //print(_pageController.page);
     if (_pageController.page.toInt() != prevPage) {
       prevPage = _pageController.page.toInt();
-      _goToNewPosition(makePosition(tempStadiums[prevPage].locationCoords));
+      _goToNewPosition(makePosition(widget.stadiumList[prevPage].locationCoords));
     }
   }
 
@@ -205,85 +213,232 @@ class _MapTestState extends State<MapTest> {
   _stadiumList(index) {
     return AnimatedBuilder(
       animation: _pageController,
-      builder: (BuildContext context, Widget widget) {
+      builder: (BuildContext context, Widget widget){
         double value = 1;
-        if (_pageController.position.haveDimensions) {
+        if (_pageController.position.haveDimensions){
           value = _pageController.page - index;
-          value = (1 - (value.abs() * 0.3) + 0.06).clamp(0.0, 1.0);
+          value = ( 1 - (value.abs() * 0.3) + 0.06).clamp(0.0, 1.0);
         }
         return Center(
           child: SizedBox(
             height: Curves.easeInOut.transform(value) * 300.0,
-            width: Curves.easeInOut.transform(value) * 500.0,
+            width: Curves.easeInOut.transform(value) * 600.0,
             child: widget,
           ),
         );
       },
-      child: InkWell(
-        child: Stack(children: [
-          Center(
-            child: Container(
-              margin: EdgeInsets.symmetric(
-                horizontal: 10.0,
-                vertical: 20.0,
-              ),
-              height: 125.0,
-              width: 275.0,
-              decoration: BoxDecoration(
-                  // borderRadius: BorderRadius.circular(1.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black54,
-                      offset: Offset(0.0, 10.0),
-                      blurRadius: 10.0,
-                    ),
-                  ],
-                  border: Border(
-                      bottom: BorderSide(color: Color(0xff3B5998), width: 2.0),
-                      left: BorderSide(color: Color(0xff3B5998), width: 2.0),
-                      right: BorderSide(color: Color(0xff3B5998), width: 2.0),
-                      top: BorderSide(color: Color(0xff3B5998), width: 2.0))),
-              child: Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5.0), color: Colors.white),
-                child: Row(
-                  children: [
-                    SizedBox(width: 10.0),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                            width: 250.0,
-                            child: Text(tempStadiums[index].shopName,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(color: Color(0xff3B5998), fontSize: 22.5, fontWeight: FontWeight.bold))),
-                        Container(
-                            width: 250.0,
-                            child: Text(tempStadiums[index].address,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                                style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold)),
-                            padding: EdgeInsets.symmetric(vertical: 5.0),
-                            decoration: BoxDecoration(
-                                border: Border(
-                              bottom: BorderSide(color: Colors.blueGrey),
-                            ))),
-                        Container(
-                          width: 250.0,
-                          child: Text(tempStadiums[index].description,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 3,
-                              style: TextStyle(fontSize: 11.0, fontWeight: FontWeight.w400)),
-                        )
-                      ],
-                    )
-                  ],
+
+      child: _buildContainer(index),
+    );
+  }
+
+  _buildContainer(int index){
+    return Stack(
+      children: <Widget>[
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 20.0),
+            height: 200.0,
+            child: ListView(
+              //scrollDirection: Axis.horizontal,
+              children: <Widget>[
+                SizedBox(width: 10.0),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: _boxes(
+                      widget.stadiumList[index].imagePath,
+                      widget.stadiumList[index].locationCoords.latitude, widget.stadiumList[index].locationCoords.longitude,widget.stadiumList[index].stadiumName,index),
                 ),
-              ),
+              ],
             ),
           ),
-        ]),
-      ),
+        ),
+      ],
+    );
+
+  }
+
+  _boxes(String _image, double lat,double long,String stadiumName,int index) {
+    //return  GestureDetector(
+      return Container(
+        child: new FittedBox(
+          child: Material(
+              color: Colors.white,
+              elevation: 14.0,
+              borderRadius: BorderRadius.circular(24.0),
+              shadowColor: Color(0x802196F3),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    width: 180,
+                    height: 200,
+                    child: ClipRRect(
+                      borderRadius: new BorderRadius.circular(24.0),
+                      child: Image(
+                        fit: BoxFit.fill,
+                        image: NetworkImage(_image),
+                      ),
+                    ),),
+                  Container(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: myDetailsContainer1(stadiumName,index),
+                    ),
+                  ),
+
+                ],)
+          ),
+        ),
+      );
+   // );
+  }
+
+  myDetailsContainer1(String stadiumName, int index) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Container(
+              child: Text(stadiumName,
+                style: TextStyle(
+                    color: Color(0xff6200ee),
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold),
+              )),
+        ),
+        SizedBox(height:5.0),
+        Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Container(
+                    child: Text(
+                      widget.stadiumList[index].location.substring(0,widget.stadiumList[index].location.lastIndexOf("구")+1),
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 18.0,
+                      ),
+                    )),
+                Container(
+                    child: Text(
+                      " ",
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 18.0,
+                      ),
+                    )),
+              ],
+            )),
+        SizedBox(height:5.0),
+        Container(
+            child: Text(
+              "시간당 "+widget.stadiumList[index].price.toString()+" 원",
+              style: TextStyle(
+                color: Colors.black54,
+                fontSize: 18.0,
+              ),
+            )),
+        SizedBox(height:5.0),
+        Container(
+            child: Text(
+              "전화번호 : " + widget.stadiumList[index].telephone,
+              style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold),
+            )),
+        Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 17),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      widget.stadiumList[index].isClothes ? Icon(FontAwesomeIcons.tshirt,
+                          color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
+                      Icon(FontAwesomeIcons.tshirt,
+                          color: Colors.grey, size: 25) ,
+                      SizedBox(height: 5),
+                      Text(
+                        "옷 대여",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            color: Colors.black.withOpacity(0.7),
+                            fontFamily: 'Dosis'),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 20),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    widget.stadiumList[index].isClothes ? Icon(FontAwesomeIcons.shoePrints,
+                        color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
+                    Icon(FontAwesomeIcons.shoePrints,
+                        color: Colors.grey, size: 25) ,
+                    SizedBox(height: 5),
+                    Text(
+                      "신발 대여",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                          color: Colors.black.withOpacity(0.7),
+                          fontFamily: 'Dosis'),
+                    ),
+                  ],
+                ),
+                SizedBox(width: 20),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    widget.stadiumList[index].isParking ? Icon(FontAwesomeIcons.parking,
+                        color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
+                    Icon(FontAwesomeIcons.parking,
+                        color: Colors.grey, size: 25) ,
+                    SizedBox(height: 5),
+                    Text("주차장",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            color: Colors.black.withOpacity(0.7),
+                            fontFamily: 'Dosis')),
+                  ],
+                ),
+                SizedBox(width: 20),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    widget.stadiumList[index].isShower ? Icon(FontAwesomeIcons.shower,
+                        color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
+                    Icon(FontAwesomeIcons.shower,
+                        color: Colors.grey, size: 25) ,
+                    SizedBox(height: 5),
+                    Text(
+                      "샤워실 이용",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                          color: Colors.black.withOpacity(0.7),
+                          fontFamily: 'Dosis'),
+                    ),
+                  ],
+                ),
+                SizedBox(width: 20),
+
+              ],
+            )),
+      ],
     );
   }
 
@@ -343,6 +498,8 @@ class _MapTestState extends State<MapTest> {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -365,12 +522,12 @@ class _MapTestState extends State<MapTest> {
               width: MediaQuery.of(context).size.width,
               child: PageView.builder(
                 controller: _pageController,
-                itemCount: tempStadiums.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return _stadiumList(index);
-                },
-              ),
-            ),
+                itemCount: widget.stadiumList.length,
+                itemBuilder: (BuildContext context, int index){
+                return _stadiumList(index);
+                }
+              )
+            )
           ),
           Padding(padding: EdgeInsets.all(16.0), child: Align(alignment: Alignment.topRight, child: mapButtons()))
         ],
