@@ -122,8 +122,14 @@ class _MapTestState extends State<MapTest> {
     if(_pageController.page.toInt() == index)      _goToNewPosition(makePosition(widget.stadiumList[index].locationCoords));
     _pageController.animateToPage(index, duration: Duration(seconds: 1), curve: Curves.ease);
 
+    showDialog(
+      context: context,
+      builder: (context){
+        return CustomDialog(stadiumData: widget.stadiumList[index], onSelected: widget.onSelected, onPop: _doPop,);
+      }
+    );
     // 아래는 해당 정보 전으로 이동시키는 것. 추후 코드 다른 메소드로 필요
-   NewGeocoder(kGoogleApiKey, language: 'ko-KR,ko;').findAddressFromCoordinates(coordinates).then((results) {
+   /*NewGeocoder(kGoogleApiKey, language: 'ko-KR,ko;').findAddressFromCoordinates(coordinates).then((results) {
       var first = results.first;
       print("${first.featureName} : ${first.addressLine}");
       showDialog(
@@ -132,9 +138,10 @@ class _MapTestState extends State<MapTest> {
             return CustomDialog(location: first.addressLine, onSelected: widget.onSelected, onPop: _doPop);
           }
       );
+
       // widget.onSelected(first.addressLine);
       // Navigator.pop(context);
-    });
+    });*/
   }
 
 
@@ -360,7 +367,7 @@ class _MapTestState extends State<MapTest> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      widget.stadiumList[index].isClothes ? Icon(FontAwesomeIcons.tshirt,
+                      widget.stadiumList[index].isClothes == 0? Icon(FontAwesomeIcons.tshirt,
                           color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
                       Icon(FontAwesomeIcons.tshirt,
                           color: Colors.grey, size: 25) ,
@@ -381,7 +388,7 @@ class _MapTestState extends State<MapTest> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    widget.stadiumList[index].isClothes ? Icon(FontAwesomeIcons.shoePrints,
+                    widget.stadiumList[index].isClothes == 0 ? Icon(FontAwesomeIcons.shoePrints,
                         color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
                     Icon(FontAwesomeIcons.shoePrints,
                         color: Colors.grey, size: 25) ,
@@ -401,7 +408,7 @@ class _MapTestState extends State<MapTest> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    widget.stadiumList[index].isParking ? Icon(FontAwesomeIcons.parking,
+                    widget.stadiumList[index].isParking == 0? Icon(FontAwesomeIcons.parking,
                         color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
                     Icon(FontAwesomeIcons.parking,
                         color: Colors.grey, size: 25) ,
@@ -419,7 +426,7 @@ class _MapTestState extends State<MapTest> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    widget.stadiumList[index].isShower ? Icon(FontAwesomeIcons.shower,
+                    widget.stadiumList[index].isShower == 0? Icon(FontAwesomeIcons.shower,
                         color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
                     Icon(FontAwesomeIcons.shower,
                         color: Colors.grey, size: 25) ,
