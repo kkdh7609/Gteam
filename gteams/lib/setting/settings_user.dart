@@ -22,8 +22,6 @@ enum Gender { MALE, FEMALE, ALL }
 class _SettingUserState extends State<SettingUser> {
   List<SettingListData> sportListData = SettingListData.sportList;
 
-  //List<SettingListData> accomodationListData = SettingListData.dayList;
-
   RangeValues _values = RangeValues(0, 24);
   double distValue = 50.0;
   Gender _selectedGender = null;
@@ -110,7 +108,9 @@ class _SettingUserState extends State<SettingUser> {
                           MaterialPageRoute(
                               builder: (context) => MainMenuPage(
                                     onSignedOut: widget.onSignedOut,
-                                  )));
+                                  ),
+                          ),
+                      );
                     },
                     child: Center(
                       child: Text(
@@ -298,34 +298,6 @@ class _SettingUserState extends State<SettingUser> {
     }
     return noList;
   }
-
-  /* unused..
-  Widget timeRangeBar() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            "선호 시간",
-            textAlign: TextAlign.left,
-            style: TextStyle(color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
-          ),
-        ),
-        RangeSliderView(
-          values: _values,
-          onChnageRangeValues: (values) {
-            _values = values;
-          },
-        ),
-        SizedBox(
-          height: 8,
-        )
-      ],
-    );
-  }
-  */
 
   Widget getAppBarUI() {
     return Container(

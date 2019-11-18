@@ -1,15 +1,16 @@
 import 'dart:ui';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gteams/services/crud.dart';
 import 'package:gteams/map/google_map.dart';
 import 'package:gteams/game/game_join/model/GameListData.dart';
 import 'package:gteams/game/game_join/widgets/GameListView.dart';
 import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 import 'package:gteams/game/game_join/widgets/GameFilterScreen.dart';
 import 'package:gteams/game/game_join/widgets/CalendarPopUpView.dart';
+import 'package:gteams/map/StadiumListData.dart';
 
 class GameJoinPage extends StatefulWidget {
   @override
@@ -17,9 +18,13 @@ class GameJoinPage extends StatefulWidget {
 }
 
 class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMixin {
-  var gameList = GameListData.gameList;
 
-  crudMedthods crudObj = new crudMedthods();
+  var gameList =GameListData.gameList;
+  var stadiumList =StadiumListData.stadiumList;
+  var stadiumListForMap = StadiumListData.stadiumList;
+  StadiumListData stadiumData;
+  int gameListLength;
+  bool flag =false;
 
   AnimationController animationController;
   ScrollController _scrollController = new ScrollController();
@@ -27,6 +32,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(Duration(days: 5));
   String _nowLocation;
+
 
   Future<bool> getData() async {
     await Future.delayed(const Duration(milliseconds: 200));
@@ -36,9 +42,15 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
   @override
   void initState() {
     this.gameList = GameListData.gameList;
+    this.stadiumList =StadiumListData.stadiumList;
+    this.stadiumListForMap =StadiumListData.stadiumList;
+
+    this.flag =false;
     animationController = AnimationController(duration: Duration(milliseconds: 1000), vsync: this);
     super.initState();
   }
+
+
 
   @override
   void dispose() {
@@ -53,58 +65,72 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
         child: Container(
             child: Scaffold(
                 body: Stack(
-          children: <Widget>[
-            InkWell(
-                splashColor: Colors.transparent,
-                focusColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                hoverColor: Colors.transparent,
-                onTap: () {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                },
-                child: Column(
                   children: <Widget>[
-                    _showAppBarUI(),
-                    Expanded(
-                        child: NestedScrollView(
-                            controller: _scrollController,
-                            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-                              return <Widget>[
-                                SliverList(
-                                  delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-                                    return Column(
-                                      children: <Widget>[
-                                        _showSearchBarUI(),
-                                        _showTimeDateUI(),
-                                      ],
-                                    );
-                                  }, childCount: 1),
-                                ),
-                                SliverPersistentHeader(
-                                  pinned: true,
-                                  floating: true,
-                                  delegate: ContestTabHeader(
-                                    _showFilterBarUI(),
-                                  ),
-                                ),
-                              ];
-                            },
-                            body: _buildBody()))
+                    InkWell(
+                        splashColor: Colors.transparent,
+                        focusColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        onTap: () {
+                          FocusScope.of(context).requestFocus(FocusNode());
+                        },
+                        child: Column(
+                          children: <Widget>[
+                            _showAppBarUI(),
+                            Expanded(
+                                child: NestedScrollView(
+                                  controller: _scrollController,
+                                  headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                                    return <Widget>[
+                                      SliverList(
+                                        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+                                          return Column(
+                                            children: <Widget>[
+                                              _showSearchBarUI(),
+                                              _showTimeDateUI(),
+                                            ],
+                                          );
+                                        }, childCount: 1),
+                                      ),
+                                      SliverPersistentHeader(
+                                        pinned: true,
+                                        floating: true,
+                                        delegate: ContestTabHeader(
+                                          _showFilterBarUI(),
+                                        ),
+                                      ),
+                                    ];
+                                  },
+                                  body: _buildBody(true),
+                                )
+                            )
+                          ],
+                        )
+                    )
                   ],
-                ))
-          ],
-        ))));
+                )
+            )
+        )
+    );
   }
 
-  /*YeongUn modify
-  By using Stream Builder, Firestroe game2 collection and App can update real time*/
-  Widget _buildBody() {
+  ///YeongUn modify
+  ///By using Stream Builder, Firestroe game2 collection and App can update real time
+  Widget _buildBody(bool check) {
     return StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection('game3').snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) return LinearProgressIndicator();
-          return _showGamelist(context, snapshot.data.documents);
-        });
+      //stream : Firestore.instance.collection('game3').where('dateNumber',isGreaterThanOrEqualTo: startDate.millisecondsSinceEpoch,isLessThanOrEqualTo: endDate.millisecondsSinceEpoch).snapshots():
+        stream : Firestore.instance.collection("game3").snapshots(),
+        builder: (context, snapshot){
+          if(!snapshot.hasData) return LinearProgressIndicator();
+          gameListLength = snapshot.data.documents.length;
+          gameList = snapshot.data.documents.map((data) => GameListData.fromJson(data.data)).toList();
+          if(!flag) {
+            flag = true;
+            stadiumList = new List(snapshot.data.documents.length);
+          }
+          return _showGamelist(context,snapshot.data.documents);
+        }
+    );
   }
 
   Widget _showGamelist(BuildContext context, List<DocumentSnapshot> snapshot) {
@@ -119,12 +145,24 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
           var animation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
               parent: animationController, curve: Interval((1 / count) * index, 1.0, curve: Curves.fastOutSlowIn)));
           animationController.forward();
-          return GameListView(
+          //GameData 및 stadium Data Setting
+          gameList[index].stadiumRef.get().then((document){
+            if(this.mounted ){
+              setState(() {
+                stadiumList[index] = StadiumListData.fromJson(document.data);
+                // print(stadiumList[index].lat);
+              });
+            }
+          });
+          // StadiumData를 받고 나서 GameListView를 출력해준다.
+          return stadiumList[index] != null ?GameListView(
             callback: () {},
-            gameData: snapshot.map((data) => GameListData.fromJson(data.data)).toList()[index],
+            gameData: gameList[index],
+            stadiumData: stadiumList[index],
+            docId :snapshot[index].documentID,
             animation: animation,
             animationController: animationController,
-          );
+          ) : LinearProgressIndicator();
         },
       ),
     );
@@ -137,71 +175,94 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
   /* AppBar 보여주는 UI */
   Widget _showAppBarUI() {
     return Container(
-      decoration: BoxDecoration(color: GameJoinTheme.buildLightTheme().backgroundColor, boxShadow: <BoxShadow>[
-        BoxShadow(color: Colors.grey.withOpacity(0.2), offset: Offset(0, 2), blurRadius: 8.0),
-      ]),
-      child: Container(
-        color: GameJoinTheme.buildLightTheme().primaryColor,
-        child: Padding(
-          padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top, left: 8, right: 8),
-          child: Row(
+        decoration: BoxDecoration(
+            color: GameJoinTheme
+                .buildLightTheme()
+                .backgroundColor,
+            boxShadow: <BoxShadow>[
+
+              BoxShadow(color: Colors.grey.withOpacity(0.2),
+                  offset: Offset(0, 2),
+                  blurRadius: 8.0),
+            ]
+        ),
+        child: Container(
+            color: GameJoinTheme.buildLightTheme().primaryColor,
+            child: Padding(
+                padding: EdgeInsets.only(top: MediaQuery
+                    .of(context)
+                    .padding
+                    .top, left: 8, right: 8),
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                        alignment: Alignment.centerLeft,
+                        width: AppBar().preferredSize.height + 40,
+                        height: AppBar().preferredSize.height,
+                        child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(32.0),
+                                ),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Icon(Icons.arrow_back, color: Colors.white),
+                                )
+                            )
+                        )
+                    ),
+                    Expanded(
+                        child: Center(
+                            child: Text("Search the Game", style: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white))
+                        )
+                    ),
+                    Container(
+                        width: AppBar().preferredSize.height + 40,
+                        height: AppBar().preferredSize.height,
+                        child: _showMapIconUi()
+                    )
+                  ],
+                )
+            )
+        )
+    );
+  }
+
+  ///YeongUn Modify
+  ///By using Stream Builder, Firestore stadium collection and google_map can update real time
+  Widget _showMapIconUi(){
+    return StreamBuilder<QuerySnapshot>(
+        stream  : Firestore.instance.collection("stadium").snapshots(),
+        builder : (context, snapshot){
+          if(!snapshot.hasData) return LinearProgressIndicator();
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Container(
-                  alignment: Alignment.centerLeft,
-                  width: AppBar().preferredSize.height + 40,
-                  height: AppBar().preferredSize.height,
-                child: Material(
+              Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(32.0
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(32.0),
                       ),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0
-                      ),
-                      child: Icon(Icons.arrow_back, color: Colors.white
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                  child: Center(
-                      child: Text("Search the Game",
-                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white)))),
-              Container(
-                  width: AppBar().preferredSize.height + 40,
-                  height: AppBar().preferredSize.height,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(32.0),
-                          ),
-                          onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => MapTest(onSelected: _changeLoc)));
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(FontAwesomeIcons.mapMarkedAlt, color: Colors.white),
-                          ),
-                        ),
+                      onTap: () {
+                        this.stadiumListForMap=snapshot.data.documents.map((data) => StadiumListData.fromJson(data.data)).toList();
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTest(onSelected: _changeLoc,stadiumList: stadiumListForMap,)));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(FontAwesomeIcons.mapMarkedAlt, color: Colors.white),
                       )
-                    ],
-                  ))
+                  )
+              )
             ],
-          ),
-        ),
-      ),
+          );
+        }
     );
   }
 
@@ -417,7 +478,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "530 games found",
+                      gameListLength.toString()+" games found",
                       style: TextStyle(
                           fontFamily: 'Dosis', fontWeight: FontWeight.w600, fontSize: 16, color: Colors.black.withOpacity(0.5)),
                     ),
@@ -504,8 +565,8 @@ class ContestTabHeader extends SliverPersistentHeaderDelegate {
   final Widget searchUI;
 
   ContestTabHeader(
-    this.searchUI,
-  );
+      this.searchUI,
+      );
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {

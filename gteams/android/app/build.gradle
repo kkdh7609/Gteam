@@ -60,6 +60,11 @@ flutter {
 }
 
 dependencies {
+    // 추가한 부분(11/15)
+    implementation 'com.google.android.gms:play-services-tasks:17.0.0'
+    implementation 'com.google.android.gms:play-services-base:17.0.0'
+    implementation 'com.google.android.gms:play-services-basement:17.0.0'
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     testImplementation 'junit:junit:4.12'
     implementation 'androidx.appcompat:appcompat:1.0.2'

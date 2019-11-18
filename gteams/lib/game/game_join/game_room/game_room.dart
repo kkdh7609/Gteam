@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gteams/game/game_join/game_room/current_room.dart';
+import 'package:gteams/game/game_join/model/GameListData.dart';
+import 'package:gteams/map/StadiumListData.dart';
 import 'package:gteams/map/google_map.dart';
 import 'package:gteams/game/game_join/game_room/GameRoomTheme.dart';
+import 'package:gteams/root_page.dart';
+import 'package:gteams/services/crud.dart';
 
 class GameRoomPage extends StatefulWidget {
+  final String docId;
+  List<dynamic> currentUserList;
+  StadiumListData stadiumData;
+  GameListData gameData;
+
+  GameRoomPage({Key key,this.docId,this.currentUserList,this.stadiumData,this.gameData}) : super(key: key);
+
   @override
   _GameRoomPageState createState() => _GameRoomPageState();
 }
@@ -15,6 +27,8 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
   var opacity1 = 0.0;
   var opacity2 = 0.0;
   var opacity3 = 0.0;
+
+  crudMedthods crudObj = new crudMedthods();
 
   @override
   void initState() {
@@ -59,7 +73,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
               children: <Widget>[
                 AspectRatio(
                   aspectRatio: 1.2,
-                  child: Image.asset('assets/game/room/footsal_club.jpg'),
+                  child: Image.asset('assets/image/game/room/footsal_club.jpg'),
                 ),
               ],
             ),
@@ -81,7 +95,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                   child: SingleChildScrollView(
                     child: Container(
                       constraints:
-                          BoxConstraints(minHeight: infoHeight, maxHeight: tempHeight > infoHeight ? tempHeight : infoHeight),
+                      BoxConstraints(minHeight: infoHeight, maxHeight: tempHeight > infoHeight ? tempHeight : infoHeight),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,7 +103,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                           Padding(
                             padding: const EdgeInsets.only(top: 32.0, left: 18, right: 16),
                             child: Text(
-                              "Suwon-World Cup Stadium, Suwon, Gyeonggi-do",
+                              widget.stadiumData.location,
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
@@ -106,7 +120,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Text(
-                                  "10,000 원",
+                                  widget.stadiumData.price.toString()+" 원",
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w200,
@@ -150,7 +164,9 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: <Widget>[
-                                      getTimeBoxUI("5 vs 5", "Match", Icon(FontAwesomeIcons.peopleCarry)),
+                                      getTimeBoxUI((widget.gameData.groupSize / 2).toInt().toString() +
+                                          " vs " +
+                                          (widget.gameData.groupSize / 2).toInt().toString(), "Match", Icon(FontAwesomeIcons.peopleCarry)),
                                       getTimeBoxUI("2시간", "Time", Icon(FontAwesomeIcons.clock)),
                                       getTimeBoxUI("신발 대여", "Shoe", Icon(FontAwesomeIcons.shoePrints)),
                                     ],
@@ -166,7 +182,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        MapTest(onSelected: _changeState, nowReq: mapReq.mapCheck)));
+                                                        MapTest(onSelected: _changeState, nowReq: mapReq.mapCheck,stadiumData: widget.stadiumData,)));
                                           }),
                                       getTimeBoxUI("초보", "Skill", Icon(FontAwesomeIcons.users)),
                                       getTimeBoxUI("옷 대여", "Clothes", Icon(FontAwesomeIcons.tshirt)),
@@ -242,30 +258,56 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Container(
-                    width: 48,
-                    height: 48,
+                  widget.currentUserList.contains(RootPage.user_email) ?
+                  InkWell(
+                    onTap:(){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(), fullscreenDialog: true),
+                      );
+                    },
                     child: Container(
+                      height: 48,
+                      width: 350,
                       decoration: BoxDecoration(
-                        color: GameRoomTheme.nearlyWhite,
+                        color: GameRoomTheme.dark_grey,
                         borderRadius: BorderRadius.all(
                           Radius.circular(16.0),
                         ),
-                        border: new Border.all(color: GameRoomTheme.grey.withOpacity(0.2)),
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(color: GameRoomTheme.nearlyBlue.withOpacity(0.5), offset: Offset(1.1, 1.1), blurRadius: 10.0),
+                        ],
                       ),
-                      child: Icon(
-                        Icons.add,
-                        color: GameRoomTheme.nearlyBlue,
-                        size: 28,
+                      child: Center(
+                        child: Text(
+                          "이미 참여중인 모임입니다",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                            letterSpacing: 0.0,
+                            color: GameRoomTheme.nearlyWhite,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 16,
-                  ),
-                  Expanded(
+                    ) ,
+                  ) : InkWell(
+                    onTap:(){
+                      List<dynamic> newList = widget.currentUserList.toList();
+                      newList.add(RootPage.user_email);
+                      print(newList);
+                      print(widget.docId);
+                      crudObj.updateData(
+                        'game3',
+                        widget.docId,
+                        {
+                          'userList' : newList,
+                        },
+                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(), fullscreenDialog: true),
+                      );
+                    },
                     child: Container(
                       height: 48,
+                      width: 350,
                       decoration: BoxDecoration(
                         color: GameRoomTheme.nearlyBlue,
                         borderRadius: BorderRadius.all(
@@ -287,7 +329,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                           ),
                         ),
                       ),
-                    ),
+                    ) ,
                   )
                 ],
               ),
