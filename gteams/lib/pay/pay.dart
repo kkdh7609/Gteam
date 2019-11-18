@@ -3,6 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:gteams/pay/iamport_payment.dart';
 
 enum Cost { ONE_THOUSANDS, FIVE_THOUSANDS, TEN_THOUSANDS }
+enum PayMethod {
+  CARD,
+  PHONE,
+  TRANS,
+}
 
 class PayPage extends StatefulWidget {
   @override
@@ -11,6 +16,7 @@ class PayPage extends StatefulWidget {
 
 class _PayPageState extends State<PayPage> {
   Cost _selectedCost = null;
+  PayMethod _selectedPayMethod = null;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +53,20 @@ class _PayPageState extends State<PayPage> {
                   ),
                 ),
               ),
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: InkWell(
+                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  onTap: () { Navigator.pop(context); },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0
+                    ),
+                    child: Icon(Icons.arrow_back, color: Colors.white),
+                  ),
+                ),
+              ),
               /* Total Point View */
               Positioned(
                 top: 0,
@@ -69,9 +89,21 @@ class _PayPageState extends State<PayPage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Text("Total Point of G-TEAM",
-                              style:
+                          Row(
+                            children: <Widget>[
+                              InkWell(
+                                borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                                onTap: () { Navigator.pop(context); },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 40),
+                                  child: Icon(Icons.arrow_back, color: Colors.white),
+                                ),
+                              ),
+                              Text("Total Point of G-TEAM",
+                                  style:
                                   TextStyle(fontSize: 27, fontWeight: FontWeight.w700, color: Colors.white, fontFamily: 'Dosis')),
+                            ],
+                          ),
                           SizedBox(height: 10),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -79,7 +111,7 @@ class _PayPageState extends State<PayPage> {
                             children: <Widget>[
                               Text("50,000 P",
                                   style: TextStyle(
-                                      fontSize: 55, fontWeight: FontWeight.w700, color: Colors.white, fontFamily: 'Dosis')),
+                                      fontSize: 80, fontWeight: FontWeight.w700, color: Colors.white, fontFamily: 'Qwigley')),
                             ],
                           ),
                         ],
@@ -145,7 +177,8 @@ class _PayPageState extends State<PayPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Text("10% Discount event card", style: TextStyle(fontSize: 17, fontFamily: 'Dosis', fontWeight: FontWeight.w600))
+                        Text("10% Discount event card",
+                            style: TextStyle(fontSize: 17, fontFamily: 'Dosis', fontWeight: FontWeight.w600))
                       ],
                     ),
                   )),
@@ -156,7 +189,8 @@ class _PayPageState extends State<PayPage> {
                 right: 0,
                 child: ListView(
                   children: <Widget>[
-                    Column(
+                  /*
+                  Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         _showCardMethod(),
@@ -165,45 +199,173 @@ class _PayPageState extends State<PayPage> {
                       ],
                     ),
                     SizedBox(height: 5),
+                    */
                     InkWell(
-                      onTap: (){ Navigator.push(context, MaterialPageRoute(builder: (context) => IamPortPayment(chargeType:_selectedCost))); },
-                      child: Container(
-                        height: MediaQuery.of(context).size.height * 0.13,
-                        margin: EdgeInsets.symmetric(vertical: 9.0, horizontal: 21.0),
-                        decoration: BoxDecoration(
-                          color: Color(0xff20253d),
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        padding: EdgeInsets.all(15),
-                        child: Row(
-                          children: <Widget>[
-                            IconButton(
-                              color: Colors.white,
-                              icon: Icon(Icons.monetization_on, size: 40),
-                              onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context) => IamPortPayment(chargeType:_selectedCost))); },
-                            ),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  "Charge Point",
-                                  style: TextStyle(fontSize: 15, fontFamily:'Dosis', color: Colors.white, fontWeight: FontWeight.w800),
-                                ),
-                                Text(
-                                  "포인트 충전하기",
-                                  style: TextStyle(fontSize: 23, fontFamily:'Dosis', color: Colors.white, fontWeight: FontWeight.w800),
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: false,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      )
-                    )
+                        onTap: () {
+                          setState(() {
+                            if (_selectedPayMethod != PayMethod.CARD)
+                              _selectedPayMethod = PayMethod.CARD;
+                            else
+                              _selectedPayMethod = null;
+                          });
+                        },
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.13,
+                          margin: EdgeInsets.symmetric(vertical: 9.0, horizontal: 21.0),
+                          decoration: BoxDecoration(
+                            color: _selectedPayMethod == PayMethod.CARD ? Color(0xff20242b).withOpacity(0.85) : Colors.white,
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          padding: EdgeInsets.all(15),
+                          child: Row(
+                            children: <Widget>[
+                              IconButton(
+                                color: _selectedPayMethod == PayMethod.CARD ? Colors.white : Color(0xff20253d),
+                                icon: Icon(Icons.card_giftcard, size: 40),
+                                onPressed: () {
+                                  setState(() {
+                                    if (_selectedPayMethod != PayMethod.CARD)
+                                      _selectedPayMethod = PayMethod.CARD;
+                                    else
+                                      _selectedPayMethod = null;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    "Card & Pay",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontFamily: 'Dosis',
+                                        color: _selectedPayMethod == PayMethod.CARD ? Colors.white : Color(0xff20253d),
+                                        fontWeight: FontWeight.w800),
+                                  ),
+                                  Text(
+                                    "카드 & 페이",
+                                    style: TextStyle(
+                                        fontSize: 23,
+                                        fontFamily: 'Dosis',
+                                        color: _selectedPayMethod == PayMethod.CARD ? Colors.white : Color(0xff20253d),
+                                        fontWeight: FontWeight.w800),
+                                    overflow: TextOverflow.ellipsis,
+                                    softWrap: false,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        )),
+                    InkWell(
+                        onTap: () {
+                          setState(() {
+                            if (_selectedPayMethod != PayMethod.PHONE)
+                              _selectedPayMethod = PayMethod.PHONE;
+                            else
+                              _selectedPayMethod = null;
+                          });
+                        },
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.13,
+                          margin: EdgeInsets.symmetric(vertical: 9.0, horizontal: 21.0),
+                          decoration: BoxDecoration(
+                            color: _selectedPayMethod == PayMethod.PHONE ? Color(0xff20242b).withOpacity(0.85) : Colors.white,
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          padding: EdgeInsets.all(15),
+                          child: Row(
+                            children: <Widget>[
+                              IconButton(
+                                color: _selectedPayMethod == PayMethod.PHONE ? Colors.white : Color(0xff20253d),
+                                icon: Icon(Icons.phone_android, size: 40),
+                                onPressed: () {
+                                  setState(() {
+                                    if (_selectedPayMethod != PayMethod.PHONE)
+                                      _selectedPayMethod = PayMethod.PHONE;
+                                    else
+                                      _selectedPayMethod = null;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    "Mobile Phone Payment",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontFamily: 'Dosis',
+                                        color: _selectedPayMethod == PayMethod.PHONE ? Colors.white : Color(0xff20253d),
+                                        fontWeight: FontWeight.w800),
+                                  ),
+                                  Text(
+                                    "휴대폰 소액 결제",
+                                    style: TextStyle(
+                                        fontSize: 23,
+                                        fontFamily: 'Dosis',
+                                        color: _selectedPayMethod == PayMethod.PHONE ? Colors.white : Color(0xff20253d),
+                                        fontWeight: FontWeight.w800),
+                                    overflow: TextOverflow.ellipsis,
+                                    softWrap: false,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        )),
+                    InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context, MaterialPageRoute(builder: (context) => IamPortPayment(chargeType: _selectedCost, PayMethodType: _selectedPayMethod)));
+                        },
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.13,
+                          margin: EdgeInsets.symmetric(vertical: 9.0, horizontal: 21.0),
+                          decoration: BoxDecoration(
+                            color: Color(0xff20253d),
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          padding: EdgeInsets.all(15),
+                          child: Row(
+                            children: <Widget>[
+                              IconButton(
+                                color: Colors.white,
+                                icon: Icon(Icons.monetization_on, size: 40),
+                                onPressed: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) => IamPortPayment(chargeType: _selectedCost, PayMethodType: _selectedPayMethod)));
+                                },
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    "Charge Point",
+                                    style: TextStyle(
+                                        fontSize: 15, fontFamily: 'Dosis', color: Colors.white, fontWeight: FontWeight.w800),
+                                  ),
+                                  Text(
+                                    "포인트 충전하기",
+                                    style: TextStyle(
+                                        fontSize: 23, fontFamily: 'Dosis', color: Colors.white, fontWeight: FontWeight.w800),
+                                    overflow: TextOverflow.ellipsis,
+                                    softWrap: false,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        )),
                   ],
                 ),
               ),
@@ -229,13 +391,9 @@ Widget _showCardMethod() {
           child: Column(
             children: <Widget>[
               Image.asset("assets/image/pay/hyundai_card.png", height: 80),
-              Text(
-                  "Hyundai Card",
-                  style: TextStyle(fontSize: 17, fontFamily: 'Dosis', fontWeight: FontWeight.w600)
-              ),
+              Text("Hyundai Card", style: TextStyle(fontSize: 17, fontFamily: 'Dosis', fontWeight: FontWeight.w600)),
             ],
-          )
-      ),
+          )),
       Container(
           width: 110,
           height: 120,
@@ -246,13 +404,9 @@ Widget _showCardMethod() {
           child: Column(
             children: <Widget>[
               Image.asset("assets/image/pay/KBbank_card.png", width: 250, height: 80),
-              Text(
-                  "KBbank Card",
-                  style: TextStyle(fontSize: 17, fontFamily: 'Dosis', fontWeight: FontWeight.w600)
-              ),
+              Text("KBbank Card", style: TextStyle(fontSize: 17, fontFamily: 'Dosis', fontWeight: FontWeight.w600)),
             ],
-          )
-      ),
+          )),
       Container(
           width: 110,
           height: 120,
@@ -263,37 +417,30 @@ Widget _showCardMethod() {
           child: Column(
             children: <Widget>[
               Image.asset("assets/image/pay/samsung_card.png", width: 200, height: 80),
-              Text(
-                  "Samsung Card",
-                  style: TextStyle(fontSize: 17, fontFamily: 'Dosis', fontWeight: FontWeight.w600)
-              ),
+              Text("Samsung Card", style: TextStyle(fontSize: 17, fontFamily: 'Dosis', fontWeight: FontWeight.w600)),
             ],
-          )
-      ),
+          )),
     ],
   );
 }
+
 Widget _showPayMethod() {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     children: <Widget>[
       Container(
-        width: 110,
-        height: 120,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        child: Column(
-          children: <Widget>[
-            Image.asset("assets/image/pay/kakaopay.png", width: 75, height: 86),
-            Text(
-              "Kakao Pay",
-              style: TextStyle(fontSize: 17, fontFamily: 'Dosis', fontWeight: FontWeight.w600)
-            ),
-          ],
-        )
-      ),
+          width: 110,
+          height: 120,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          child: Column(
+            children: <Widget>[
+              Image.asset("assets/image/pay/kakaopay.png", width: 75, height: 86),
+              Text("Kakao Pay", style: TextStyle(fontSize: 17, fontFamily: 'Dosis', fontWeight: FontWeight.w600)),
+            ],
+          )),
       Container(
           width: 110,
           height: 120,
@@ -304,13 +451,9 @@ Widget _showPayMethod() {
           child: Column(
             children: <Widget>[
               Image.asset("assets/image/pay/payco.png", width: 75, height: 86),
-              Text(
-                  "Payco",
-                style: TextStyle(fontSize: 17, fontFamily: 'Dosis', fontWeight: FontWeight.w600)
-              ),
+              Text("Payco", style: TextStyle(fontSize: 17, fontFamily: 'Dosis', fontWeight: FontWeight.w600)),
             ],
-          )
-      ),
+          )),
       Container(
           width: 110,
           height: 120,
@@ -321,14 +464,9 @@ Widget _showPayMethod() {
           child: Column(
             children: <Widget>[
               Image.asset("assets/image/pay/samsung_pay2.png", width: 90, height: 86),
-              Text(
-                  "Samsung Pay",
-                  style: TextStyle(fontSize: 17, fontFamily: 'Dosis', fontWeight: FontWeight.w600)
-              ),
+              Text("Samsung Pay", style: TextStyle(fontSize: 17, fontFamily: 'Dosis', fontWeight: FontWeight.w600)),
             ],
-          )
-      ),
+          )),
     ],
   );
 }
-

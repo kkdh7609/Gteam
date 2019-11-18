@@ -65,19 +65,21 @@ class _MainMenuPageState extends State<MainMenuPage> {
             screenView = MainHomePageScreen();
           },
         );
-      } else if (drawerIndex == DrawerIndex.Help) {
+      } else if (drawerIndex == DrawerIndex.POINTCHARGE) {
         setState(
           () {
-            screenView = PayPage();
+            drawerIndex = DrawerIndex.HOME;
+            Navigator.push(context, MaterialPageRoute(builder: (context) => PayPage()));
+            screenView = MainHomePageScreen();
           },
         );
-      } else if (drawerIndex == DrawerIndex.RoomList) {
+      } else if (drawerIndex == DrawerIndex.CURRENTROOM) {
         setState(
           () {
             screenView = CurrentRoomListPage();
           },
         );
-      } else if (drawerIndex == DrawerIndex.About) {
+      } else if (drawerIndex == DrawerIndex.CONTACT) {
         setState(
           () {
             screenView = MainHomePageScreen();

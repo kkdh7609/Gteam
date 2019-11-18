@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
+typedef TimeFunc = void Function(List<List<int>>);
+
 class SetTime extends StatefulWidget{
+  SetTime({this.timeFunc});
+
+  final TimeFunc timeFunc;
   @override
   _SetTimeState createState() => _SetTimeState();
 }
@@ -57,7 +62,7 @@ class _SetTimeState extends State<SetTime> with TickerProviderStateMixin {
         appBar: AppBar(title: Text("Available Times", style: TextStyle(
             fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white)),
           centerTitle: true,
-          backgroundColor: Color(0xff3B5998),
+          backgroundColor: Color(0xff20253d),
         ),
         body: Column(children: <Widget>[
           Expanded(
@@ -273,7 +278,7 @@ class _SetTimeState extends State<SetTime> with TickerProviderStateMixin {
                           fontSize: 20,
                           color: Colors.white)))),
               onPressed: () {},
-              color: Color(0xff3B5998)
+              color: Color(0xff20253d)
           )
         ])
     );

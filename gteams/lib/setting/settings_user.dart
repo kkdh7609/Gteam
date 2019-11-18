@@ -108,7 +108,9 @@ class _SettingUserState extends State<SettingUser> {
                           MaterialPageRoute(
                               builder: (context) => MainMenuPage(
                                     onSignedOut: widget.onSignedOut,
-                                  )));
+                                  ),
+                          ),
+                      );
                     },
                     child: Center(
                       child: Text(

@@ -5,6 +5,7 @@ import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:gteams/util/customGeocoder.dart';
+import 'package:gteams/map/mapDialog.dart';
 import 'package:gteams/map/forSecure.dart';
 
 import 'package:gteams/map/StadiumListData.dart';
@@ -19,12 +20,11 @@ GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 enum mapReq { mapCheck, findLocation, newLocation }
 
 class MapTest extends StatefulWidget {
-  MapTest({this.onSelected, this.nowReq,this.stadiumData,this.stadiumList,this.docId});
+  MapTest({this.onSelected, this.nowReq,this.stadiumData,this.stadiumList});
   List<StadiumListData> stadiumList;
   final StadiumListData stadiumData; // GameRoom에서 한가지 방정보만 가지고 왔을때..
   final selectFunc onSelected;
   final mapReq nowReq;
-  final String docId; // 무엇을 위한 DocId 인교..?
 
   @override
   _MapTestState createState() => _MapTestState();
@@ -40,9 +40,8 @@ class _MapTestState extends State<MapTest> {
   PageController _pageController;
   int prevPage;
 
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _pageController = PageController(initialPage: 1, viewportFraction: 0.8)..addListener(_onScroll);
     if(widget.stadiumData != null ) {widget.stadiumList = [widget.stadiumData];}
@@ -51,20 +50,18 @@ class _MapTestState extends State<MapTest> {
           element.locationCoords = new LatLng(element.lat, element.lng) ;
           String nowLoc =
           [element.locationCoords.latitude.toStringAsFixed(6), element.locationCoords.longitude.toStringAsFixed(6)].toString();
+          final coordinates = Coordinates(element.locationCoords.latitude, element.locationCoords.longitude);
           _markers.add(Marker(
               markerId: MarkerId(nowLoc),
               draggable: false,
               infoWindow: InfoWindow(title: element.stadiumName, snippet: element.location),
               position: element.locationCoords,
-              onTap: (){
-                if(_pageController.page.toInt() == index) _goToNewPosition(makePosition(widget.stadiumList[index].locationCoords));
-                _pageController.animateToPage(index, duration: Duration(seconds: 1), curve: Curves.ease);
-              }));
+              onTap: () => _onMarkerPressed(coordinates, index))
+          );
         });
   }
 
   void _onScroll() {
-    //print(_pageController.page);
     if (_pageController.page.toInt() != prevPage) {
       prevPage = _pageController.page.toInt();
       _goToNewPosition(makePosition(widget.stadiumList[prevPage].locationCoords));
@@ -80,7 +77,7 @@ class _MapTestState extends State<MapTest> {
     final GoogleMapController controller = await _controller.future;
     if (_tempMarker != null) {
       setState(
-            () {
+        () {
           _markers.remove(Marker(markerId: MarkerId(_tempMarker)));
         },
       );
@@ -110,11 +107,36 @@ class _MapTestState extends State<MapTest> {
 
   _onMapTypeButtonPressed() {
     setState(
-          () {
+      () {
         _currentMapType = _currentMapType == MapType.normal ? MapType.satellite : MapType.normal;
       },
     );
   }
+
+  _doPop(){
+    Navigator.pop(context);
+    Navigator.pop(context);
+  }
+
+  _onMarkerPressed(coordinates, index){
+    if(_pageController.page.toInt() == index)      _goToNewPosition(makePosition(widget.stadiumList[index].locationCoords));
+    _pageController.animateToPage(index, duration: Duration(seconds: 1), curve: Curves.ease);
+
+    // 아래는 해당 정보 전으로 이동시키는 것. 추후 코드 다른 메소드로 필요
+   NewGeocoder(kGoogleApiKey, language: 'ko-KR,ko;').findAddressFromCoordinates(coordinates).then((results) {
+      var first = results.first;
+      print("${first.featureName} : ${first.addressLine}");
+      showDialog(
+          context: context,
+          builder: (context){
+            return CustomDialog(location: first.addressLine, onSelected: widget.onSelected, onPop: _doPop);
+          }
+      );
+      // widget.onSelected(first.addressLine);
+      // Navigator.pop(context);
+    });
+  }
+
 
   _onAddMarkerButtonPressed() {
     String nowLoc = [_lastMapPosition.latitude.toStringAsFixed(6), _lastMapPosition.longitude.toStringAsFixed(6)].toString();
@@ -122,7 +144,7 @@ class _MapTestState extends State<MapTest> {
     double latitude = _lastMapPosition.latitude;
     double longtitude = _lastMapPosition.longitude;
     setState(
-          () {
+      () {
         if (_tempMarker == nowLoc) {
           _tempMarker = null;
           _markers.remove(Marker(markerId: MarkerId(nowLoc)));
@@ -138,31 +160,10 @@ class _MapTestState extends State<MapTest> {
             onTap: () {
               // print(nowLoc);
               final coordinates = new Coordinates(latitude, longtitude);
-              /*
-              Geocoder.google(kGoogleApiKey, language: 'kr').findAddressesFromCoordinates(coordinates).then((addresses){
-                var first = addresses.first;
-                print("${first.featureName} : ${first.addressLine}");
-                }
-              );
-              */
-              NewGeocoder(kGoogleApiKey, language: 'ko-KR,ko;').findAddressFromCoordinates(coordinates).then((results) {
-                var first = results.first;
-                print("${first.featureName} : ${first.addressLine}");
-                widget.onSelected(first.addressLine);
+              /*_getAddress(coordinates).then((results) {
+                widget.onSelected(results);
                 Navigator.pop(context);
-              });
-              // var addresses = await Geocoder.google(kGoogleApiKey).findAddressesFromCoordinates(coordinates);
-              // print(addresses);
-              /*
-              Geocoder.local.findAddressesFromCoordinates(coordinates).then((addresses){
-                  print(addresses);
-                  var first = addresses.first;
-                  print("${first.featureName} : ${first.addressLine}");
-                  widget.onSelected(title);
-                  Navigator.pop(context);
-                  }
-                );
-              */
+              });*/
             },
             icon: BitmapDescriptor.defaultMarker,
           ),
@@ -177,7 +178,7 @@ class _MapTestState extends State<MapTest> {
     // print(_markers);
     String title = "This is a title";
     setState(
-          () {
+      () {
         if (!_markers.contains(Marker(markerId: MarkerId(nowLoc)))) {
           // print(11);
           // print(_lastMapPosition);
@@ -212,16 +213,16 @@ class _MapTestState extends State<MapTest> {
   _stadiumList(index) {
     return AnimatedBuilder(
       animation: _pageController,
-      builder: (BuildContext context, Widget widget){
+      builder: (BuildContext context, Widget widget) {
         double value = 1;
-        if (_pageController.position.haveDimensions){
+        if (_pageController.position.haveDimensions) {
           value = _pageController.page - index;
-          value = ( 1 - (value.abs() * 0.3) + 0.06).clamp(0.0, 1.0);
+          value = (1 - (value.abs() * 0.3) + 0.06).clamp(0.0, 1.0);
         }
         return Center(
           child: SizedBox(
             height: Curves.easeInOut.transform(value) * 300.0,
-            width: Curves.easeInOut.transform(value) * 600.0,
+            width: Curves.easeInOut.transform(value) * 500.0,
             child: widget,
           ),
         );
@@ -496,8 +497,6 @@ class _MapTestState extends State<MapTest> {
       );
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {

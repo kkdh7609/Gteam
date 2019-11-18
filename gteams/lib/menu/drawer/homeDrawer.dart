@@ -5,6 +5,7 @@ import 'package:gteams/setting/profile/myProfile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gteams/root_page.dart';
 import 'package:gteams/menu/drawer/UserData.dart';
+import 'package:gteams/main.dart';
 
 class HomeDrawer extends StatefulWidget {
   final AnimationController iconAnimationController;
@@ -35,18 +36,18 @@ class _HomeDrawerState extends State<HomeDrawer> {
         icon: new Icon(Icons.home),
       ),
       DrawerList(
-        index: DrawerIndex.Help,
+        index: DrawerIndex.POINTCHARGE,
         labelName: 'Point Charge',
         //isAssetsImage: true,
         icon: new Icon(FontAwesomeIcons.coins, color: Colors.black),
       ),
       DrawerList(
-        index: DrawerIndex.RoomList,
+        index: DrawerIndex.CURRENTROOM,
         labelName: 'Current Room',
         icon: new Icon(Icons.group),
       ),
       DrawerList(
-        index: DrawerIndex.About,
+        index: DrawerIndex.CONTACT,
         labelName: 'Contact G-TEAMs',
         icon: new Icon(Icons.info),
       ),
@@ -172,7 +173,11 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   Icons.power_settings_new,
                   color: Colors.red,
                 ),
-                onTap: () { widget.onSignedOut(); },
+                onTap: () { widget.onSignedOut();
+                            Navigator.pop(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MyApp()));
+                            },
               ),
               SizedBox(
                 height: MediaQuery.of(context).padding.bottom,
@@ -281,9 +286,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
 enum DrawerIndex {
   HOME,
-  Help,
-  About,
-  RoomList,
+  POINTCHARGE,
+  CURRENTROOM,
+  CONTACT,
 }
 
 class DrawerList {

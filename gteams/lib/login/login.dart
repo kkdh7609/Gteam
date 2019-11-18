@@ -11,6 +11,7 @@ import 'package:gteams/login/manager_signUp.dart';
 import 'package:gteams/login/signUpWaitingPage.dart';
 import 'package:gteams/validator/login_validator.dart';
 import 'package:gteams/manager/usePhoto.dart';
+import 'package:gteams/manager/addStadium.dart';
 import 'package:gteams/manager/managerSetTime.dart';
 import 'package:gteams/pay/pay.dart';
 
@@ -28,6 +29,7 @@ enum FormMode { LOGIN, GOOGLE, SIGNUP }
 
 class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
   final _formKey = new GlobalKey<FormState>();
+
   String _loginEmail;
   String _loginPassword;
   String _errorMessage;
@@ -341,7 +343,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             padding: EdgeInsets.only(top: 10.0),
             child: FlatButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => PayPage()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => StadiumCreatePage()));
                 },
                 child: Text(
                   "Forgot Password?",

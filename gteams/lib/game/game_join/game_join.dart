@@ -45,7 +45,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
     this.stadiumList =StadiumListData.stadiumList;
     this.stadiumListForMap =StadiumListData.stadiumList;
 
-   this.flag =false;
+    this.flag =false;
     animationController = AnimationController(duration: Duration(milliseconds: 1000), vsync: this);
     super.initState();
   }
@@ -150,7 +150,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
             if(this.mounted ){
               setState(() {
                 stadiumList[index] = StadiumListData.fromJson(document.data);
-               // print(stadiumList[index].lat);
+                // print(stadiumList[index].lat);
               });
             }
           });
