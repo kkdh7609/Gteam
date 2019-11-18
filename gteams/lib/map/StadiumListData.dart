@@ -9,9 +9,9 @@ class StadiumListData {
   String telephone;
   String webSite;
   List<dynamic> operationTime;
-  bool isShower;
-  bool isParking;
-  bool isClothes;
+  int isShower;
+  int isParking;
+  int isClothes;
   int parkingHours;
   String etc;
   int price;
@@ -27,9 +27,9 @@ class StadiumListData {
     this.webSite = "",
     this.telephone = "",
     this.fieldNumber=1,
-    this.isShower=false,
-    this.isClothes=false,
-    this.isParking=false,
+    this.isShower=0,
+    this.isClothes=0,
+    this.isParking=0,
     this.addPrice=0,
     this.etc="",
     this.parkingHours=0,

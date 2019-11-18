@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gteams/map/mapWidget.dart';
+import 'package:gteams/map/StadiumListData.dart';
 
 typedef selectFunc = void Function(String);
 
 class CustomDialog extends StatelessWidget{
-  CustomDialog({this.stadiumID, this.location, this.onSelected, this.onPop});
+  CustomDialog({this.stadiumData, this.onSelected, this.onPop});
 
-  final String stadiumID;
-  final String location;
+  final StadiumListData stadiumData;
   final selectFunc onSelected;
   final VoidCallback onPop;
 
@@ -15,6 +15,7 @@ class CustomDialog extends StatelessWidget{
   String price = "70000";
   String callNum = "010-1234-5678";
   String times = "Temp";
+
 
   int clothesVal = 0;
   int shoesVal = 0;
@@ -46,7 +47,7 @@ class CustomDialog extends StatelessWidget{
   };
 
   _onConfirmPressed(){
-    onSelected(stadiumName);
+    onSelected(stadiumData.stadiumName);
     onPop();
   }
 
@@ -69,15 +70,15 @@ class CustomDialog extends StatelessWidget{
                           SizedBox(height: 16.0),
                           PhotoWidget(),
                           SizedBox(height: 4.0),
-                          TextWidget(header: "경기장 이름", text: stadiumName),
+                          TextWidget(header: "경기장 이름", text: stadiumData.stadiumName),
                           SizedBox(height: 4.0),
-                          TextWidget(header: "30분당 이용 요금(단위: 원)", text: price),
+                          TextWidget(header: "30분당 이용 요금(단위: 원)", text: stadiumData.price.toString()),
                           SizedBox(height: 4.0),
-                          LocationWidget(location: location,),
+                          LocationWidget(location: stadiumData.location),
                           SizedBox(height: 4.0),
                           TimeWidget(checkTimes: times,),
                           SizedBox(height: 4.0),
-                          PhoneWidget(text: callNum),
+                          PhoneWidget(text: stadiumData.telephone),
                           SizedBox(height: 4.0),
                           SegmentedControl(header: "유니폼 제공 여부", value: clothesVal, children: clothesSeg),
                           SizedBox(height: 4.0),
