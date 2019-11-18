@@ -109,6 +109,7 @@ class _RootPageState extends State<RootPage> {
     //print("ON_LOGGED_IN");
     widget.auth.getCurrentUser().then(
           (user) {
+            RootPage.user_email = user?.email;
         setState(
               () {
             _userId = user.uid.toString();

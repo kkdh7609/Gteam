@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gteams/menu/MainMenuScreen.dart';
 import 'package:gteams/menu/drawer/homeDrawer.dart';
 import 'package:gteams/menu/drawer/DrawerTheme.dart';
+import 'package:gteams/setting/currentRoomMenu/currentRoomList.dart';
 import 'package:gteams/menu/drawer/drawerUserController.dart';
 import 'package:gteams/pay/pay.dart';
 
@@ -70,13 +71,13 @@ class _MainMenuPageState extends State<MainMenuPage> {
             screenView = PayPage();
           },
         );
-      } else if (drawerIndex == DrawerIndex.FeedBack) {
+      } else if (drawerIndex == DrawerIndex.RoomList) {
         setState(
           () {
-            screenView = MainHomePageScreen();
+            screenView = CurrentRoomListPage();
           },
         );
-      } else if (drawerIndex == DrawerIndex.Invite) {
+      } else if (drawerIndex == DrawerIndex.About) {
         setState(
           () {
             screenView = MainHomePageScreen();

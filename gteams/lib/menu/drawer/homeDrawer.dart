@@ -41,7 +41,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
         icon: new Icon(FontAwesomeIcons.coins, color: Colors.black),
       ),
       DrawerList(
-        index: DrawerIndex.Invite,
+        index: DrawerIndex.RoomList,
         labelName: 'Current Room',
         icon: new Icon(Icons.group),
       ),
@@ -240,8 +240,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 ],
               ),
             ),
-            widget.screenIndex == listData.index
-                ? AnimatedBuilder(
+            widget.screenIndex == listData.index ? AnimatedBuilder(
               animation: widget.iconAnimationController,
               builder: (BuildContext context, Widget child) {
                 return new Transform(
@@ -282,12 +281,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
 enum DrawerIndex {
   HOME,
-  FeedBack,
   Help,
-  Share,
   About,
-  Invite,
-  Testing,
+  RoomList,
 }
 
 class DrawerList {
