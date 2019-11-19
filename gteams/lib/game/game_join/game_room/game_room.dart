@@ -21,12 +21,13 @@ class GameRoomPage extends StatefulWidget {
 }
 
 class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMixin {
-  final infoHeight = 500.0;
+  final infoHeight = 800.0;
   AnimationController animationController;
   Animation<double> animation;
   var opacity1 = 0.0;
   var opacity2 = 0.0;
   var opacity3 = 0.0;
+  var isServiceNum = 0;
 
   crudMedthods crudObj = new crudMedthods();
 
@@ -53,6 +54,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
     setState(() {
       opacity3 = 1.0;
     });
+    await Future.delayed(const Duration(milliseconds: 200));
   }
 
   void _changeState(String tempStr) {
@@ -95,7 +97,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                   child: SingleChildScrollView(
                     child: Container(
                       constraints:
-                      BoxConstraints(minHeight: infoHeight, maxHeight: tempHeight > infoHeight ? tempHeight : infoHeight),
+                      BoxConstraints(minHeight: infoHeight, maxHeight: tempHeight  > infoHeight ? tempHeight : infoHeight),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,26 +168,35 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                                     children: <Widget>[
                                       getTimeBoxUI((widget.gameData.groupSize / 2).toInt().toString() +
                                           " vs " +
-                                          (widget.gameData.groupSize / 2).toInt().toString(), "Match", Icon(FontAwesomeIcons.peopleCarry)),
-                                      getTimeBoxUI("2시간", "Time", Icon(FontAwesomeIcons.clock)),
-                                      getTimeBoxUI("신발 대여", "Shoe", Icon(FontAwesomeIcons.shoePrints)),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: <Widget>[
+                                          (widget.gameData.groupSize / 2).toInt().toString(), "Match", Icon(FontAwesomeIcons.peopleCarry),1),
+                                      getTimeBoxUI("2시간", "Time", Icon(FontAwesomeIcons.clock),1),
                                       InkWell(
-                                          child: getTimeBoxUI("위치", "Location", Icon(FontAwesomeIcons.mapMarkedAlt)),
+                                          child: getTimeBoxUI("위치", "Location", Icon(FontAwesomeIcons.mapMarkedAlt),1),
                                           onTap: () {
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
                                                         MapTest(onSelected: _changeState, nowReq: mapReq.mapCheck,stadiumData: widget.stadiumData,)));
-                                          }),
-                                      getTimeBoxUI("초보", "Skill", Icon(FontAwesomeIcons.users)),
-                                      getTimeBoxUI("옷 대여", "Clothes", Icon(FontAwesomeIcons.tshirt)),
+                                          })
+                                    ],
+                                  ),
+                                   Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      getTimeBoxUI("공 대여", "Ball", Icon(FontAwesomeIcons.volleyballBall),widget.stadiumData.isBall),
+                                      getTimeBoxUI("주차장 ", "Skill", Icon(FontAwesomeIcons.parking),widget.stadiumData.isParking),
+                                      getTimeBoxUI("샤워장", "Clothes", Icon(FontAwesomeIcons.shower),widget.stadiumData.isClothes),
+                                    ],
+                                  ),
+                                   Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      getTimeBoxUI("팀 조끼", "Ball", Icon(FontAwesomeIcons.tshirt),widget.stadiumData.isClothes),
+                                      getTimeBoxUI("풋살화 ", "Skill", Icon(FontAwesomeIcons.shoePrints),widget.stadiumData.isShoes),
+                                      getTimeBoxUI("실력", "Level"+widget.gameData.gameLevel.toString(), Icon(FontAwesomeIcons.users),1),
                                     ],
                                   ),
                                 ],
@@ -340,7 +351,8 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
     );
   }
 
-  Widget getTimeBoxUI(String text1, String text2, Icon icon1) {
+  Widget getTimeBoxUI(String text1, String text2, Icon icon1,int isProvide) {
+    text1 = isProvide == 2 ? text1+"(유료)" : text1;
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.28,
       height: 110,
@@ -356,33 +368,46 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
           ),
           child: Padding(
             padding: const EdgeInsets.only(left: 18.0, right: 18.0, top: 12.0, bottom: 12.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: Stack(
+              alignment: Alignment.bottomCenter,
               children: <Widget>[
-                icon1,
-                Text(
-                  text1,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'Dosis',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
-                    letterSpacing: 0.27,
-                    color: GameRoomTheme.nearlyBlue,
-                  ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    icon1,
+                    Text(
+                      text1,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Dosis',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                        letterSpacing: 0.27,
+                        color: GameRoomTheme.nearlyBlue,
+                      ),
+                    ),
+                    Text(
+                      text2,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Dosis',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        letterSpacing: 0.27,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
                 ),
-                Text(
-                  text2,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'Dosis',
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
-                    letterSpacing: 0.27,
-                    color: Colors.black,
+                isProvide >= 1 ?
+                Text("")  // 제공할경우
+                    :
+                Icon( // 제공하지 않을경우 X 표시 출력
+                  Icons.clear,
+                  size: 70,
+                  color: Colors.red,
                   ),
-                ),
               ],
             ),
           ),

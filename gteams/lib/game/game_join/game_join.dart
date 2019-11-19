@@ -94,7 +94,8 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                                         pinned: true,
                                         floating: true,
                                         delegate: ContestTabHeader(
-                                          _showFilterBarUI(),
+                                          Text(gameListLength.toString()),
+                                          //_showFilterBarUI(),
                                         ),
                                       ),
                                     ];
