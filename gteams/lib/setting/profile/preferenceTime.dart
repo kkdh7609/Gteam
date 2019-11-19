@@ -93,9 +93,9 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
           margin: const EdgeInsets.all(5),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(width: 3, color: Colors.blueGrey),
+            border: Border.all(width: 3, color: Color(0xff20253d)),
             color: dayListData[idx].isSelected
-                ? Color(0xff3B5998)
+                ? Color(0xff20253d)
                 : Colors.white12,
           ),
           child: new FlatButton(
@@ -103,7 +103,7 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
                 borderRadius: new BorderRadius.circular(30.0)),
             child: Text("$day",
                 style: TextStyle(
-                    color: Colors.black,
+                    color: dayListData[idx].isSelected == true ? Colors.white : Colors.black,
                     fontSize: 16,
                     fontWeight: FontWeight.w900),
                 textAlign: TextAlign.center),
@@ -127,10 +127,10 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       child: RaisedButton(
-        color: Color(0xff3B5998),
+        color: Color(0xff20253d),
         child: Text("추가",
             style: TextStyle(
-                color: Colors.black, fontSize: 16, fontWeight: FontWeight.w900),
+                color: Colors.white, fontSize: 16, fontWeight: FontWeight.w900),
             textAlign: TextAlign.center),
         shape: RoundedRectangleBorder(
             borderRadius: new BorderRadius.circular(30.0)),
@@ -349,12 +349,12 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
                   animation: _bottomSize,
                   builder: (BuildContext context, Widget child) {
                     return SliverAppBar(
-                      backgroundColor: Color(0xff3B5998),
+                      backgroundColor: Color(0xff20253d),
                       pinned: true,
                       floating: true,
                       title: Text('선호 시간 목록',
                           style: TextStyle(
-                              color: Colors.black, fontWeight: FontWeight.w900),
+                              color: Colors.white, fontWeight: FontWeight.w900),
                           textAlign: TextAlign.center),
                       bottom: _buildBottom(),
                     );
