@@ -122,7 +122,6 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
         stream : Firestore.instance.collection("game3").snapshots(),
         builder: (context, snapshot){
           if(!snapshot.hasData) return LinearProgressIndicator();
-          gameListLength = snapshot.data.documents.length;
           gameList = snapshot.data.documents.map((data) => GameListData.fromJson(data.data)).toList();
           if(!flag) {
             flag = true;
@@ -150,6 +149,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
             if(this.mounted ){
               setState(() {
                 stadiumList[index] = StadiumListData.fromJson(document.data);
+                gameListLength = gameList.length;
                 // print(stadiumList[index].lat);
               });
             }
@@ -477,8 +477,12 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(
+                    child: gameListLength != null ? Text(
                       gameListLength.toString()+" games found",
+                      style: TextStyle(
+                          fontFamily: 'Dosis', fontWeight: FontWeight.w600, fontSize: 16, color: Colors.black.withOpacity(0.5)),
+                    ) : Text(
+                      "Loading.. ",
                       style: TextStyle(
                           fontFamily: 'Dosis', fontWeight: FontWeight.w600, fontSize: 16, color: Colors.black.withOpacity(0.5)),
                     ),

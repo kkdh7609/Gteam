@@ -261,7 +261,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                   widget.currentUserList.contains(RootPage.user_email) ?
                   InkWell(
                     onTap:(){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(), fullscreenDialog: true),
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: widget.currentUserList,), fullscreenDialog: true),
                       );
                     },
                     child: Container(
@@ -302,7 +302,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                           'userList' : newList,
                         },
                       );
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(), fullscreenDialog: true),
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: newList,), fullscreenDialog: true),
                       );
                     },
                     child: Container(
