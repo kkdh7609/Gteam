@@ -120,7 +120,8 @@ class _GameCreatePageState extends State<GameCreatePage> {
           state: StepState.indexed,
           content: Column(
             children: <Widget>[_showGameDate(), _showGameTime()],
-          )),
+          )
+      ),
       Step(
           title: const Text(
             "Where",
