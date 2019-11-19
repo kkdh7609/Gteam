@@ -50,8 +50,6 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
     super.initState();
   }
 
-
-
   @override
   void dispose() {
     animationController.dispose();
@@ -96,7 +94,8 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                                         pinned: true,
                                         floating: true,
                                         delegate: ContestTabHeader(
-                                          _showFilterBarUI(),
+                                          Text(gameListLength.toString()),
+                                          //_showFilterBarUI(),
                                         ),
                                       ),
                                     ];
@@ -122,7 +121,6 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
         stream : Firestore.instance.collection("game3").snapshots(),
         builder: (context, snapshot){
           if(!snapshot.hasData) return LinearProgressIndicator();
-          gameListLength = snapshot.data.documents.length;
           gameList = snapshot.data.documents.map((data) => GameListData.fromJson(data.data)).toList();
           if(!flag) {
             flag = true;
@@ -150,7 +148,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
             if(this.mounted ){
               setState(() {
                 stadiumList[index] = StadiumListData.fromJson(document.data);
-                // print(stadiumList[index].lat);
+                gameListLength = gameList.length;
               });
             }
           });
@@ -477,8 +475,12 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(
+                    child: gameListLength != null ? Text(
                       gameListLength.toString()+" games found",
+                      style: TextStyle(
+                          fontFamily: 'Dosis', fontWeight: FontWeight.w600, fontSize: 16, color: Colors.black.withOpacity(0.5)),
+                    ) : Text(
+                      "Loading.. ",
                       style: TextStyle(
                           fontFamily: 'Dosis', fontWeight: FontWeight.w600, fontSize: 16, color: Colors.black.withOpacity(0.5)),
                     ),
@@ -581,6 +583,6 @@ class ContestTabHeader extends SliverPersistentHeaderDelegate {
 
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
-    return false;
+    return true;
   }
 }

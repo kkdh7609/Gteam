@@ -64,6 +64,7 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.only(top: 75.0),
+                    /* show Title of SignUp */
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
@@ -295,6 +296,11 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
                         print("Signed Up: $managerId");
                         ManagerManagement()
                             .storeNewManager(_managerSignUpEmail, context, _managerSignUpName, _managerSignUpBusinessNum, false);
+
+                        signUpEmailController.clear();
+                        signUpNameController.clear();
+                        signUpPasswordController.clear();
+                        signUpBusinessNumController.clear();
                       }).catchError((e) {
                         print(e);
                       });

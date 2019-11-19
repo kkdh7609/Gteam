@@ -2,24 +2,51 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gteams/game/game_join/model/MemberListData.dart';
 import 'package:gteams/game/game_join/game_room/GameRoomTheme.dart';
+import 'package:gteams/services/crud.dart';
 
 class currentRoomPage extends StatefulWidget {
+
+  currentRoomPage({Key key, this.currentUserList}) : super(key: key);
+
+  List<dynamic> currentUserList;
+
   @override
   _currentRoomPageState createState() => _currentRoomPageState();
 }
 
 class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProviderStateMixin {
+  crudMedthods crudObj = new crudMedthods();
+  var memberlist = MemberListData.memberList;
 
   final infoHeight = 100.0;
   var opacity1 = 0.0;
   var opacity2 = 0.0;
   var opacity3 = 0.0;
 
-  List<Widget> _textTab() => [
-    Tab(text: "Member"),
-    Tab(text: "Chatting"),
-    Tab(text: "details "),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    this.memberlist = MemberListData.memberList;
+
+    for(var i = 0; i < widget.currentUserList.length; i++){
+      var userQuery = crudObj.getDocumentByWhere('user', 'email', widget.currentUserList[i]);
+      userQuery.then((data){
+        setState((){
+          if(data.documents.length >= 1){
+            var name = data.documents[0].data['name'];
+            var address = data.documents[0].data['prferenceLoc'];
+            this.memberlist.add(MemberListData(name: name, address: address));
+          }
+        });
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    this.memberlist.clear();
+    super.dispose();
+  }
 
   List<Widget> _tabTwoParameters() => [
     Tab(
@@ -76,15 +103,13 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
             Expanded(
               child: Container(
                 child: TabBarView(children: [
-                  ListView(
-                      padding: const EdgeInsets.only(top: 20.0),
-                      children: <Widget>[
-                        _temp_member("김영운", "경기도 수원시 호매실동"),
-                        _temp_member("김학준", "경기도 안양시 석수동"),
-                        _temp_member("안우일", "경기도 수원시 고색동"),
-                        _temp_member("김도현", "경기도 수원시 어딘가"),
-                        _temp_member("홍길동", "경기도 수원시 어딘가"),
-                      ]
+                  ListView.builder(
+                    itemCount: this.memberlist.length,
+                    itemBuilder: (BuildContext context, int index){
+                      return this.memberlist.length != 0 ?_member_info(
+                          this.memberlist[index].name, this.memberlist[index].address
+                      ):LinearProgressIndicator();
+                    },
                   ),
                   Container(
                     child: Text("Chatting ui"),
@@ -99,7 +124,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
     );
   }
 
-  Widget _temp_member(String name, String address){
+  Widget _member_info(String name, String address){
     return Card(
       color: Color(0xff20253d),
       key: ValueKey(name),

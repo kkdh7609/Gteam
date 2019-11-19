@@ -33,8 +33,7 @@ class MainHomePageScreen extends StatelessWidget {
     return Scaffold(
       body: Container(
         child: MenuPager(
-          children: Aliments.aliments
-              .map(
+          children: Aliments.aliments.map(
                 (aliment) => Page(
                   title: "G-TEAM",
                   background: aliment.background,
