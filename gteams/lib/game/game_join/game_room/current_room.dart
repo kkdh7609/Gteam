@@ -4,6 +4,11 @@ import 'package:gteams/game/game_join/model/MemberListData.dart';
 import 'package:gteams/game/game_join/game_room/GameRoomTheme.dart';
 
 class currentRoomPage extends StatefulWidget {
+
+  currentRoomPage({Key key, this.currentUserList}) : super(key: key);
+
+  List<dynamic> currentUserList;
+
   @override
   _currentRoomPageState createState() => _currentRoomPageState();
 }

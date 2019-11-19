@@ -163,7 +163,7 @@ class GameListView extends StatelessWidget {
                                                       mainAxisAlignment: MainAxisAlignment.center,
                                                       crossAxisAlignment: CrossAxisAlignment.center,
                                                       children: <Widget>[
-                                                        stadiumData.isClothes != 0 ?
+                                                        stadiumData.isShoes != 0 ?
                                                         Icon(FontAwesomeIcons.shoePrints, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35,) :
                                                         Icon(FontAwesomeIcons.shoePrints, color: Colors.grey, size: 25,),
                                                         SizedBox(height: 5),
