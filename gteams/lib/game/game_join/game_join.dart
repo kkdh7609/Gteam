@@ -50,8 +50,6 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
     super.initState();
   }
 
-
-
   @override
   void dispose() {
     animationController.dispose();
@@ -584,6 +582,6 @@ class ContestTabHeader extends SliverPersistentHeaderDelegate {
 
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
-    return false;
+    return true;
   }
 }
