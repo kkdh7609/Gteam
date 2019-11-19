@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gteams/root_page.dart';
 import 'package:gteams/services/crud.dart';
 import 'package:gteams/map/google_map.dart';
 import 'package:gteams/game/game_create/GameCreateTheme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gteams/map/StadiumListData.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GameCreatePage extends StatefulWidget {
   @override
@@ -25,6 +27,9 @@ class _GameCreatePageState extends State<GameCreatePage> {
   String _startTimeText = "Start Time";
   String _endTimeText = "End Time";
   String _loc_name = "Select Location";
+  String _stadium_id = "temp Id";
+  DocumentReference _stadiumRef ;
+  var userList = [];
 
   int _groupSize;
   int _gameLevel;
@@ -88,8 +93,9 @@ class _GameCreatePageState extends State<GameCreatePage> {
     }
   }
 
-  void _change_loc_name(String new_name) {
-    _loc_name = new_name;
+  void _change_loc_name(String new_name, String new_id) {
+  _loc_name = new_name;
+  _stadium_id = new_id;
   }
 
   @override
@@ -352,7 +358,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
   Widget _showGameLoc(){
     return StreamBuilder<QuerySnapshot>(
         stream  : Firestore.instance.collection("stadium").snapshots(),
-        builder : (context, snapshot){
+        builder : (context, snapshot ,){
           if(!snapshot.hasData) return LinearProgressIndicator();
           return Container(
             child: Row(
@@ -369,6 +375,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
                     child: Text(_loc_name),
                     onPressed: () {
                       this.stadiumList=snapshot.data.documents.map((data) => StadiumListData.fromJson(data.data)).toList();
+                      //snapshot.data.documents[0].documentID
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => MapTest(onSelected: _change_loc_name, nowReq: mapReq.findLocation,stadiumList: stadiumList,)));
                     },
@@ -538,11 +545,11 @@ class _GameCreatePageState extends State<GameCreatePage> {
                       'Gender':_selectedGender.toString(),
                       'loc_name':_loc_name,
                       'dateNumber':_dateNumber,
+                      'sort' : FieldValue.serverTimestamp(),
+                      'stadiumRef' : _stadiumRef,
+                      'userList' : userList,
                     });
 
-                    print(crudObj.getDataCollection('/game').then((data) {
-                      data.documents[0].data['gameName'];
-                    }));
 
                     Navigator.pop(context);
                     Navigator.pop(context);
@@ -577,6 +584,10 @@ class _GameCreatePageState extends State<GameCreatePage> {
               borderRadius: BorderRadius.all(Radius.circular(24.0)),
             ),
             onPressed: () {
+              crudObj.getDocumentByWhere('stadium', 'id', _stadium_id).then((document){
+                _stadiumRef = document.documents[0].reference;
+              });
+              this.userList.add(RootPage.user_email);
               _showMaterialDialog();
             },
             child: Center(

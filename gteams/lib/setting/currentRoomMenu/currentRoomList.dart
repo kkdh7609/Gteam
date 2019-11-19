@@ -1,5 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gteams/game/game_join/game_room/current_room.dart';
+import 'package:gteams/game/game_join/model/GameListData.dart';
+import 'package:gteams/root_page.dart';
+import 'package:gteams/services/crud.dart';
+
 
 class CurrentRoomListPage extends StatefulWidget {
   @override
@@ -7,7 +12,29 @@ class CurrentRoomListPage extends StatefulWidget {
 }
 
 class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
-  Widget makeCard(){
+
+  List<dynamic> gameList;
+  GameListData gameData;
+  crudMedthods crudObj = new crudMedthods();
+  var flag = 0;
+
+  @override
+  void initState(){
+    super.initState();
+    var userQuery = crudObj.getDocumentByWhere('user','email',RootPage.user_email);
+      userQuery.then((document){
+        setState(() {
+          this.gameList=document.documents[0].data['gameList'];
+        });
+      });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  Widget makeCard(int index,GameListData gameData){
     return Card(
         elevation: 8.0,
         margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
@@ -23,7 +50,7 @@ class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
                 child: Icon(Icons.receipt, color: Colors.black),
               ),
               title: Text(
-                "Room Title",
+                  gameData.gameName,
                 style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               ),
               subtitle: Row(
@@ -33,7 +60,8 @@ class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
               ),
               trailing: Icon(Icons.keyboard_arrow_right, color: Colors.black, size: 30.0),
               onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(), fullscreenDialog: true));
+                bool isFull = gameData.groupSize == gameData.userList.length ? true : false;
+                Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: gameData.userList,gameData: gameData,isFull: isFull,), fullscreenDialog: true));
               }
           ),
         )
@@ -46,18 +74,24 @@ class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
         appBar: AppBar(
             centerTitle: true,
             elevation: 0.1,
-            title: Text("현재 방 목록")
+            title: Text("현재  목록")
         ),
         body: Container(
-          child: ListView.builder(
+          child: gameList != null ? ListView.builder(
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
-            // snapshot으러
-            itemCount: 3,
+            itemCount: gameList.length,
             itemBuilder: (BuildContext context, int index) {
-              return makeCard();
+              crudObj.getDocumentById('game3', gameList[index]).then((document){
+                if (this.mounted) {
+                  setState(() {
+                    gameData = GameListData.fromJson(document.data);
+                  });
+                }
+              });
+              return this.gameData != null ? makeCard(index,gameData) : LinearProgressIndicator();
             },
-          ),
+          ) : LinearProgressIndicator(),
         )
     );
   }

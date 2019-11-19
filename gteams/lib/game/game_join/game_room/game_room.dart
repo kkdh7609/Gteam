@@ -57,7 +57,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
     await Future.delayed(const Duration(milliseconds: 200));
   }
 
-  void _changeState(String tempStr) {
+  void _changeState(String tempStr,String tempStr2) {
     print(tempStr);
   }
 
@@ -272,7 +272,8 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                   widget.currentUserList.contains(RootPage.user_email) ?
                   InkWell(
                     onTap:(){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: widget.currentUserList,), fullscreenDialog: true),
+                      bool isFull = widget.gameData.groupSize == widget.currentUserList.length ? true : false;
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: widget.currentUserList,gameData: widget.gameData,isFull: isFull,), fullscreenDialog: true),
                       );
                     },
                     child: Container(
@@ -313,7 +314,8 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                           'userList' : newList,
                         },
                       );
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: newList,), fullscreenDialog: true),
+                      bool isFull = widget.gameData.groupSize == newList.length ? true : false;
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: newList,gameData: widget.gameData,isFull: isFull,), fullscreenDialog: true),
                       );
                     },
                     child: Container(

@@ -33,7 +33,7 @@ class _UserProfileState extends State<UserProfile> {
 
   List<SettingListData> sportListData = SettingListData.sportList;
 
-  void _change_loc_name(String new_name) {
+  void _change_loc_name(String new_name,String tmp2) {
     _userData.preferenceLoc = new_name;
   }
 

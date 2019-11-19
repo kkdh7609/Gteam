@@ -21,6 +21,7 @@ class StadiumListData {
   double lat;
   double lng;
   LatLng locationCoords;
+  String id;
 
   StadiumListData({
     this.imagePath = '',
@@ -41,6 +42,7 @@ class StadiumListData {
     this.operationTime,
     this.lat = 0.0,
     this.lng = 0.0,
+    this.id ="",
   });
 
   factory StadiumListData.fromJson(Map<dynamic, dynamic> json){
@@ -63,6 +65,7 @@ class StadiumListData {
       operationTime: json['operationTime'], // operationTime의 각요소접근 방법 => operationTime['openTime'] .operationTime['endTime'] .
       lat: json['lat'],
       lng : json['lng'],
+      id: json['id'],
     );
   }
 
