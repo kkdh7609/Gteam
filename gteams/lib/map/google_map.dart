@@ -285,7 +285,7 @@ class _MapTestState extends State<MapTest> {
                     borderRadius: new BorderRadius.circular(24.0),
                     child: Image(
                       fit: BoxFit.fill,
-                      image: NetworkImage(_image),
+                      image: NetworkImage(_image)//AssetImage("assets/image/camera.png")//NetworkImage(_image),
                     ),
                   ),),
                 Container(
