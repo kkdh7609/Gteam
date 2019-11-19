@@ -51,8 +51,6 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
     super.initState();
   }
 
-
-
   @override
   void dispose() {
     animationController.dispose();

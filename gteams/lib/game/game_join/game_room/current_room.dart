@@ -66,7 +66,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
     tabs: _tabTwoParameters(),
     labelColor: Colors.redAccent,
     labelStyle: TextStyle(fontSize: 12),
-    unselectedLabelColor: Colors.blueGrey,
+    unselectedLabelColor: Color(0xff20253d),
     unselectedLabelStyle: TextStyle(fontSize: 12),
     onTap: (index) {
       var content = "";
@@ -99,6 +99,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
 //              constraints: BoxConstraints.expand(height: 50),
               child: _tabBarLabel(),
             ),
+            Divider(color: Colors.black),
             Expanded(
               child: Container(
                 child: TabBarView(children: [
@@ -109,7 +110,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                           this.memberlist[index].name, this.memberlist[index].address
                       ):LinearProgressIndicator();
                     },
-                   ),
+                  ),
                   Container(
                     child: Text("Chatting ui"),
                   ),
@@ -125,11 +126,12 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
 
   Widget _member_info(String name, String address){
     return Card(
+      color: Color(0xff20253d),
       key: ValueKey(name),
       elevation: 8.0,
       margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
       child: Container(
-        decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .5)),
+        decoration: BoxDecoration(color : Colors.white),
         child: ListTile(
           contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
           leading: Container(
@@ -147,7 +149,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
           ),
           title: Text(
             name,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontFamily: 'Dosis'),
           ),
           subtitle: Row(
             children: <Widget>[
@@ -158,7 +160,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                         RichText(
                           text: TextSpan(
                             text: address,
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400, fontFamily: 'Dosis'),
                           ),
                           maxLines: 3,
                           softWrap: true,
@@ -185,7 +187,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
               padding: EdgeInsets.only(right: 12.0),
               decoration: new BoxDecoration(
                   border: new Border(
-                      right: new BorderSide(width: 1.0, color: Colors.white24))),
+                      right: new BorderSide(width: 1.0, color: Colors.white))),
               child: Hero(
                   tag: "avatar_" + member.name,
                   child: CircleAvatar(
@@ -196,7 +198,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
           ),
           title: Text(
             member.name,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
           subtitle: Row(
             children: <Widget>[
@@ -237,7 +239,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                 )),
             Container(
               height: MediaQuery.of(context).size.height * 0.3,
-              padding: EdgeInsets.all(40.0),
+              padding: EdgeInsets.only(top: 40.0, left: 40.0, right: 40.0),
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(color: Color.fromRGBO(58, 66, 86, .9)),
               child: Center(
@@ -277,14 +279,14 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                     padding: EdgeInsets.only(left: 10.0),
                     child: Text(
                       "시작: "+"11:30",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
+                      style: TextStyle(color: Colors.white, fontSize: 20),
                     )
                 ),
                 Padding(
                     padding: EdgeInsets.only(left: 10.0),
                     child: Text(
                       "/",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
+                      style: TextStyle(color: Colors.white, fontSize: 20),
                     )
                 ),
 
@@ -292,7 +294,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                     padding: EdgeInsets.only(left: 10.0),
                     child: Text(
                       "종료: "+"13:30",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
+                      style: TextStyle(color: Colors.white, fontSize: 20),
                     )
                 ),
 
@@ -302,25 +304,23 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Expanded(
-                    flex: 8,
+                    flex: 5,
                     child: Padding(
                         padding: EdgeInsets.only(left: 10.0),
                         child: Text(
                           "희망 수준: 6",
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 20),
                         )
                     )
                 ),
                 Expanded(
-                    flex: 2,
+                    flex: 5,
                     child: Container(
-                      padding: const EdgeInsets.all(7.0),
-                      decoration: new BoxDecoration(
-                          border: new Border.all(color: Colors.white),
-                          borderRadius: BorderRadius.circular(5.0)),
+                      alignment: Alignment.bottomRight,
+                      padding: const EdgeInsets.only(left: 7.0, right: 7.0, top: 7.0),
                       child: new Text(
-                        "10000원",
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                        "10,000원",
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 20),
                       ),
                     )
                 )

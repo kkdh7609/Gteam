@@ -103,8 +103,7 @@ class _SettingUserState extends State<SettingUser> {
                           // It can update array type field
                         },
                       );
-                      Navigator.pop(context);
-                      Navigator.push(
+                      Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (context) => MainMenuPage(
