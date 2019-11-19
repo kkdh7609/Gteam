@@ -29,23 +29,17 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
     this.memberlist = MemberListData.memberList;
 
     for(var i = 0; i < widget.currentUserList.length; i++){
-      var newMember = new MemberListData();
       var userQuery = crudObj.getDocumentByWhere('user', 'email', widget.currentUserList[i]);
-      setState(
-            () {
-          userQuery.then(
-                (data) {
-              if(data.documents.length >= 1) {
-                newMember.name = data.documents[0].data['name'];
-                newMember.address = data.documents[0].data['prferenceLoc'];
-                // newMember.photo = data.documents[0].data['???사진???'];
-              }
-            },
-          );
-        },
-      );
-      this.memberlist.add(newMember);
-      }
+      userQuery.then((data){
+        setState((){
+          if(data.documents.length >= 1){
+            var name = data.documents[0].data['name'];
+            var address = data.documents[0].data['prferenceLoc'];
+            this.memberlist.add(MemberListData(name: name, address: address));
+          }
+        });
+      });
+    }
   }
 
   @override
