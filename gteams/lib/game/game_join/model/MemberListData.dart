@@ -14,10 +14,9 @@ class MemberListData {
     return MemberListData(
       name: json['name'],
       address: json['address'],
-      photo: json['photo'],
+//      photo: json['photo'],
     );
   }
 
   static List<MemberListData> memberList = [];
-
 }
