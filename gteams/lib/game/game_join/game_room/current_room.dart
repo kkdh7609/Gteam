@@ -15,7 +15,7 @@ class currentRoomPage extends StatefulWidget {
 
 class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProviderStateMixin {
 
-  final infoHeight = 100.0;
+ final infoHeight = 100.0;
   var opacity1 = 0.0;
   var opacity2 = 0.0;
   var opacity3 = 0.0;
@@ -25,6 +25,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
     Tab(text: "Chatting"),
     Tab(text: "details "),
   ];
+
 
   List<Widget> _tabTwoParameters() => [
     Tab(
@@ -83,9 +84,8 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                   ListView(
                       padding: const EdgeInsets.only(top: 20.0),
                       children: <Widget>[
-
-                        _temp_member("김영운", "경기도 수원시 호매실동"),
-                        _temp_member("김학준", "경기도 안양시 석수동"),
+                        _temp_member("text", "경기도 수원시 호매실동"),
+                        _temp_member("test", "경기도 안양시 석수동"),
                         _temp_member("안우일", "경기도 수원시 고색동"),
                         _temp_member("김도현", "경기도 수원시 어딘가"),
                         _temp_member("홍길동", "경기도 수원시 어딘가"),

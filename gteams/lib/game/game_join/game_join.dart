@@ -96,7 +96,8 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                                         pinned: true,
                                         floating: true,
                                         delegate: ContestTabHeader(
-                                          _showFilterBarUI(),
+                                          Text(gameListLength.toString()),
+                                          //_showFilterBarUI(),
                                         ),
                                       ),
                                     ];
@@ -585,6 +586,6 @@ class ContestTabHeader extends SliverPersistentHeaderDelegate {
 
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
-    return false;
+    return true;
   }
 }

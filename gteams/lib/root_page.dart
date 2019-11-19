@@ -6,7 +6,7 @@ import 'package:gteams/setting/settings_admin.dart';
 import 'package:gteams/setting/settings_user.dart';
 import 'package:gteams/login/login.dart';
 
-class RootPage extends StatefulWidget {
+class  RootPage extends StatefulWidget {
   RootPage({this.auth});
 
   static String user_email ="";
