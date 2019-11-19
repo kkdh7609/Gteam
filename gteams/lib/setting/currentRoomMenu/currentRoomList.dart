@@ -39,7 +39,7 @@ class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
         elevation: 8.0,
         margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
         child: Container(
-          decoration: BoxDecoration(color: Colors.grey.withOpacity(0.4)),
+          decoration: BoxDecoration(color: Colors.white),
           child: ListTile(
               contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
               leading: Container(

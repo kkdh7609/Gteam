@@ -8,6 +8,8 @@ import 'package:gteams/game/game_create/GameCreateTheme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gteams/map/StadiumListData.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gteams/util/customTimePicker.dart';
+import 'package:gteams/pay/payMethod.dart';
 
 class GameCreatePage extends StatefulWidget {
   @override
@@ -19,6 +21,7 @@ enum Gender { MALE, FEMALE, ALL }
 class _GameCreatePageState extends State<GameCreatePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   crudMedthods crudObj = new crudMedthods();
+  PayMethods payObj = new PayMethods();
   var stadiumList =StadiumListData.stadiumList;
 
   String _gameName;
@@ -45,6 +48,17 @@ class _GameCreatePageState extends State<GameCreatePage> {
   TimeOfDay _startTime = TimeOfDay.now();
   TimeOfDay _endTime = TimeOfDay.now();
 
+  TextEditingController _textEditingController = TextEditingController();
+
+  bool _completeDate = false;
+  bool _completeStartTime = false;
+  bool _completeEndTime = false;
+
+  @override
+  void initState(){
+    super.initState();
+  }
+
   void loadData() {
     _sportsList = [];
     _sportsList = _sports
@@ -55,6 +69,34 @@ class _GameCreatePageState extends State<GameCreatePage> {
         .toList();
   }
 
+  Widget _alertButton(){
+    return FlatButton(
+      child: Text("OK"),
+      onPressed: (){
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  AlertDialog _alertDialog(title, text){
+    return AlertDialog(
+        title: Text(title),
+        content: Text(text),
+        actions: <Widget>[
+          _alertButton(),
+        ]
+    );
+  }
+
+  _showAlertDialog(title, text){
+    showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return _alertDialog(title, text);
+        }
+    );
+  }
+
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime _pickedDate = await showDatePicker(
         context: context,
@@ -62,33 +104,78 @@ class _GameCreatePageState extends State<GameCreatePage> {
         firstDate: DateTime.now().subtract(Duration(days: 1)),
         lastDate: _date.add(Duration(days: 100)));
 
-    if (_pickedDate != null && _pickedDate != _date) {
+    if (_pickedDate != null && (_pickedDate != _date || !_completeDate)) {
       setState(() {
         _date = _pickedDate;
+        _completeDate = true;
         _dateNumber=_date.millisecondsSinceEpoch;
         _dateText = _date.toString().split(" ")[0];
+        _completeStartTime = false;
+        _completeEndTime = false;
+        if(_date.isAfter(DateTime.now())){
+          _startTime = TimeOfDay(hour: 0, minute: 0);
+          _endTime = TimeOfDay(hour: 0, minute: 0);
+        }
+        else{
+          _startTime = TimeOfDay.now();
+          _endTime = TimeOfDay.now();
+        }
+        _startTimeText = "Start Time";
+        _endTimeText = "End Time";
       });
     }
   }
 
   Future<Null> _selectStart(BuildContext context) async {
-    final TimeOfDay _pickedStart = await showTimePicker(context: context, initialTime: _startTime);
+    final TimeOfDay _pickedStart = await showCustomTimePicker(context: context, initialTime: _startTime);
 
-    if (_pickedStart != null && _pickedStart != _startTime) {
+    if (_pickedStart != null && (_pickedStart != _startTime || !_completeStartTime)) {
       setState(() {
-        _startTime = _pickedStart;
-        _startTimeText = _startTime.toString().split("(")[1].split(")")[0];
+        if(_completeEndTime){
+          int intPickedStart = _pickedStart.hour * 100 + _pickedStart.minute;
+          int intEndTime = _endTime.hour * 100 + _endTime.minute;
+
+          if(intPickedStart >= intEndTime){
+             _showAlertDialog("변경 실패", "시작 시간은 종료 시간보다 빨라야 합니다.");
+          }
+          else{
+            _completeStartTime = true;
+            _startTime = _pickedStart;
+            _startTimeText = _startTime.toString().split("(")[1].split(")")[0];
+          }
+        }
+        else {
+          _completeStartTime = true;
+          _startTime = _pickedStart;
+          _startTimeText = _startTime.toString().split("(")[1].split(")")[0];
+        }
       });
     }
   }
 
   Future<Null> _selectEnd(BuildContext context) async {
-    final TimeOfDay _pickedEnd = await showTimePicker(context: context, initialTime: _endTime);
+    final TimeOfDay _pickedEnd = await showCustomTimePicker(context: context, initialTime: _endTime);
 
-    if (_pickedEnd != null && _pickedEnd != _endTime) {
+    if (_pickedEnd != null && (_pickedEnd != _endTime || !_completeEndTime)) {
       setState(() {
-        _endTime = _pickedEnd;
-        _endTimeText = _endTime.toString().split("(")[1].split(")")[0];
+        if(_completeStartTime){
+          int intPickedStart = _pickedEnd.hour * 100 + _pickedEnd.minute;
+          int intStartTime = _startTime.hour * 100 + _startTime.minute;
+
+          if(intPickedStart <= intStartTime){
+             _showAlertDialog("변경 실패", "종료 시간은 시작 시간보다 늦어야 합니다.");
+          }
+          else{
+            _completeEndTime = true;
+            _endTime = _pickedEnd;
+            _endTimeText = _endTime.toString().split("(")[1].split(")")[0];
+          }
+        }
+        else {
+          _completeEndTime = true;
+          _endTime = _pickedEnd;
+          _endTimeText = _endTime.toString().split("(")[1].split(")")[0];
+        }
       });
     }
   }
@@ -237,6 +324,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
               children: <Widget>[
                 Expanded(
                   child: TextFormField(
+                    controller: _textEditingController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       hintText: '게임 이름 입력',
@@ -331,7 +419,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
             child: FlatButton(
               color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.2),
               child: Text(_startTimeText, style: TextStyle(fontSize: 16, fontFamily: 'Dosis', fontWeight: FontWeight.w700)),
-              onPressed: () {
+              onPressed: !_completeDate ? (){} : () {
                 _selectStart(context);
               },
             ),
@@ -345,7 +433,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
             child: FlatButton(
               color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.2),
               child: Text(_endTimeText, style: TextStyle(fontSize: 16, fontFamily: 'Dosis', fontWeight: FontWeight.w700)),
-              onPressed: () {
+              onPressed: !_completeDate ? (){} : () {
                 _selectEnd(context);
               },
             ),
@@ -517,7 +605,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
             content: SingleChildScrollView(
                 child: ListBody(
                   children: <Widget>[
-                    Text("게임 이름 : $_gameName"),
+                    Text("게임 이름 : " + _textEditingController.text),
                     Text("게임 종목: $_selectedSports"),
                     Text("게임 날짜 : $_dateText"),
                     Text("게임 시간 : $_startTimeText ~ $_endTimeText"),
@@ -534,25 +622,66 @@ class _GameCreatePageState extends State<GameCreatePage> {
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
                     _formKey.currentState.save();
-                    crudObj.addData('game3', {
-                      'gameName' : _gameName,
-                      'selectedSport':_selectedSports,
-                      'dateText':_dateText,
-                      'startTime':_startTimeText,
-                      'endTime':_endTimeText,
-                      'groupSize':_groupSize,
-                      'gameLevel':_gameLevel,
-                      'Gender':_selectedGender.toString(),
-                      'loc_name':_loc_name,
-                      'dateNumber':_dateNumber,
-                      'sort' : FieldValue.serverTimestamp(),
-                      'stadiumRef' : _stadiumRef,
-                      'userList' : userList,
+                    int startMinute = _startTime.minute;
+                    int endMinute = _endTime.minute;
+                    int startHour = _startTime.hour;
+                    int endHour = _endTime.hour;
+
+                    int usingMinute;
+                    int usingHour;
+                    int timeBlock; // 사용하는 시간을 30분 단위로 끊었을 때 나오는 블럭 수
+
+                    int totalPrice;
+                    int perPrice;
+
+                    int tempPrice = 35000; // 경기장 정보 들어오면 그거 쓰기
+
+                    if (endMinute == 00 && startMinute == 30) {
+                      endHour -= 1;
+                      usingMinute = 30;
+                    }
+                    else {
+                      usingMinute = endMinute - startMinute;
+                    }
+
+                    usingHour = endHour - startHour;
+                    timeBlock = usingHour * 2 + (usingMinute == 30 ? 1 : 0);
+
+                    totalPrice = tempPrice * timeBlock; // 경기장 정보 들어오면 그거 쓰기
+                    perPrice = totalPrice ~/ _groupSize;
+
+                    payObj.getFund().then((fundData) {
+                      if (fundData >= perPrice) {
+                        crudObj.getDocumentByWhere('stadium', 'id', _stadium_id).then((document){
+                          _stadiumRef = document.documents[0].reference;
+                          this.userList.add(RootPage.user_email);
+                          int newFund = fundData - perPrice;
+                          payObj.updateFund(newFund).then((waitData1) {
+                            crudObj.addData('game3', {
+                              'gameName': _gameName,
+                              'selectedSport': _selectedSports,
+                              'dateText': _dateText,
+                              'startTime': _startTimeText,
+                              'endTime': _endTimeText,
+                              'groupSize': _groupSize,
+                              'gameLevel': _gameLevel,
+                              'Gender': _selectedGender.toString(),
+                              'loc_name': _loc_name,
+                              'perPrice' : perPrice,
+                              'dateNumber': _dateNumber,
+                              'sort' : FieldValue.serverTimestamp(),
+                              'stadiumRef' : _stadiumRef,
+                              'userList' : userList,
+                            });
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          });
+                        });
+                      }
+                      else{
+                        _showAlertDialog("참가 실패", "포인트가 부족합니다");
+                      }
                     });
-
-
-                    Navigator.pop(context);
-                    Navigator.pop(context);
                   }
                 },
                 child: Text('생성'),
@@ -584,11 +713,25 @@ class _GameCreatePageState extends State<GameCreatePage> {
               borderRadius: BorderRadius.all(Radius.circular(24.0)),
             ),
             onPressed: () {
-              crudObj.getDocumentByWhere('stadium', 'id', _stadium_id).then((document){
-                _stadiumRef = document.documents[0].reference;
-              });
-              this.userList.add(RootPage.user_email);
-              _showMaterialDialog();
+              if(_textEditingController.text.length == 0){
+                _showAlertDialog("생성 실패", "경기장 이름을 입력해주세요.");
+              }
+              else if(_selectedSports == null){
+                _showAlertDialog("생성 실패", "스포츠를 선택해주세요.");
+              }
+              else if(!_completeDate){
+                _showAlertDialog("생성 실패", "날짜를 선택해주세요.");
+              }
+              else if(!_completeStartTime){
+                _showAlertDialog("생성 실패", "시작 시간을 선택해주세요.");
+              }
+              else if(!_completeEndTime){
+                _showAlertDialog("생성 실패", "종료 시간을 선택해주세요.");
+              }
+              // Todo 위의 내용 이외의 내용들 예외처리 필요
+              else{
+                _showMaterialDialog();
+              }
             },
             child: Center(
               child: Text(

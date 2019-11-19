@@ -13,7 +13,8 @@ import 'package:gteams/validator/login_validator.dart';
 import 'package:gteams/manager/usePhoto.dart';
 import 'package:gteams/manager/addStadium.dart';
 import 'package:gteams/manager/managerSetTime.dart';
-import 'package:gteams/pay/pay.dart';
+
+import 'package:gteams/manager_main/ManagerMainMenu.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({this.auth, this.onSignedIn});
@@ -419,6 +420,25 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                   ),
                 ),
               ),
+              Padding(
+                padding: EdgeInsets.only(top: 3.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ManagerMainMenuPage()));
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(9.0),
+                    decoration: new BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                    ),
+                    child: new Icon(
+                      FontAwesomeIcons.facebook,
+                      color: Color(0xFF0084ff),
+                    ),
+                  ),
+                ),
+              )
             ],
           ),
         ],
@@ -613,7 +633,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             padding: EdgeInsets.only(top: 5.0),
             child: FlatButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ManagerSignUpPage()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ManagerSignUpPage(auth: widget.auth)));
                 },
                 child: Text(
                   "you are Facility Manager? click here.",

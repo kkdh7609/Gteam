@@ -11,6 +11,7 @@ import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 import 'package:gteams/game/game_join/widgets/GameFilterScreen.dart';
 import 'package:gteams/game/game_join/widgets/CalendarPopUpView.dart';
 import 'package:gteams/map/StadiumListData.dart';
+import 'package:gteams/root_page.dart';
 
 class GameJoinPage extends StatefulWidget {
   @override
@@ -151,7 +152,6 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
               parent: animationController, curve: Interval((1 / count) * index, 1.0, curve: Curves.fastOutSlowIn)));
           animationController.forward();
           //GameData 및 stadium Data Setting
-          //gameList[index].stadiumRef.ge
           gameList[index].stadiumRef.get().then((document){
             if(this.mounted ){
               setState(() {

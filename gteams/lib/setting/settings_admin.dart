@@ -27,6 +27,13 @@ class _SettingAdminPageState extends State<SettingAdminPage> {
             )
           ],
         ),
-        body: Text("setting Admin page"));
+        body: Container(
+          child: Column(
+            children: <Widget>[
+
+
+            ],
+          ),
+        ));
   }
 }

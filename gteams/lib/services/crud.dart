@@ -58,7 +58,6 @@ class crudMedthods {
     return await _db.collection(collection).document(docId).updateData(newValues);
   }
 
-
   Future<void> deleteData(String collection, String docId) {
     _db.collection(collection).document(docId).delete().catchError(
       (e) {
@@ -66,7 +65,4 @@ class crudMedthods {
       },
     );
   }
-
-
-
 }
