@@ -94,6 +94,7 @@ class _SettingUserState extends State<SettingUser> {
                         'user',
                         widget.userDocID,
                         {
+                          'fund' : 10000,
                           'info_status': true,
                           'prferenceTime': "1700~1800",
                           'prferenceLoc': "loc",

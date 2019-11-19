@@ -11,6 +11,7 @@ import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 import 'package:gteams/game/game_join/widgets/GameFilterScreen.dart';
 import 'package:gteams/game/game_join/widgets/CalendarPopUpView.dart';
 import 'package:gteams/map/StadiumListData.dart';
+import 'package:gteams/root_page.dart';
 
 class GameJoinPage extends StatefulWidget {
   @override
@@ -96,7 +97,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                                         pinned: true,
                                         floating: true,
                                         delegate: ContestTabHeader(
-                                          Text(gameListLength.toString()),
+                                          Text(RootPage.user_email),
                                           //_showFilterBarUI(),
                                         ),
                                       ),

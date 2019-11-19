@@ -50,8 +50,12 @@ class crudMedthods {
     _db.collection(collection).document(docId).updateData(newValues).catchError(
       (e) {
         print(e);
-      },
+      }
     );
+  }
+
+  Future<dynamic> updateDataThen(String collection, String docId, newValues) async {
+    return await _db.collection(collection).document(docId).updateData(newValues);
   }
 
   Future<void> deleteData(String collection, String docId) {
