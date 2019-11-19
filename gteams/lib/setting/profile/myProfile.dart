@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 import 'package:gteams/map/google_map.dart';
 import 'package:gteams/setting/popularFilterList.dart';
+import 'package:gteams/game/game_create/GameCreateTheme.dart';
 import 'package:gteams/setting/profile/preferenceTime.dart';
 import 'package:gteams/manager/usePhoto.dart';
 import 'package:gteams/menu/drawer/UserData.dart';
 import 'package:gteams/services/crud.dart';
+import 'package:gteams/map/StadiumListData.dart';
 import 'package:gteams/root_page.dart';
 
 class UserProfile extends StatefulWidget {
@@ -20,6 +22,7 @@ enum Gender { MALE, FEMALE }
 
 class _UserProfileState extends State<UserProfile> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  var stadiumList =StadiumListData.stadiumList;
   crudMedthods crudObj = new crudMedthods();
 
   UserData _userData;
@@ -107,39 +110,36 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 
-  Widget _my_location() {
-    return Container(
-      child: Row(
-        children: <Widget>[
-          new Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
-            child: Icon(Icons.not_listed_location, color: Color(0xFF364A54)),
-          ),
-          Container(
-            height: 30.0,
-            width: 1.0,
-            color: Colors.grey.withOpacity(0.5),
-            margin: const EdgeInsets.only(right: 10.0),
-          ),
-          FlatButton(
-              child: Text(
-                _userData.preferenceLoc != null ? _userData.preferenceLoc : "Temp location",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16.0),
-              ),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            MapTest(onSelected: _change_loc_name)
-                    )
-                );
-              }),
-        ],
-      ),
+  Widget _showGameLoc(){
+    return StreamBuilder<QuerySnapshot>(
+        stream  : Firestore.instance.collection("stadium").snapshots(),
+        builder : (context, snapshot){
+          if(!snapshot.hasData) return LinearProgressIndicator();
+          return Container(
+            child: Row(
+              children: <Widget>[
+                Padding(padding: EdgeInsets.symmetric(horizontal: 15.0), child: Icon(Icons.location_on, color: Colors.black)),
+                Container(
+                  height: 30.0,
+                  width: 1.0,
+                  color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+                  margin: const EdgeInsets.only(right: 10.0),
+                ),
+                FlatButton(
+                    child: Text(
+                      _userData.preferenceLoc != null ? _userData.preferenceLoc : "Temp location",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16.0),
+                    ),
+                    onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MapTest(onSelected: _change_loc_name, nowReq: mapReq.findLocation, stadiumList: stadiumList,)));
+                    }),
+              ],
+            ),
+          );
+        }
     );
   }
 
@@ -343,7 +343,7 @@ class _UserProfileState extends State<UserProfile> {
                                         _title("선호 시간"),
                                         _preferenceTime(),
                                         _title("선호 위치"),
-                                        _my_location(),
+                                      _showGameLoc(),
                                       ],
                                     )),
                               )),
