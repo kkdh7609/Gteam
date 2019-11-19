@@ -150,7 +150,6 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
               setState(() {
                 stadiumList[index] = StadiumListData.fromJson(document.data);
                 gameListLength = gameList.length;
-                // print(stadiumList[index].lat);
               });
             }
           });
