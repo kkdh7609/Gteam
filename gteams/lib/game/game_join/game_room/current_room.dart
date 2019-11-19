@@ -75,10 +75,9 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
             Expanded(
               child: Container(
                 child: TabBarView(children: [
-                  ListView(
+                      ListView(
                       padding: const EdgeInsets.only(top: 20.0),
                       children: <Widget>[
-
                         _temp_member("김영운", "경기도 수원시 호매실동"),
                         _temp_member("김학준", "경기도 안양시 석수동"),
                         _temp_member("안우일", "경기도 수원시 고색동"),
