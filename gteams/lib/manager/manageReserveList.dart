@@ -296,11 +296,16 @@ class _ReserveListState extends State<ReserveList> {
                   if (isAvailable) {
                     isAvailable = false;
                     payObj.getFund().then((fund) {
-                      int newFund = this._reserveGame.totalPrice + fund;
+                      int newFund = this.gameData.totalPrice + fund;
                       payObj.updateFund(newFund).then((tempVal) {
                         Navigator.pop(context);
                         isAvailable = true;
-                        _showAlertDialog("성공", "승인에 성공하였습니다.");
+                        crudObj.updateDataThen('game3', this.reserveList[0], {"reserve_status": 2}).then((tempVal){
+                          setState((){
+                            this.reserveList = [];      // 여기 고쳐야 함
+                          });
+                          _showAlertDialog("성공", "승인에 성공하였습니다.");
+                        });
                       });
                     });
                   }
