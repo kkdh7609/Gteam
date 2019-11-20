@@ -10,6 +10,7 @@ class GameListData {
   String startTime;
   String endTime;
   String loc_name;
+  int perPrice;
   int dateNumber;
   List<dynamic> userList;
   DocumentReference stadiumRef;
@@ -23,6 +24,7 @@ class GameListData {
     this.dateText = "",
     this.endTime = "",
     this.loc_name = "",
+    this.perPrice,
     this.gameLevel=1,
     this.groupSize=1,
     this.dateNumber=1,
@@ -45,6 +47,7 @@ class GameListData {
       dateNumber: json['dateNumber'],
       userList: json['userList'],
       stadiumRef: json['stadiumRef'],
+      perPrice: json['perPrice'],
       sort:json['sort'],
     );
   }

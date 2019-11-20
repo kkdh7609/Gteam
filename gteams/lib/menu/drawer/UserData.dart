@@ -20,7 +20,6 @@ class UserData {
       gender: json['gender'],
       preferenceLoc: json['prferenceLoc'],
       preferenceSports: json['sportList'],
-
     );
   }
 
