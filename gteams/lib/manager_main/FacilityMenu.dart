@@ -53,7 +53,7 @@ class _FacilityMenuPageState extends State<FacilityMenuPage> {
                             child: FittedBox(
                               child: Center(
                                 child: Text(
-                                  "Wooil Games",
+                                  "에스빌드 풋살장",
                                   style: TextStyle(
                                       color: Color(0xfff1e4d4),
                                       fontWeight: FontWeight.w600,
