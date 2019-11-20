@@ -7,6 +7,8 @@ class CurrentRoomListPage extends StatefulWidget {
 }
 
 class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
+
+
   Widget makeCard(){
     return Card(
         elevation: 8.0,

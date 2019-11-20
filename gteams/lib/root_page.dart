@@ -6,7 +6,7 @@ import 'package:gteams/setting/settings_admin.dart';
 import 'package:gteams/setting/settings_user.dart';
 import 'package:gteams/login/login.dart';
 
-class  RootPage extends StatefulWidget {
+class RootPage extends StatefulWidget {
   RootPage({this.auth});
 
   static String user_email ="";
@@ -82,6 +82,7 @@ class _RootPageState extends State<RootPage> {
           print("info_status : $_infoStatus");
           return new SettingUser(
             onSignedOut: _onSignedOut,
+
             userDocID: _userDocID,
           );
         } else {
@@ -95,9 +96,10 @@ class _RootPageState extends State<RootPage> {
 
       case AuthStatus.LOGGED_IN_ADMIN:
         print('admin check in');
-        return new SettingAdminPage(
+        return SettingAdminPage(
           onSignedOut: _onSignedOut,
         );
+
         break;
 
       default:
