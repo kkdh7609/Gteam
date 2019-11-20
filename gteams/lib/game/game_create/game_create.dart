@@ -585,7 +585,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
               inputFormatters: [LengthLimitingTextInputFormatter(2)],
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                hintText: '희망 수준 입력',
+                hintText: '희망 수준 입력(1 ~ 10)',
                 hintStyle: TextStyle(color: Colors.grey),
               ),
               validator: (value) {
@@ -741,7 +741,6 @@ class _GameCreatePageState extends State<GameCreatePage> {
               else if(_textEditingController_level.text.length == 0){
                 _showAlertDialog("생성 실패", "희망 수준을 선택해주세요.");
               }
-              // Todo 위의 내용 이외의 내용들 예외처리 필요
               else{
                 _showMaterialDialog();
               }

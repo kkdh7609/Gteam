@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GameListData {
-  String imagePath;
+//  String imagePath;
   String gameName;
   String selectedSport;
   int gameLevel;
@@ -18,7 +18,7 @@ class GameListData {
   Timestamp sort;
 
   GameListData({
-    this.imagePath = '',
+//    this.imagePath = '',
     this.gameName = '',
     this.selectedSport = "",
     this.startTime = "",
@@ -37,7 +37,7 @@ class GameListData {
 
   factory GameListData.fromJson(Map<String, dynamic> json) {
     return GameListData(
-      imagePath: json['imagePath'],
+//      imagePath: json['imagePath'],
       gameName: json['gameName'],
       selectedSport: json['selectedSport'],
       dateText: json['dateText'],
