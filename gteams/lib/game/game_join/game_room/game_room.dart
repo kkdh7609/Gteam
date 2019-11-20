@@ -202,7 +202,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                                           })
                                     ],
                                   ),
-                                   Row(
+                                  Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: <Widget>[
@@ -211,7 +211,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                                       getTimeBoxUI("샤워장", "Clothes", Icon(FontAwesomeIcons.shower),widget.stadiumData.isClothes),
                                     ],
                                   ),
-                                   Row(
+                                  Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: <Widget>[
