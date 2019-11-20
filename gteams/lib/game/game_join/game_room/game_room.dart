@@ -315,15 +315,15 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                         payObj.getFund().then((fundData){
                           if(fundData >= price){
                             int newFund = fundData - price;
-                            //int reserve_status = widget.gameData.groupSize == currentUserList.length ? 1 : 0; // 1 => 방이 가득찼을때 0 방 가득 안찼을때
+                            //reserve_status = widget.gameData.groupSize == currentUserList.length ? 1 : 0; // 1 => 방이 가득찼을때 0 방 가득 안찼을때
                             payObj.updateFund(newFund).then((waitData1){
-                              crudObj.getDocumentById('game3', widget.docId).then((gameDocument1){
-                                reserve_status = gameDocument1.data['reserve_status'];
-                              });
                               crudObj.updateDataThen('game3', widget.docId, {
                                 'userList' : currentUserList,
-                                'reserve_status' : reserve_status,
+                                'reserve_status' : widget.gameData.groupSize == currentUserList.length ? 1 : 0,
                               }).then((waitData2){
+                                crudObj.getDocumentById('game3', widget.docId).then((gameDocument1){
+                                  reserve_status = gameDocument1.data['reserve_status'];
+                                });
                                 crudObj.getDocumentById('user',RootPage.userDocID).then((userDoc){
                                   userGameList=List.from(userDoc.data['gameList']);
                                   userGameList.add(widget.docId);
