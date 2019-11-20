@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gteams/game/game_join/game_room/current_room.dart';
 import 'package:gteams/game/game_join/model/GameListData.dart';
+import 'package:gteams/map/StadiumListData.dart';
 import 'package:gteams/root_page.dart';
 import 'package:gteams/services/crud.dart';
 
@@ -16,6 +17,8 @@ class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
   List<dynamic> gameList;
   GameListData gameData;
   crudMedthods crudObj = new crudMedthods();
+  StadiumListData stadiumData;
+  bool isAvailable =true ;
   var flag = 0;
 
   @override
@@ -25,6 +28,7 @@ class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
     userQuery.then((document){
       setState(() {
         this.gameList=document.documents[0].data['gameList'];
+        isAvailable =true ;
       });
     });
   }
@@ -60,8 +64,16 @@ class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
               ),
               trailing: Icon(Icons.keyboard_arrow_right, color: Colors.black, size: 30.0),
               onTap: (){
-                bool isFull = gameData.groupSize == gameData.userList.length ? true : false;
-                Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: gameData.userList,gameData: gameData,isFull: isFull,), fullscreenDialog: true));
+                  if(isAvailable){
+                      isAvailable = false ;
+                    bool isFull = gameData.groupSize == gameData.userList.length ? true : false;
+                    gameData.stadiumRef.get().then((document){
+                      stadiumData = StadiumListData.fromJson(document.data);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: gameData.userList,gameData: gameData,stadiumData: stadiumData,isFull: isFull,), fullscreenDialog: true)).then((data){
+                          isAvailable = true;
+                      });
+                    });
+                  }
               }
           ),
         )

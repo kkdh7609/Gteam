@@ -17,7 +17,7 @@ class GameListView extends StatelessWidget {
 
   Widget clearIcon(int isProvide){
     return isProvide >= 1 ?
-    Text("")  // 제공할경우
+    SizedBox(width: 60,)  // 제공할경우
         :
     Icon( // 제공하지 않을경우 X 표시 출력
       Icons.clear,
@@ -161,7 +161,7 @@ class GameListView extends StatelessWidget {
                                                           children: <Widget>[
                                                             stadiumData.isClothes != 0 ?
                                                             Icon(FontAwesomeIcons.tshirt, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
-                                                            Icon(FontAwesomeIcons.tshirt, color: Colors.grey, size: 25),
+                                                            Icon(FontAwesomeIcons.tshirt, color: Colors.grey, size: 28),
                                                             SizedBox(height: 5),
                                                             Text(
                                                               "팀 조끼",
@@ -181,7 +181,7 @@ class GameListView extends StatelessWidget {
                                                           children: <Widget>[
                                                             stadiumData.isBall != 0 ?
                                                             Icon(FontAwesomeIcons.volleyballBall, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35,) :
-                                                            Icon(FontAwesomeIcons.volleyballBall, color: Colors.grey, size: 25,),
+                                                            Icon(FontAwesomeIcons.volleyballBall, color: Colors.grey, size: 28,),
                                                             SizedBox(height: 5),
                                                             Text(
                                                               "공 대여",
@@ -200,7 +200,7 @@ class GameListView extends StatelessWidget {
                                                           children: <Widget>[
                                                             stadiumData.isParking != 0 ?
                                                             Icon(FontAwesomeIcons.parking, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
-                                                            Icon(FontAwesomeIcons.parking, color: Colors.grey, size: 25) ,
+                                                            Icon(FontAwesomeIcons.parking, color: Colors.grey, size: 28) ,
                                                             SizedBox(height: 5),
                                                             Text("주차장",
                                                                 style: TextStyle(
@@ -217,7 +217,7 @@ class GameListView extends StatelessWidget {
                                                           children: <Widget>[
                                                             stadiumData.isShower != 0 ?
                                                             Icon(FontAwesomeIcons.shower, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
-                                                            Icon(FontAwesomeIcons.shower, color: Colors.grey, size: 25) ,
+                                                            Icon(FontAwesomeIcons.shower, color: Colors.grey, size: 28) ,
                                                             SizedBox(height: 5),
                                                             Text(
                                                               "샤워장",
@@ -234,7 +234,7 @@ class GameListView extends StatelessWidget {
                                                     ),
                                                     Row(
                                                         children: <Widget>[
-                                                          SizedBox(width: 7),
+                                                          SizedBox(width: 10),
                                                           clearIcon(stadiumData.isClothes,),
                                                           SizedBox(width: 20),
                                                           clearIcon(stadiumData.isBall),
