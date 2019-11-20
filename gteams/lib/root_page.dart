@@ -89,7 +89,6 @@ class _RootPageState extends State<RootPage> {
           print("info_status : $_infoStatus");
           return new SettingUser(
             onSignedOut: _onSignedOut,
-
             userDocID: _userDocID,
           );
         } else {

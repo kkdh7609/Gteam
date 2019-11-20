@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -80,10 +81,24 @@ class TextWidget extends StatelessWidget{
   }
 }
 
+
 class CheckButton extends StatelessWidget{
-  CheckButton({this.formKey});
+
+  CheckButton({this.formKey,this.stadiumName,this.price,this.location,this.lat,this.lng,this.locId,this.telephone,this.isParking,this.isClothes,this.isShower,this.isBall,this.isShoes});
 
   final GlobalKey<FormState> formKey;
+  final String stadiumName;
+  final String price;
+  final String location;
+  final double lat;
+  final double lng;
+  final String locId;
+  final String telephone;
+  final int isParking;
+  final int isClothes;
+  final int isShower;
+  final int isShoes;
+  final int isBall;
 
   @override
   Widget build(BuildContext context){
@@ -91,7 +106,23 @@ class CheckButton extends StatelessWidget{
         icon: Icon(Icons.check),
         onPressed: ((){
           if(formKey.currentState.validate()){
-            // 통신이 여기에 들어가면 됨
+            Firestore.instance.collection('stadium').add({
+              'imagePath' : "https://firebasestorage.googleapis.com/v0/b/gteam-18931.appspot.com/o/%ED%92%8B%EC%82%B4%EC%9E%A52.jpg?alt=media&token=f224a5cd-0869-46de-bb0f-487b0576e6a8",
+              'stadiumName' : stadiumName,
+              'price' : int.parse(price),
+              'location' :location,
+              'lat' : lat,
+              'lng' : lng,
+              'locId' : locId,
+              'telephone' : telephone,
+              'isParking' : isParking,
+              'isClothes' : isClothes,
+              'isShower' : isShower,
+              'isShoes' : isShoes,
+              'isBall' : isBall,
+            }).then((data){
+              Navigator.pop(context);
+            });
           }
         })
     );

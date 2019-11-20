@@ -32,9 +32,11 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
   bool isEnter = false; // 참여가능 true , 참여불가능 false
   bool isAvailable = true;
   List<dynamic> currentUserList = [];
+  List<dynamic> userGameList = [];
   crudMedthods crudObj = new crudMedthods();
   PayMethods payObj = new PayMethods();
 
+  int reserve_status =0;
   @override
   void initState() {
     animationController = AnimationController(duration: Duration(milliseconds: 1000), vsync: this);
@@ -312,12 +314,30 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                         payObj.getFund().then((fundData){
                           if(fundData >= price){
                             int newFund = fundData - price;
+                            //int reserve_status = widget.gameData.groupSize == currentUserList.length ? 1 : 0; // 1 => 방이 가득찼을때 0 방 가득 안찼을때
                             payObj.updateFund(newFund).then((waitData1){
-                              crudObj.updateDataThen('game3', widget.docId, {'userList' : currentUserList}).then((waitData2){
-                                bool isFull = widget.gameData.groupSize == currentUserList.length ? true : false;
+                              crudObj.getDocumentById('game3', widget.docId).then((gameDocument1){
+                                reserve_status = gameDocument1.data['reserve_status'];
+                              });
+                              crudObj.updateDataThen('game3', widget.docId, {
+                                'userList' : currentUserList,
+                                'reserve_status' : reserve_status,
+                              }).then((waitData2){
+                                crudObj.getDocumentById('user',RootPage.userDocID).then((userDoc){
+                                  userGameList=List.from(userDoc.data['gameList']);
+                                  userGameList.add(widget.docId);
+                                  crudObj.updateDataThen('user', RootPage.userDocID, {'gameList' : userGameList}).then((data){
+                                    print("성공..");
+                                  });
+                                });
                                 if (isAvailable) {
                                   isAvailable = false;
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList,gameData: widget.gameData,stadiumData: widget.stadiumData,isFull: isFull,), fullscreenDialog: true)).then((data){
+                                  //int reserve_status = widget.gameData.groupSize == currentUserList.length ? 1 : 0; // 1 => 방이 가득찼을때 0 방 가득 안찼을때
+                                  crudObj.getDocumentById('game3', widget.docId).then((gameDocument1){
+                                    reserve_status = gameDocument1.data['reserve_status'];
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList,gameData: widget.gameData,stadiumData: widget.stadiumData,reserve_status: reserve_status,), fullscreenDialog: true)).then((data){
+                                    });
+                                  //Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList,gameData: widget.gameData,stadiumData: widget.stadiumData,reserve_status: reserve_status,), fullscreenDialog: true)).then((data){
                                     if(this.mounted){
                                       setState(() {
                                         isEnter = false;
@@ -367,8 +387,12 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                     ) ,
                   ) : InkWell( // 현재 참여중일경우
                     onTap:(){
-                      bool isFull = widget.gameData.groupSize == widget.initialUserList.length ? true : false;
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList,gameData: widget.gameData,stadiumData: widget.stadiumData,isFull: isFull,), fullscreenDialog: true)).then((data){
+                      //int reserve_status = widget.gameData.groupSize == currentUserList.length ? 1 : 0; // 1 => 방이 가득찼을때 0 방 가득 안찼을때
+                      crudObj.getDocumentById('game3', widget.docId).then((gameDocument1) {
+                        reserve_status = gameDocument1.data['reserve_status'];
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList, gameData: widget.gameData, stadiumData: widget.stadiumData, reserve_status: reserve_status,), fullscreenDialog: true)).then((data) {
+                        });
+                        // Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList,gameData: widget.gameData,stadiumData: widget.stadiumData,reserve_status: reserve_status,), fullscreenDialog: true)).then((data){
                         if(this.mounted){
                           setState(() {
                             isEnter = false;

@@ -10,7 +10,7 @@ class UserManagement {
       'isUser': isUser,
       'info_status': false,
       'balance' : 0,
-
+      'gameList':[],
       // To check basic information about user[ True=> setting complete] ex) gender , age etc..
     }).then((value) {
       Navigator.of(context).pop();

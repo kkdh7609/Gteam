@@ -8,12 +8,12 @@ import 'package:gteams/services/crud.dart';
 import 'package:gteams/game/game_join/model/GameListData.dart';
 
 class currentRoomPage extends StatefulWidget {
-  currentRoomPage({Key key, this.currentUserList, this.gameData, this.stadiumData, this.isFull}) : super(key: key);
+  currentRoomPage({Key key, this.currentUserList, this.gameData, this.stadiumData, this.reserve_status}) : super(key: key);
 
   List<dynamic> currentUserList;
   final StadiumListData stadiumData;
   GameListData gameData;
-  bool isFull;
+  int reserve_status;
 
   @override
   _currentRoomPageState createState() => _currentRoomPageState();
@@ -52,8 +52,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
         });
       });
     }
-
-    if (widget.isFull) registGame();
+    if (widget.reserve_status == 1) registGame();
   }
 
   void registGame() {
@@ -333,14 +332,14 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                         ))),
                 Expanded(
                   flex: 3,
-                  child: widget.isFull
+                  child: widget.reserve_status >= 1
                       ? Container(
                           padding: const EdgeInsets.all(7.0),
                           decoration: new BoxDecoration(border: new Border.all(color: Colors.white), borderRadius: BorderRadius.circular(5.0)),
-                          child: Text(
-                            "예약 접수중",
-                            style: TextStyle(color: Colors.amberAccent, fontSize: 15.0, fontWeight: FontWeight.w600),
-                          ))
+                          child: widget.reserve_status == 2 ?
+                          Text("예약 완료", style: TextStyle(color: Colors.amberAccent, fontSize: 15.0, fontWeight: FontWeight.w600)) :
+                          Text("예약 접수중", style: TextStyle(color: Colors.amberAccent, fontSize: 15.0, fontWeight: FontWeight.w600)),
+                  )
                       : Container(
                           padding: const EdgeInsets.all(4.0),
                           decoration: new BoxDecoration(border: new Border.all(color: Colors.white), borderRadius: BorderRadius.circular(5.0)),
