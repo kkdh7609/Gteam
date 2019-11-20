@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:gteams/pay/iamport_payment.dart';
+import 'package:gteams/pay/payMethod.dart';
 
 enum Cost { ONE_THOUSANDS, FIVE_THOUSANDS, TEN_THOUSANDS }
 enum PayMethod {
@@ -17,6 +18,17 @@ class PayPage extends StatefulWidget {
 class _PayPageState extends State<PayPage> {
   Cost _selectedCost = null;
   PayMethod _selectedPayMethod = null;
+  int fund = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    PayMethods().getFund().then((data){
+      setState(() {
+        fund = data;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +121,7 @@ class _PayPageState extends State<PayPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Text("50,000 P",
+                              Text(fund.toString() + " P",
                                   style: TextStyle(
                                       fontSize: 80, fontWeight: FontWeight.w700, color: Colors.white, fontFamily: 'Qwigley')),
                             ],
@@ -177,7 +189,7 @@ class _PayPageState extends State<PayPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Text("10% Discount event card",
+                        Text("Choose your Pay Method",
                             style: TextStyle(fontSize: 17, fontFamily: 'Dosis', fontWeight: FontWeight.w600))
                       ],
                     ),
@@ -375,98 +387,4 @@ class _PayPageState extends State<PayPage> {
       ),
     );
   }
-}
-
-Widget _showCardMethod() {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: <Widget>[
-      Container(
-          width: 110,
-          height: 120,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-          child: Column(
-            children: <Widget>[
-              Image.asset("assets/image/pay/hyundai_card.png", height: 80),
-              Text("Hyundai Card", style: TextStyle(fontSize: 17, fontFamily: 'Dosis', fontWeight: FontWeight.w600)),
-            ],
-          )),
-      Container(
-          width: 110,
-          height: 120,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-          child: Column(
-            children: <Widget>[
-              Image.asset("assets/image/pay/KBbank_card.png", width: 250, height: 80),
-              Text("KBbank Card", style: TextStyle(fontSize: 17, fontFamily: 'Dosis', fontWeight: FontWeight.w600)),
-            ],
-          )),
-      Container(
-          width: 110,
-          height: 120,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-          child: Column(
-            children: <Widget>[
-              Image.asset("assets/image/pay/samsung_card.png", width: 200, height: 80),
-              Text("Samsung Card", style: TextStyle(fontSize: 17, fontFamily: 'Dosis', fontWeight: FontWeight.w600)),
-            ],
-          )),
-    ],
-  );
-}
-
-Widget _showPayMethod() {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: <Widget>[
-      Container(
-          width: 110,
-          height: 120,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-          child: Column(
-            children: <Widget>[
-              Image.asset("assets/image/pay/kakaopay.png", width: 75, height: 86),
-              Text("Kakao Pay", style: TextStyle(fontSize: 17, fontFamily: 'Dosis', fontWeight: FontWeight.w600)),
-            ],
-          )),
-      Container(
-          width: 110,
-          height: 120,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-          child: Column(
-            children: <Widget>[
-              Image.asset("assets/image/pay/payco.png", width: 75, height: 86),
-              Text("Payco", style: TextStyle(fontSize: 17, fontFamily: 'Dosis', fontWeight: FontWeight.w600)),
-            ],
-          )),
-      Container(
-          width: 110,
-          height: 120,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-          child: Column(
-            children: <Widget>[
-              Image.asset("assets/image/pay/samsung_pay2.png", width: 90, height: 86),
-              Text("Samsung Pay", style: TextStyle(fontSize: 17, fontFamily: 'Dosis', fontWeight: FontWeight.w600)),
-            ],
-          )),
-    ],
-  );
 }

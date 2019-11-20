@@ -29,6 +29,7 @@ class GameListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return AnimatedBuilder(
       animation: animationController,
       builder: (BuildContext context, Widget child) {
@@ -92,9 +93,9 @@ class GameListView extends StatelessWidget {
                                                       ),
                                                     ),
                                                   ),
-                                                  SizedBox(width: 15),
+                                                  SizedBox(width: 10),
                                                   Icon(
-                                                    FontAwesomeIcons.calendarTimes,
+                                                    FontAwesomeIcons.calendar,
                                                     size: 15,
                                                     color: GameJoinTheme.buildLightTheme().primaryColor,
                                                   ),
@@ -109,12 +110,12 @@ class GameListView extends StatelessWidget {
                                                   ),
                                                   SizedBox(width: 65),
                                                   Text(
-                                                    stadiumData.price.toString() + "원",
+                                                    "인당 "+gameData.perPrice.toString() + "원",
                                                     textAlign: TextAlign.left,
                                                     style: TextStyle(
                                                       fontFamily: 'Dosis',
                                                       fontWeight: FontWeight.w600,
-                                                      fontSize: 18,
+                                                      fontSize: 15,
                                                     ),
                                                   ),
                                                 ],
@@ -262,7 +263,7 @@ class GameListView extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => GameRoomPage(docId: docId,currentUserList: gameData.userList,stadiumData: stadiumData ,gameData: gameData,)
+                                  builder: (context) => GameRoomPage(docId: docId,initialUserList: gameData.userList,stadiumData: stadiumData ,gameData: gameData,)
                               ),
                             );
                           },
