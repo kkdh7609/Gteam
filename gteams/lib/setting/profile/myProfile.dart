@@ -33,7 +33,7 @@ class _UserProfileState extends State<UserProfile> {
 
   List<SettingListData> sportListData = SettingListData.sportList;
 
-  void _change_loc_name(String new_name) {
+  void _change_loc_name(String new_name,String tmp2) {
     _userData.preferenceLoc = new_name;
   }
 
@@ -352,8 +352,8 @@ class _UserProfileState extends State<UserProfile> {
                                 left: 20, right: 20, top: 10, bottom: 10),
                             width: double.infinity,
                             child: MaterialButton(
-                              child: Text("Edit Profile"),
-                              color: Color(0xff3B5998),
+                              child: Text("Edit Profile", style: TextStyle(color: Colors.white, fontSize: 20)),
+                              color: Color(0xff20253d),
                               onPressed: () {
                                 if (_formKey.currentState.validate()) {
                                   _formKey.currentState.save();
@@ -395,11 +395,12 @@ class _UserProfileState extends State<UserProfile> {
           centerTitle: true,
           title: Text("프로필 수정",
               style: TextStyle(
+                  fontFamily: 'Dosis',
                   color: Colors.white,
                   fontSize: 20,
-                  fontWeight: FontWeight.w900),
+                  fontWeight: FontWeight.w600),
               textAlign: TextAlign.center),
-          backgroundColor: Color(0xff3B5998),
+          backgroundColor: Color(0xff20253d),
           elevation: 1.5,
           leading: Builder(
             builder: (context) => IconButton(

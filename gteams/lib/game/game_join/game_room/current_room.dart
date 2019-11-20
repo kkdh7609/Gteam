@@ -3,12 +3,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gteams/game/game_join/model/MemberListData.dart';
 import 'package:gteams/game/game_join/game_room/GameRoomTheme.dart';
 import 'package:gteams/services/crud.dart';
+import 'package:gteams/game/game_join/model/GameListData.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class currentRoomPage extends StatefulWidget {
 
-  currentRoomPage({Key key, this.currentUserList}) : super(key: key);
+  currentRoomPage({Key key, this.currentUserList,this.gameData,this.isFull}) : super(key: key);
 
   List<dynamic> currentUserList;
+  GameListData gameData;
+  bool isFull;
 
   @override
   _currentRoomPageState createState() => _currentRoomPageState();
@@ -23,11 +27,15 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
   var opacity2 = 0.0;
   var opacity3 = 0.0;
 
+  var gameDocId;
+  List<dynamic> gameDocIdList = [];
+  List<dynamic> gameDocIdList2 = [];
+  bool flag =false;
+
   @override
   void initState() {
     super.initState();
     this.memberlist = MemberListData.memberList;
-
     for(var i = 0; i < widget.currentUserList.length; i++){
       var userQuery = crudObj.getDocumentByWhere('user', 'email', widget.currentUserList[i]);
 
@@ -41,6 +49,33 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
         });
       });
     }
+
+    if(widget.isFull) registGame();
+  }
+
+  void registGame(){
+    crudObj.getDocumentByWhere('game3', 'sort', widget.gameData.sort).then((document){ // game의 DocId를 찾기 위함..
+      gameDocId = document.documents[0].documentID;
+      widget.gameData.stadiumRef.get().then((document){ //경기장의 document 접근
+        if(!flag && document.data['gameList'] == null){ //경기장에 데이터가 없을때
+          flag = true;
+          gameDocIdList.add(gameDocId);
+          crudObj.updateDataThen('stadium', document.documentID, {
+            'gameList': gameDocIdList,
+          });
+        }else{ // 경기장에 데이터 있을때
+          gameDocIdList2 = document.data['gameList'];
+          if (gameDocIdList2.contains(gameDocId)) {
+            print("이미 있는 데이터임");
+          } else {
+            gameDocIdList.add(gameDocId);
+            crudObj.updateDataThen('stadium', document.documentID, {
+              'gameList': gameDocIdList,
+            });
+          }
+        }
+      });
+    });
   }
 
   @override
@@ -110,7 +145,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                           this.memberlist[index].name, this.memberlist[index].address
                       ):LinearProgressIndicator();
                     },
-                  ),
+                   ),
                   Container(
                     child: Text("Chatting ui"),
                   ),
@@ -265,19 +300,19 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SizedBox(height: 10.0),
+            SizedBox(height: 8.0),
             Text(
-              "풋살 5vs5 ㄱㄱ",
+              widget.gameData.gameName,
               style: TextStyle(color: Colors.white, fontSize: 25.0, fontWeight: FontWeight.w600),
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: 8.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Padding(
                     padding: EdgeInsets.only(left: 10.0),
                     child: Text(
-                      "시작: "+"11:30",
+                      "시작: "+widget.gameData.startTime,
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     )
                 ),
@@ -288,42 +323,71 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     )
                 ),
-
                 Padding(
                     padding: EdgeInsets.only(left: 10.0),
                     child: Text(
-                      "종료: "+"13:30",
+                      "종료: "+widget.gameData.endTime,
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     )
                 ),
-
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Expanded(
-                    flex: 8,
+                    flex: 7,
                     child: Padding(
                         padding: EdgeInsets.only(left: 10.0),
                         child: Text(
-                          "희망 수준: 6",
+                          "희망 수준: " + widget.gameData.gameLevel.toString(),
                           style: TextStyle(color: Colors.white),
                         )
                     )
                 ),
                 Expanded(
-                    flex: 2,
-                    child: Container(
-                      padding: const EdgeInsets.all(7.0),
+                  flex: 3,
+                    child: widget.isFull ?
+                    Container(
+                        padding: const EdgeInsets.all(7.0),
+                        decoration: new BoxDecoration(
+                            border: new Border.all(color: Colors.white),
+                            borderRadius: BorderRadius.circular(5.0)),
+                      child: Text(
+                       "예약 접수중",
+                       style: TextStyle(color: Colors.amberAccent, fontSize: 15.0, fontWeight: FontWeight.w600),
+                      )
+                    )
+                        :
+                    Container(
+                      padding: const EdgeInsets.all(4.0),
                       decoration: new BoxDecoration(
                           border: new Border.all(color: Colors.white),
                           borderRadius: BorderRadius.circular(5.0)),
-                      child: new Text(
-                        "10000원",
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-                      ),
-                    )
+                      child: Center(
+                        child : Row(
+                        children: <Widget>[
+                          InkWell(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(32.0),
+                            ),
+                            onTap: () {},
+                            child: Padding(
+                              padding: const EdgeInsets.all(1.0),
+                              child: Icon(
+                                Icons.people,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 3),
+                          Text(
+                            widget.currentUserList.length.toString()+" / "+widget.gameData.groupSize.toString(),
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600,),
+                          ),
+                        ],
+                      ),)
+                    ),
                 )
               ],
             ),

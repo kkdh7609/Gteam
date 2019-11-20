@@ -94,6 +94,7 @@ class _SettingUserState extends State<SettingUser> {
                         'user',
                         widget.userDocID,
                         {
+                          'fund' : 10000,
                           'info_status': true,
                           'prferenceTime': "1700~1800",
                           'prferenceLoc': "loc",
@@ -102,8 +103,7 @@ class _SettingUserState extends State<SettingUser> {
                           // It can update array type field
                         },
                       );
-                      Navigator.pop(context);
-                      Navigator.push(
+                      Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (context) => MainMenuPage(

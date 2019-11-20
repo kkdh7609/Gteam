@@ -42,7 +42,7 @@ class crudMedthods {
 
 */
 
-  Future<QuerySnapshot> getDocumentByWhere(String collection, String field, String where) async {
+  Future<QuerySnapshot> getDocumentByWhere(String collection, String field, dynamic where) async {
     return await _db.collection(collection).where(field, isEqualTo: where).limit(1).getDocuments();
   }
 
@@ -52,6 +52,10 @@ class crudMedthods {
         print(e);
       },
     );
+  }
+
+  Future<dynamic> updateDataThen(String collection, String docId, newValues) async {
+    return await _db.collection(collection).document(docId).updateData(newValues);
   }
 
   Future<void> deleteData(String collection, String docId) {

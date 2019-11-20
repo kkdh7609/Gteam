@@ -7,6 +7,7 @@ import 'package:gteams/map/google_map.dart';
 import 'package:gteams/game/game_join/game_room/GameRoomTheme.dart';
 import 'package:gteams/root_page.dart';
 import 'package:gteams/services/crud.dart';
+import 'package:gteams/pay/payMethod.dart';
 
 class GameRoomPage extends StatefulWidget {
   final String docId;
@@ -30,6 +31,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
   var isServiceNum = 0;
 
   crudMedthods crudObj = new crudMedthods();
+  PayMethods payObj = new PayMethods();
 
   @override
   void initState() {
@@ -57,8 +59,27 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
     await Future.delayed(const Duration(milliseconds: 200));
   }
 
-  void _changeState(String tempStr) {
+  void _changeState(String tempStr,String tempStr2) {
     print(tempStr);
+  }
+
+  Widget _alertButton(){
+    return FlatButton(
+      child: Text("OK"),
+      onPressed: (){
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  AlertDialog _alertDialog(title, text){
+    return AlertDialog(
+        title: Text(title),
+      content: Text(text),
+      actions: <Widget>[
+        _alertButton(),
+      ]
+    );
   }
 
   @override
@@ -272,7 +293,8 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                   widget.currentUserList.contains(RootPage.user_email) ?
                   InkWell(
                     onTap:(){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: widget.currentUserList,), fullscreenDialog: true),
+                      bool isFull = widget.gameData.groupSize == widget.currentUserList.length ? true : false;
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: widget.currentUserList,gameData: widget.gameData,isFull: isFull,), fullscreenDialog: true),
                       );
                     },
                     child: Container(
@@ -304,17 +326,28 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                     onTap:(){
                       List<dynamic> newList = widget.currentUserList.toList();
                       newList.add(RootPage.user_email);
-                      print(newList);
-                      print(widget.docId);
-                      crudObj.updateData(
-                        'game3',
-                        widget.docId,
-                        {
-                          'userList' : newList,
-                        },
-                      );
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: newList,), fullscreenDialog: true),
-                      );
+                      crudObj.getDocumentById('game3', widget.docId).then((data){
+                        int price = data.data['perPrice'];
+                        payObj.getFund().then((fundData){
+                          if(fundData >= price){
+                            int newFund = fundData - price;
+                            payObj.updateFund(newFund).then((waitData1){
+                              crudObj.updateDataThen('game3', widget.docId, {'userList' : newList}).then((waitData2){
+                                bool isFull = widget.gameData.groupSize == newList.length ? true : false;
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: newList,gameData: widget.gameData,isFull: isFull,), fullscreenDialog: true));
+                              });
+                            });
+                          }
+                          else{
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context){
+                                return _alertDialog("참가 실패", "포인트가 부족합니다");
+                              }
+                            );
+                          }
+                        });
+                      });
                     },
                     child: Container(
                       height: 48,

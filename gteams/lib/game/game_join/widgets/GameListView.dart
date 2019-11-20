@@ -275,7 +275,6 @@ class GameListView extends StatelessWidget {
                                   SizedBox(width: 10),
                                 ],
                               )
-
                           ),
                         )
                       ],

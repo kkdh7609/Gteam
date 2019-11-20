@@ -69,55 +69,55 @@ class AlimentWidget extends StatelessWidget {
         ),
         Container(
             child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            InkWell(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => GameCreatePage()));
-              },
-              child: Column(
-                children: <Widget>[
-                  SvgPicture.asset(
-                    "assets/image/menu/calendar.svg",
-                    width: 50.0,
-                    height: 50.0,
-                  ),
-                  Padding(
-                      padding: EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        'Create',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                        ),
-                      )),
-                ],
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => GameJoinPage()));
-              },
-              child: Column(
-                children: <Widget>[
-                  SvgPicture.asset(
-                    "assets/image/menu/magnifying-glass.svg",
-                    width: 50.0,
-                    height: 50.0,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      'Join',
-                      style: TextStyle(
-                        fontSize: 20.0,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                InkWell(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => GameCreatePage()));
+                  },
+                  child: Column(
+                    children: <Widget>[
+                      SvgPicture.asset(
+                        "assets/image/menu/calendar.svg",
+                        width: 50.0,
+                        height: 50.0,
                       ),
-                    ),
+                      Padding(
+                          padding: EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            'Create',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                            ),
+                          )),
+                    ],
                   ),
-                ],
-              ),
-            ),
-          ],
-        )),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => GameJoinPage()));
+                  },
+                  child: Column(
+                    children: <Widget>[
+                      SvgPicture.asset(
+                        "assets/image/menu/magnifying-glass.svg",
+                        width: 50.0,
+                        height: 50.0,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          'Join',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            )),
       ],
     );
   }

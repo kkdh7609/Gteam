@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
-class Aliment {
+class Facility {
   final String name;
   final LinearGradient background;
   final String subtitle;
   final String image;
-  final String bottomImage;
 
-  Aliment(
+  Facility(
       {this.name,
-      this.background,
-      this.subtitle,
-      this.image,
-      this.bottomImage,});
+        this.background,
+        this.subtitle,
+        this.image,
+      });
 }
