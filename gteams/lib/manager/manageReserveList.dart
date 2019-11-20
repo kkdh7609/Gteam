@@ -78,18 +78,6 @@ class _ReserveListState extends State<ReserveList> {
     );
   }
 
-/*
-  Widget gameInfo(){
-    return StreamBuilder<QuerySnapshot>(
-        stream : Firestore.instance.collection("game3").where('id', isEqualTo: RootPage.adminData.myStadium[0]).snapshots(),
-        builder: (context, snapshot){
-          if(!snapshot.hasData) return LinearProgressIndicator();
-          return reserveListUI(context,snapshot.data.documents);
-        }
-    );
-  }
-*/
-
   Widget reserveListUI(BuildContext context, List<DocumentSnapshot> snapshot) {
     return Container(
         child: ListView.builder(
@@ -317,38 +305,42 @@ class _ReserveListState extends State<ReserveList> {
         });
   }
 
+  Widget _buildbody(){
+    return ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: reserveList.length,
+        itemBuilder: (BuildContext context, int index) {
+          crudObj
+              .getDocumentById('game3', reserveList[index])
+              .then((document) {
+            if (this.mounted) {
+              setState(() {
+                gameData = GameListData.fromJson(document.data);
+              });
+            }
+          });
+          return (gameData != null &&
+              gameData.groupSize == gameData.userList.length)
+              ? makeCard(
+              gameData.gameName,
+              gameData.startTime,
+              gameData.endTime,
+              gameData.groupSize,
+              gameData.totalPrice
+          )
+              : LinearProgressIndicator();
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
           centerTitle: true, elevation: 0.1, title: Text("경기장 예약 목록 관리")),
       body: Container(
-          child: reserveList != null
-              ? ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: reserveList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    crudObj
-                        .getDocumentById('game3', reserveList[index])
-                        .then((document) {
-                      if (this.mounted) {
-                        setState(() {
-                          gameData = GameListData.fromJson(document.data);
-                        });
-                      }
-                    });
-                    return (gameData != null &&
-                            gameData.groupSize == gameData.userList.length)
-                        ? makeCard(
-                            gameData.gameName,
-                            gameData.startTime,
-                            gameData.endTime,
-                            gameData.groupSize,
-                            gameData.totalPrice)
-                        : LinearProgressIndicator();
-                  })
-              : LinearProgressIndicator()),
+          child: reserveList != null ? _buildbody() : LinearProgressIndicator()
+      ),
     );
   }
 }
