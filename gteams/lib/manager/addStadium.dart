@@ -28,6 +28,7 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
   int _shoes = 0;
   int _parking = 0;
   int _shower = 0;
+  int _ball = 0;
 
   List<int> _times;
   bool _checkTimes = false;
@@ -68,6 +69,13 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
     2: Text('유료 제공')
   };
 
+  final Map<int, Widget> ballSeg = const <int, Widget>{
+    0: Text('제공 안함'),
+    1: Text('무료 제공'),
+    2: Text('유료 제공')
+  };
+
+
   void onPhotoPressed(){
     Navigator.push(context, MaterialPageRoute(builder: (context) => ImageCapture(photo: _photo, onPressed: changePhoto)));
   }
@@ -107,6 +115,12 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
   void onShowerChanged(int val){
     setState((){
       _shower = val;
+    });
+  }
+
+  void onBallChanged(int val){
+    setState((){
+      _ball = val;
     });
   }
 
@@ -151,7 +165,9 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
         backgroundColor: Color(0xff20253d),
         title: Text('Add new stadium'),
         actions: <Widget>[
-          CheckButton(formKey: _formKey,)
+          CheckButton(formKey: _formKey, stadiumName: _nameController.text,
+              price : _priceController.text, location : _locName, lat : _lat,lng : _lng,
+              locId : _locId,telephone : _callController.text, isParking : _parking, isClothes :_clothes, isShower :_shower,isShoes : _shoes,isBall : _ball)
         ]
       ),
       body: Form(
@@ -202,6 +218,8 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
                                       SegmentedControl(header: "축구화 제공 여부", value: _shoes, children: shoesSeg, onValueChanged: onShoesChanged),
                                       SizedBox(height: 4.0),
                                       SegmentedControl(header: "주차장 제공 여부", value: _parking, children: parkSeg, onValueChanged: onParkChanged),
+                                      SizedBox(height: 4.0),
+                                      SegmentedControl(header: "축구공 제공 여부", value: _ball, children: ballSeg, onValueChanged: onBallChanged),
                                       SizedBox(height: 4.0),
                                       SegmentedControl(header: "샤워 시설 제공 여부", value: _shower, children: showerSeg, onValueChanged: onShowerChanged),
                                       SizedBox(height: 16.0)

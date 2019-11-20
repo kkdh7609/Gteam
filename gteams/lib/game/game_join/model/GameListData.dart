@@ -16,6 +16,7 @@ class GameListData {
   List<dynamic> userList;
   DocumentReference stadiumRef;
   Timestamp sort;
+  int reserve_status;
 
   GameListData({
 //    this.imagePath = '',
@@ -33,6 +34,7 @@ class GameListData {
     this.userList,
     this.stadiumRef,
     this.sort,
+    this.reserve_status,
   });
 
   factory GameListData.fromJson(Map<String, dynamic> json) {
@@ -52,6 +54,7 @@ class GameListData {
       totalPrice: json['totalPrice'],
       perPrice: json['perPrice'],
       sort:json['sort'],
+      reserve_status : json['reserve_status'],
     );
   }
 

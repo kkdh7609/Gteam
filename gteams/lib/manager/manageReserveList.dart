@@ -78,18 +78,6 @@ class _ReserveListState extends State<ReserveList> {
     );
   }
 
-/*
-  Widget gameInfo(){
-    return StreamBuilder<QuerySnapshot>(
-        stream : Firestore.instance.collection("game3").where('id', isEqualTo: RootPage.adminData.myStadium[0]).snapshots(),
-        builder: (context, snapshot){
-          if(!snapshot.hasData) return LinearProgressIndicator();
-          return reserveListUI(context,snapshot.data.documents);
-        }
-    );
-  }
-*/
-
   Widget reserveListUI(BuildContext context, List<DocumentSnapshot> snapshot) {
     return Container(
         child: ListView.builder(
@@ -297,11 +285,16 @@ class _ReserveListState extends State<ReserveList> {
                   if (isAvailable) {
                     isAvailable = false;
                     payObj.getFund().then((fund) {
-                      int newFund = this._reserveGame.totalPrice + fund;
+                      int newFund = this.gameData.totalPrice + fund;
                       payObj.updateFund(newFund).then((tempVal) {
                         Navigator.pop(context);
                         isAvailable = true;
-                        _showAlertDialog("성공", "승인에 성공하였습니다.");
+                        crudObj.updateDataThen('game3', this.reserveList[0], {"reserve_status": 2}).then((tempVal){
+                          setState((){
+                            this.reserveList = [];      // 여기 고쳐야 함
+                          });
+                          _showAlertDialog("성공", "승인에 성공하였습니다.");
+                        });
                       });
                     });
                   }
@@ -313,38 +306,42 @@ class _ReserveListState extends State<ReserveList> {
         });
   }
 
+  Widget _buildbody(){
+    return ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: reserveList.length,
+        itemBuilder: (BuildContext context, int index) {
+          crudObj
+              .getDocumentById('game3', reserveList[index])
+              .then((document) {
+            if (this.mounted) {
+              setState(() {
+                gameData = GameListData.fromJson(document.data);
+              });
+            }
+          });
+          return (gameData != null &&
+              gameData.groupSize == gameData.userList.length)
+              ? makeCard(
+              gameData.gameName,
+              gameData.startTime,
+              gameData.endTime,
+              gameData.groupSize,
+              gameData.totalPrice
+          )
+              : LinearProgressIndicator();
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
           centerTitle: true, elevation: 0.1, title: Text("경기장 예약 승인", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white))),
       body: Container(
-          child: reserveList != null
-              ? ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: reserveList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    crudObj
-                        .getDocumentById('game3', reserveList[index])
-                        .then((document) {
-                      if (this.mounted) {
-                        setState(() {
-                          gameData = GameListData.fromJson(document.data);
-                        });
-                      }
-                    });
-                    return (gameData != null &&
-                            gameData.groupSize == gameData.userList.length)
-                        ? makeCard(
-                            gameData.gameName,
-                            gameData.startTime,
-                            gameData.endTime,
-                            gameData.groupSize,
-                            gameData.totalPrice)
-                        : LinearProgressIndicator();
-                  })
-              : LinearProgressIndicator()),
+          child: reserveList != null ? _buildbody() : LinearProgressIndicator()
+      ),
     );
   }
 }

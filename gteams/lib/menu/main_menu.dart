@@ -76,6 +76,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
       } else if (drawerIndex == DrawerIndex.CURRENTROOM) {
         setState(
           () {
+            drawerIndex = DrawerIndex.HOME;
             Navigator.push(context, MaterialPageRoute(builder: (context) => CurrentRoomListPage()));
             screenView = MainHomePageScreen();
           },

@@ -8,12 +8,12 @@ import 'package:gteams/services/crud.dart';
 import 'package:gteams/game/game_join/model/GameListData.dart';
 
 class currentRoomPage extends StatefulWidget {
-  currentRoomPage({Key key, this.currentUserList, this.gameData, this.stadiumData, this.isFull}) : super(key: key);
+  currentRoomPage({Key key, this.currentUserList, this.gameData, this.stadiumData, this.reserve_status}) : super(key: key);
 
   List<dynamic> currentUserList;
   final StadiumListData stadiumData;
   GameListData gameData;
-  bool isFull;
+  int reserve_status;
 
   @override
   _currentRoomPageState createState() => _currentRoomPageState();
@@ -52,8 +52,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
         });
       });
     }
-
-    if (widget.isFull) registGame();
+    if (widget.reserve_status == 1) registGame();
   }
 
   void registGame() {
@@ -148,7 +147,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                   ListView.builder(
                     itemCount: this.memberlist.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return this.memberlist.length != 0 ? _member_info(this.memberlist[index].name, this.memberlist[index].address) : LinearProgressIndicator();
+                      return this.memberlist.length != 0 ? _member_info(this.memberlist[index].name, this.memberlist[index].address, index) : LinearProgressIndicator();
                     },
                   ),
                   Container(
@@ -164,7 +163,12 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
     );
   }
 
-  Widget _member_info(String name, String address) {
+  Widget _member_info(String name, String address, int idx) {
+    String img;
+    if(idx % 2==0)
+      img = "assets/image/userImage.png";
+    else
+      img = "assets/image/userImage2.png";
     return Card(
       key: ValueKey(name),
       elevation: 8.0,
@@ -180,7 +184,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                   tag: "avatar_" + name,
                   child: CircleAvatar(
                     radius: 32,
-                    backgroundImage: AssetImage("assets/image/userImage.png"),
+                    backgroundImage: AssetImage(img),
                   ))),
           title: Text(
             name,
@@ -333,14 +337,14 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                         ))),
                 Expanded(
                   flex: 3,
-                  child: widget.isFull
+                  child: widget.reserve_status >= 1
                       ? Container(
                           padding: const EdgeInsets.all(7.0),
                           decoration: new BoxDecoration(border: new Border.all(color: Colors.white), borderRadius: BorderRadius.circular(5.0)),
-                          child: Text(
-                            "예약 접수중",
-                            style: TextStyle(color: Colors.amberAccent, fontSize: 15.0, fontWeight: FontWeight.w600),
-                          ))
+                          child: widget.reserve_status == 2 ?
+                          Text("예약 완료", style: TextStyle(color: Colors.amberAccent, fontSize: 15.0, fontWeight: FontWeight.w600)) :
+                          Text("예약 접수중", style: TextStyle(color: Colors.amberAccent, fontSize: 15.0, fontWeight: FontWeight.w600)),
+                  )
                       : Container(
                           padding: const EdgeInsets.all(4.0),
                           decoration: new BoxDecoration(border: new Border.all(color: Colors.white), borderRadius: BorderRadius.circular(5.0)),

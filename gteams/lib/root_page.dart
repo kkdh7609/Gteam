@@ -89,7 +89,6 @@ class _RootPageState extends State<RootPage> {
           print("info_status : $_infoStatus");
           return new SettingUser(
             onSignedOut: _onSignedOut,
-
             userDocID: _userDocID,
           );
         } else {
@@ -134,9 +133,9 @@ class _RootPageState extends State<RootPage> {
   void _onSignedOut() {
     setState(
           () {
-        authStatus = AuthStatus.NOT_LOGGED_IN;
-        _userId = "";
-        _userMail = "";
+            authStatus = AuthStatus.NOT_LOGGED_IN;
+          _userId = "";
+          _userMail = "";
       },
     );
   }

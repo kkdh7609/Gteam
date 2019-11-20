@@ -20,6 +20,7 @@ class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
   StadiumListData stadiumData;
   bool isAvailable =true ;
   var flag = 0;
+  int reserve_status ;
 
   @override
   void initState(){
@@ -64,14 +65,17 @@ class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
               ),
               trailing: Icon(Icons.keyboard_arrow_right, color: Colors.black, size: 30.0),
               onTap: (){
-                  if(isAvailable){
-                      isAvailable = false ;
-                    bool isFull = gameData.groupSize == gameData.userList.length ? true : false;
-                    gameData.stadiumRef.get().then((document){
-                      stadiumData = StadiumListData.fromJson(document.data);
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: gameData.userList,gameData: gameData,stadiumData: stadiumData,isFull: isFull,), fullscreenDialog: true)).then((data){
-                          isAvailable = true;
+                if (isAvailable) {
+                  isAvailable = false;
+                  //int reserve_status = gameData.groupSize == gameData.userList.length ? 1 : 0; // 1 => 방이 가득찼을때 0 방 가득 안찼을때
+                  gameData.stadiumRef.get().then((document) {
+                    stadiumData = StadiumListData.fromJson(document.data);
+                    crudObj.getDocumentById('game3', gameList[index]).then((gameDocument1) {
+                      reserve_status = gameDocument1.data['reserve_status'];
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: gameData.userList, gameData: gameData, stadiumData: stadiumData, reserve_status: reserve_status,), fullscreenDialog: true)).then((data) {
                       });
+                      isAvailable = true;
+                    });
                     });
                   }
               }
