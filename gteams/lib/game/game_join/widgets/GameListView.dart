@@ -52,7 +52,6 @@ class GameListView extends StatelessWidget {
                                     fit: BoxFit.fill,
                                     image: NetworkImage(stadiumData.imagePath),
                                   )
-                                //child: Image.asset(gameData.imagePath, fit: BoxFit.cover),
                               ),
                               Container(
                                 color: GameJoinTheme.buildLightTheme().backgroundColor,
@@ -137,9 +136,11 @@ class GameListView extends StatelessWidget {
                                                 child: Row(
                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                   children: <Widget>[
-                                                    Padding(
-                                                      padding: const EdgeInsets.only(left: 17),
-                                                      child: Column(
+                                                    //Padding(
+                                                     // padding: const EdgeInsets.only(left: 17),
+                                                      //child: Column(
+                                                    SizedBox(width: 10),
+                                                    Column(
                                                         mainAxisAlignment: MainAxisAlignment.start,
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: <Widget>[
@@ -148,7 +149,7 @@ class GameListView extends StatelessWidget {
                                                           Icon(FontAwesomeIcons.tshirt, color: Colors.grey, size: 25),
                                                           SizedBox(height: 5),
                                                           Text(
-                                                            "옷 대여",
+                                                            "팀 조끼",
                                                             style: TextStyle(
                                                                 fontWeight: FontWeight.w700,
                                                                 fontSize: 14,
@@ -157,18 +158,18 @@ class GameListView extends StatelessWidget {
                                                           ),
                                                         ],
                                                       ),
-                                                    ),
+                                                    //),
                                                     SizedBox(width: 20),
                                                     Column(
                                                       mainAxisAlignment: MainAxisAlignment.center,
                                                       crossAxisAlignment: CrossAxisAlignment.center,
                                                       children: <Widget>[
-                                                        stadiumData.isShoes != 0 ?
-                                                        Icon(FontAwesomeIcons.shoePrints, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35,) :
-                                                        Icon(FontAwesomeIcons.shoePrints, color: Colors.grey, size: 25,),
+                                                        stadiumData.isBall != 0 ?
+                                                        Icon(FontAwesomeIcons.volleyballBall, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35,) :
+                                                        Icon(FontAwesomeIcons.volleyballBall, color: Colors.grey, size: 25,),
                                                         SizedBox(height: 5),
                                                         Text(
-                                                          "신발 대여",
+                                                          "공 대여",
                                                           style: TextStyle(
                                                               fontWeight: FontWeight.w700,
                                                               fontSize: 14,
@@ -204,7 +205,7 @@ class GameListView extends StatelessWidget {
                                                         Icon(FontAwesomeIcons.shower, color: Colors.grey, size: 25) ,
                                                         SizedBox(height: 5),
                                                         Text(
-                                                          "샤워실 이용",
+                                                          "샤워장",
                                                           style: TextStyle(
                                                               fontWeight: FontWeight.w700,
                                                               fontSize: 14,

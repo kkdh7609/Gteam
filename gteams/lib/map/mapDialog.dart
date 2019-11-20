@@ -22,6 +22,8 @@ class CustomDialog extends StatelessWidget{
   int parkVal = 0;
   int showerVal = 0;
 
+  bool isAvailable = true;
+
   final Map<int, Widget> clothesSeg = const <int, Widget>{
     0: Text('제공 안함'),
     1: Text('무료 제공'),
@@ -47,8 +49,11 @@ class CustomDialog extends StatelessWidget{
   };
 
   _onConfirmPressed(){
-    onSelected(stadiumData.stadiumName,stadiumData.id);
-    onPop();
+    if(isAvailable){
+      isAvailable = false;
+      onSelected(stadiumData.stadiumName,stadiumData.id);
+      onPop();
+    }
   }
 
   dialogContent(BuildContext context) {
