@@ -12,7 +12,7 @@ import 'package:gteams/map/StadiumListData.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 
-typedef selectFunc = void Function(String);
+typedef selectFunc = void Function(String,String);
 
 String kGoogleApiKey = getSecureKey();
 GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
@@ -200,7 +200,7 @@ class _MapTestState extends State<MapTest> {
               ),
               onTap: () {
                 // print(nowLoc);
-                widget.onSelected(title);
+                widget.onSelected(title,"loc");
                 Navigator.pop(context);
               },
               icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),

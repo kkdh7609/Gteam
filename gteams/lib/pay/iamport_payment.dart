@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:gteams/services/crud.dart' as prefix0;
 
 /* 아임포트 결제 모듈을 불러옵니다. */
 import 'package:iamport_flutter/iamport_payment.dart';
 /* 아임포트 결제 데이터 모델을 불러옵니다. */
 import 'package:iamport_flutter/model/payment_data.dart';
 import 'package:gteams/pay/pay.dart';
+import 'package:gteams/pay/result.dart';
+import 'package:gteams/root_page.dart';
+import 'package:gteams/services/crud.dart';
+import 'package:gteams/pay/payMethod.dart';
 
 class IamPortPayment extends StatefulWidget {
 
@@ -27,7 +32,7 @@ class _IamPortPaymentState extends State<IamPortPayment> {
     super.initState();
     setState(() {
       if(widget.chargeType == Cost.ONE_THOUSANDS)
-        chargeAmount = 100;
+        chargeAmount = 1000;
       else if(widget.chargeType == Cost.FIVE_THOUSANDS)
         chargeAmount = 5000;
       else if(widget.chargeType == Cost.TEN_THOUSANDS)
@@ -82,11 +87,12 @@ class _IamPortPaymentState extends State<IamPortPayment> {
       }),
       /* [필수입력] 콜백 함수 */
       callback: (Map<String, String> result) {
-        Navigator.pushReplacementNamed(
-          context,
-          '/result',
-          arguments: result,
-        );
+        PayMethods().getFund().then((data){
+          int fund = data + chargeAmount;
+          PayMethods().updateFund(fund).then((tempData){
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PayResultPage(payResult: chargeAmount)));
+          });
+        });
       },
     );
   }

@@ -11,6 +11,7 @@ import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 import 'package:gteams/game/game_join/widgets/GameFilterScreen.dart';
 import 'package:gteams/game/game_join/widgets/CalendarPopUpView.dart';
 import 'package:gteams/map/StadiumListData.dart';
+import 'package:gteams/root_page.dart';
 
 class GameJoinPage extends StatefulWidget {
   @override
@@ -23,6 +24,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
   var stadiumList =StadiumListData.stadiumList;
   var stadiumListForMap = StadiumListData.stadiumList;
   StadiumListData stadiumData;
+  List<DocumentReference> gameRef = [];
   int gameListLength;
   bool flag =false;
 
@@ -32,6 +34,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(Duration(days: 5));
   String _nowLocation;
+  String _nowAddr;
 
 
   Future<bool> getData() async {
@@ -49,6 +52,8 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
     animationController = AnimationController(duration: Duration(milliseconds: 1000), vsync: this);
     super.initState();
   }
+
+
 
   @override
   void dispose() {
@@ -94,8 +99,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                                         pinned: true,
                                         floating: true,
                                         delegate: ContestTabHeader(
-                                          Text(gameListLength.toString()),
-                                          //_showFilterBarUI(),
+                                          _showFilterBarUI(),
                                         ),
                                       ),
                                     ];
@@ -122,6 +126,10 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
         builder: (context, snapshot){
           if(!snapshot.hasData) return LinearProgressIndicator();
           gameList = snapshot.data.documents.map((data) => GameListData.fromJson(data.data)).toList();
+          //gameReference 저장
+          for(int i = 0; i < gameList.length ; i++){
+            gameRef.add(snapshot.data.documents[i].reference);
+          }
           if(!flag) {
             flag = true;
             stadiumList = new List(snapshot.data.documents.length);
@@ -166,8 +174,9 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
     );
   }
 
-  void _changeLoc(String newLocation) {
+  void _changeLoc(String newLocation,String newAddr) {
     _nowLocation = newLocation;
+    _nowAddr     = newAddr;
   }
 
   /* AppBar 보여주는 UI */

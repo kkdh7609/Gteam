@@ -10,6 +10,7 @@ class  RootPage extends StatefulWidget {
   RootPage({this.auth});
 
   static String user_email ="";
+  static String userDocID = "";
   final BaseAuth auth;
 
   @override
@@ -163,6 +164,7 @@ class _RootPageState extends State<RootPage> {
                   if(data.documents.length >= 1){
                     _infoStatus = data.documents[0].data['info_status'];
                     _userDocID = data.documents[0].documentID;
+                    RootPage.userDocID = _userDocID;
                   }
                 },
               );

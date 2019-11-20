@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gteams/map/mapWidget.dart';
 import 'package:gteams/map/StadiumListData.dart';
 
-typedef selectFunc = void Function(String);
+typedef selectFunc = void Function(String,String);
 
 class CustomDialog extends StatelessWidget{
   CustomDialog({this.stadiumData, this.onSelected, this.onPop});
@@ -47,7 +47,7 @@ class CustomDialog extends StatelessWidget{
   };
 
   _onConfirmPressed(){
-    onSelected(stadiumData.stadiumName);
+    onSelected(stadiumData.stadiumName,stadiumData.id);
     onPop();
   }
 

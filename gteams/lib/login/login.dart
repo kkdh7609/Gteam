@@ -619,7 +619,6 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                         UserManagement().storeNewUser(_signUpEmail, context, _signUpName, true);
 
                         Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpWaitingPage()));
-
                         signUpEmailController.clear();
                         signUpNameController.clear();
                         signUpPasswordController.clear();
