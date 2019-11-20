@@ -233,14 +233,10 @@ class _GameCreatePageState extends State<GameCreatePage> {
     ];
 
     return Scaffold(
-<<<<<<< HEAD
       appBar: AppBar(
           title: Text("게임 생성", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white)),
           centerTitle: true,
           backgroundColor: GameCreateTheme.buildLightTheme().primaryColor),
-=======
-      appBar: AppBar(title: Text("Create the Game", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white)), centerTitle: true, backgroundColor: GameCreateTheme.buildLightTheme().primaryColor),
->>>>>>> ae1155c102076afc9ce7001c687ad7b73aea75a0
       body: Container(
         child: Form(
           key: _formKey,
@@ -725,7 +721,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
                 _showAlertDialog("생성 실패", "종료 시간을 선택해주세요.");
               } else if (_textEditingController_size.text.length == 0) {
                 _showAlertDialog("생성 실패", "총 인원을 입력해주세요.");
-              } else if (int.parse(_textEditingController_size.text) < 10 || int.parse(_textEditingController_size.text) > 30) {
+              } else if (int.parse(_textEditingController_size.text) < 2 || int.parse(_textEditingController_size.text) > 30) {
                 _showAlertDialog("생성 실패", "모집 인원: 10 ~ 30 사이의 값을 입력하세요");
               } else if (_textEditingController_level.text.length == 0) {
                 _showAlertDialog("생성 실패", "희망 수준을 선택해주세요.");
