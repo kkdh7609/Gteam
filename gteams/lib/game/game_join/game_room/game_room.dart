@@ -11,11 +11,11 @@ import 'package:gteams/pay/payMethod.dart';
 
 class GameRoomPage extends StatefulWidget {
   final String docId;
-  List<dynamic> currentUserList;
+  List<dynamic> initialUserList;
   StadiumListData stadiumData;
   GameListData gameData;
 
-  GameRoomPage({Key key,this.docId,this.currentUserList,this.stadiumData,this.gameData}) : super(key: key);
+  GameRoomPage({Key key,this.docId,this.initialUserList,this.stadiumData,this.gameData}) : super(key: key);
 
   @override
   _GameRoomPageState createState() => _GameRoomPageState();
@@ -29,7 +29,9 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
   var opacity2 = 0.0;
   var opacity3 = 0.0;
   var isServiceNum = 0;
-
+  bool isEnter = false; // 참여가능 true , 참여불가능 false
+  bool isAvailable = true;
+  List<dynamic> currentUserList = [];
   crudMedthods crudObj = new crudMedthods();
   PayMethods payObj = new PayMethods();
 
@@ -39,6 +41,13 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
     animation = Tween(begin: 0.0, end: 1.0)
         .animate(CurvedAnimation(parent: animationController, curve: Interval(0, 1.0, curve: Curves.fastOutSlowIn)));
     setData();
+    if(this.mounted){
+      setState(() {
+        isEnter = widget.initialUserList.contains(RootPage.user_email) ? false : true;
+        isAvailable = true;
+        currentUserList = widget.initialUserList.toList();
+      });
+    }
     super.initState();
   }
 
@@ -84,6 +93,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+    print(isEnter);
     final tempHeight = (MediaQuery.of(context).size.height - (MediaQuery.of(context).size.width / 1.2) + 24.0);
     return Container(
       color: GameRoomTheme.nearlyWhite,
@@ -143,7 +153,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Text(
-                                  "총 비용 :"+widget.stadiumData.price.toString()+" 원 / 인당 :" + widget.gameData.perPrice.toString()+" 원" ,
+                                  "총 비용 :"+widget.gameData.totalPrice.toString()+" 원 / 인당 :" + widget.gameData.perPrice.toString()+" 원" ,
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w200,
@@ -194,11 +204,14 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                                       InkWell(
                                           child: getTimeBoxUI("위치", "Location", Icon(FontAwesomeIcons.mapMarkedAlt),1),
                                           onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        MapTest(onSelected: _changeState, nowReq: mapReq.mapCheck,stadiumData: widget.stadiumData,)));
+                                            if(isAvailable){
+                                              isAvailable = false;
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          MapTest(onSelected: _changeState, nowReq: mapReq.mapCheck,stadiumData: widget.stadiumData,)));
+                                            }
                                           })
                                     ],
                                   ),
@@ -290,51 +303,30 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  widget.currentUserList.contains(RootPage.user_email) ?
-                  InkWell(
+                  isEnter ?
+                    InkWell( //현재 참여중 아닐때
                     onTap:(){
-                      bool isFull = widget.gameData.groupSize == widget.currentUserList.length ? true : false;
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: widget.currentUserList,gameData: widget.gameData,isFull: isFull,), fullscreenDialog: true),
-                      );
-                    },
-                    child: Container(
-                      height: 48,
-                      width: 350,
-                      decoration: BoxDecoration(
-                        color: GameRoomTheme.dark_grey,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(16.0),
-                        ),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(color: GameRoomTheme.nearlyBlue.withOpacity(0.5), offset: Offset(1.1, 1.1), blurRadius: 10.0),
-                        ],
-                      ),
-                      child: Center(
-                        child: Text(
-                          "이미 참여중인 모임입니다",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                            letterSpacing: 0.0,
-                            color: GameRoomTheme.nearlyWhite,
-                          ),
-                        ),
-                      ),
-                    ) ,
-                  ) : InkWell(
-                    onTap:(){
-                      List<dynamic> newList = widget.currentUserList.toList();
-                      newList.add(RootPage.user_email);
+                      currentUserList = widget.initialUserList.toList();
+                      currentUserList.add(RootPage.user_email);
                       //crudObj.getDocumentById('game3', widget.docId).then((data){
                         int price =  widget.gameData.perPrice;
                         payObj.getFund().then((fundData){
                           if(fundData >= price){
                             int newFund = fundData - price;
                             payObj.updateFund(newFund).then((waitData1){
-                              crudObj.updateDataThen('game3', widget.docId, {'userList' : newList}).then((waitData2){
-                                bool isFull = widget.gameData.groupSize == newList.length ? true : false;
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: newList,gameData: widget.gameData,isFull: isFull,), fullscreenDialog: true));
+                              crudObj.updateDataThen('game3', widget.docId, {'userList' : currentUserList}).then((waitData2){
+                                bool isFull = widget.gameData.groupSize == currentUserList.length ? true : false;
+                                if (isAvailable) {
+                                  isAvailable = false;
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList,gameData: widget.gameData,isFull: isFull,), fullscreenDialog: true)).then((data){
+                                    if(this.mounted){
+                                      setState(() {
+                                        isEnter = false;
+                                        isAvailable =true;
+                                      });
+                                    }
+                                  });
+                                }
                               });
                             });
                           }
@@ -374,7 +366,44 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                         ),
                       ),
                     ) ,
-                  )
+                  ) : InkWell( // 현재 참여중일경우
+                    onTap:(){
+                      bool isFull = widget.gameData.groupSize == widget.initialUserList.length ? true : false;
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList,gameData: widget.gameData,isFull: isFull,), fullscreenDialog: true)).then((data){
+                        if(this.mounted){
+                          setState(() {
+                            isEnter = false;
+                            isAvailable =true;
+                          });
+                        }
+                      });
+                    },
+                    child: Container(
+                      height: 48,
+                      width: 350,
+                      decoration: BoxDecoration(
+                        color: GameRoomTheme.dark_grey,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(16.0),
+                        ),
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(color: GameRoomTheme.nearlyBlue.withOpacity(0.5), offset: Offset(1.1, 1.1), blurRadius: 10.0),
+                        ],
+                      ),
+                      child: Center(
+                        child: Text(
+                          "이미 참여중인 모임입니다",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                            letterSpacing: 0.0,
+                            color: GameRoomTheme.nearlyWhite,
+                          ),
+                        ),
+                      ),
+                    ) ,
+                  ),
                 ],
               ),
             ),
@@ -388,7 +417,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
     text1 = isProvide == 2 ? text1+"(유료)" : text1;
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.28,
-      height: 110,
+      height: 115,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
@@ -400,7 +429,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
             ],
           ),
           child: Padding(
-            padding: const EdgeInsets.only(left: 18.0, right: 18.0, top: 12.0, bottom: 12.0),
+            padding: const EdgeInsets.only(left: 11.0, right: 11.0, top: 12.0, bottom: 12.0),
             child: Stack(
               alignment: Alignment.bottomCenter,
               children: <Widget>[

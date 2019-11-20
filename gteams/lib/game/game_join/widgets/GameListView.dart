@@ -29,6 +29,7 @@ class GameListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return AnimatedBuilder(
       animation: animationController,
       builder: (BuildContext context, Widget child) {
@@ -262,7 +263,7 @@ class GameListView extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => GameRoomPage(docId: docId,currentUserList: gameData.userList,stadiumData: stadiumData ,gameData: gameData,)
+                                  builder: (context) => GameRoomPage(docId: docId,initialUserList: gameData.userList,stadiumData: stadiumData ,gameData: gameData,)
                               ),
                             );
                           },
