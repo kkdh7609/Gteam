@@ -539,9 +539,10 @@ class _GameCreatePageState extends State<GameCreatePage> {
             child: TextFormField(
               controller: _textEditingController_size,
               inputFormatters: [LengthLimitingTextInputFormatter(2)],
+              enableInteractiveSelection: false,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                hintText: '모집 인원 입력',
+                hintText: '모집 인원 입력(1 ~ 30)',
                 hintStyle: TextStyle(color: Colors.grey),
               ),
               onSaved: (value) {
@@ -569,9 +570,10 @@ class _GameCreatePageState extends State<GameCreatePage> {
             child: TextFormField(
               controller: _textEditingController_level,
               inputFormatters: [LengthLimitingTextInputFormatter(2)],
+              enableInteractiveSelection: false,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                hintText: '희망 수준 입력',
+                hintText: '희망 수준 입력(1 ~ 10)',
                 hintStyle: TextStyle(color: Colors.grey),
               ),
               onSaved: (value) {
