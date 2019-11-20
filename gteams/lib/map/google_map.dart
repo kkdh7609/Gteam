@@ -309,9 +309,10 @@ class _MapTestState extends State<MapTest> {
           child: Container(
               child: Text(stadiumName,
                 style: TextStyle(
-                    color: Color(0xff6200ee),
+                    color: Color(0xff20253d),
                     fontSize: 24.0,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Dosis'),
               )),
         ),
         SizedBox(height:5.0),
@@ -323,15 +324,17 @@ class _MapTestState extends State<MapTest> {
                     child: Text(
                       widget.stadiumList[index].location.substring(0,widget.stadiumList[index].location.lastIndexOf("구")+1),
                       style: TextStyle(
-                        color: Colors.black54,
+                        color: Colors.black,
                         fontSize: 18.0,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Dosis'
                       ),
                     )),
                 Container(
                     child: Text(
                       " ",
                       style: TextStyle(
-                        color: Colors.black54,
+                        color: Colors.black,
                         fontSize: 18.0,
                       ),
                     )),
@@ -342,8 +345,10 @@ class _MapTestState extends State<MapTest> {
             child: Text(
               "시간당 "+widget.stadiumList[index].price.toString()+" 원",
               style: TextStyle(
-                color: Colors.black54,
+                color: Colors.black,
                 fontSize: 18.0,
+                fontFamily: 'Dosis',
+                fontWeight: FontWeight.w600,
               ),
             )),
         SizedBox(height:5.0),
@@ -351,9 +356,10 @@ class _MapTestState extends State<MapTest> {
             child: Text(
               "전화번호 : " + widget.stadiumList[index].telephone,
               style: TextStyle(
-                  color: Colors.black54,
+                  color: Colors.black,
                   fontSize: 18.0,
-                  fontWeight: FontWeight.bold),
+                  fontFamily: 'Dosis',
+                  fontWeight: FontWeight.w600),
             )),
         Container(
             child: Row(

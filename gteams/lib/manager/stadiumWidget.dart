@@ -53,7 +53,7 @@ class TextWidget extends StatelessWidget{
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(header, style: TextStyle(
-          color: Colors.blueGrey, fontWeight: FontWeight.bold, fontSize: 13
+          color: Color(0xff20253d), fontWeight: FontWeight.bold, fontSize: 13
         )),
         TextFormField(
           //key: _formKey,
@@ -123,7 +123,7 @@ class PhoneWidget extends StatelessWidget{
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text("연 락 처", style: TextStyle(
-                            color: Colors.blueGrey, fontWeight: FontWeight.bold, fontSize: 13
+                            color: Color(0xff20253d), fontWeight: FontWeight.bold, fontSize: 13
                         )),
                         TextFormField(
                             key: formKey,
@@ -219,7 +219,7 @@ class TimeWidget extends StatelessWidget{
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text("운영시간", style: TextStyle(
-                    color: Colors.blueGrey, fontWeight: FontWeight.bold, fontSize: 13
+                    color: Color(0xff20253d), fontWeight: FontWeight.bold, fontSize: 13
                   )),
                   SizedBox(height: 4.0),
                   AutoSizeText(
@@ -256,7 +256,7 @@ class SegmentedControl extends StatelessWidget{
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Text(header, style:TextStyle(
-              color: Colors.blueGrey, fontWeight: FontWeight.bold, fontSize: 13
+              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13
           ))
         ),
         SizedBox(
@@ -264,8 +264,8 @@ class SegmentedControl extends StatelessWidget{
           child: CupertinoSegmentedControl<int>(
             children: children,
             groupValue: value,
-            selectedColor: Color(0xff3B5998),
-            pressedColor: Color(0x400B5998),
+            selectedColor: Color(0xff20253d),
+            pressedColor: Color(0xff20253d),
             onValueChanged: onValueChanged,
           )
         )
