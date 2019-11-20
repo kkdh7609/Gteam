@@ -208,8 +208,8 @@ class SegmentedControl extends StatelessWidget{
               child: CupertinoSegmentedControl<int>(
                 children: children,
                 groupValue: value,
-                selectedColor: Color(0xff3B5998),
-                pressedColor: Color(0x400B5998),
+                selectedColor: Color(0x400B5998),
+                pressedColor: Color(0x000B5998),
                 onValueChanged: (result){},
               )
           )
