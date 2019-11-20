@@ -5,6 +5,7 @@ import 'package:gteams/game/game_create/GameCreateTheme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gteams/services/crud.dart';
 import 'package:gteams/manager/AdminData.dart';
+import 'package:gteams/pay/payMethod.dart';
 
 class ReserveList extends StatefulWidget {
   ReserveList({Key key, this.adminData, this.onSignedOut}) : super(key: key);
@@ -18,9 +19,12 @@ class ReserveList extends StatefulWidget {
 
 class _ReserveListState extends State<ReserveList> {
   crudMedthods crudObj = new crudMedthods();
+  PayMethods payObj = new PayMethods();
 
-  bool flag =false;
+  bool flag = false;
   GameListData _reserveGame = new GameListData();
+  bool isAvailable = true;
+  bool isDialogAvailable = true;
 
   @override
   void initState() {
@@ -31,6 +35,38 @@ class _ReserveListState extends State<ReserveList> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Widget _alertButton(){
+    return FlatButton(
+      child: Text("OK"),
+      onPressed: (){
+        if(isAvailable) {
+          isAvailable = false;
+          Navigator.of(context).pop();
+          isAvailable = true;
+        }
+      },
+    );
+  }
+
+  AlertDialog _alertDialog(title, text){
+    return AlertDialog(
+        title: Text(title),
+        content: Text(text),
+        actions: <Widget>[
+          _alertButton(),
+        ]
+    );
+  }
+
+  _showAlertDialog(title, text) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return _alertDialog(title, text);
+        }
+    );
   }
 
   Widget _acceptButton() {
@@ -89,14 +125,28 @@ class _ReserveListState extends State<ReserveList> {
             actions: <Widget>[
               FlatButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    if(isAvailable) {
+                      isAvailable = false;
+                      Navigator.pop(context);
+                      isAvailable = true;
+                    }
                   },
                   child: Text('취소')),
               FlatButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  if(isAvailable) {
+                    isAvailable = false;
+                    payObj.getFund().then((fund){
+                      int newFund = this._reserveGame.totalPrice + fund;
+                      payObj.updateFund(newFund).then((tempVal){
+                        Navigator.pop(context);
+                        isAvailable = true;
+                        _showAlertDialog("성공", "승인에 성공하였습니다.");
+                      });
+                    });
+                  }
                 },
-                child: Text('생성'),
+                child: Text('승인'),
               )
             ],
           );
@@ -143,7 +193,7 @@ class _ReserveListState extends State<ReserveList> {
   }
 
   Widget _showGameInfo(
-      String startTime, String endTime, int groupSize, int perPrice) {
+      String startTime, String endTime, int groupSize, int totalPrice) {
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -152,7 +202,7 @@ class _ReserveListState extends State<ReserveList> {
           _rowItem("시작시간", startTime),
           _rowItem("종료시간", endTime),
           _rowItem("총원", groupSize.toString()),
-          _rowItem("금액", perPrice.toString()),
+          _rowItem("금액", totalPrice.toString()),
           _acceptButton()
         ],
       ),
@@ -160,7 +210,7 @@ class _ReserveListState extends State<ReserveList> {
   }
 
   Widget makeCard(String title, String startTime, String endTime, int groupSize,
-      int perPrice) {
+      int totalPrice) {
     return Card(
         elevation: 8.0,
         margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
@@ -190,7 +240,7 @@ class _ReserveListState extends State<ReserveList> {
                   elevation: 5,
                   child: Column(
                     children: <Widget>[
-                      _showGameInfo(startTime, endTime, groupSize, perPrice),
+                      _showGameInfo(startTime, endTime, groupSize, totalPrice),
                     ],
                   ),
                 )
@@ -217,7 +267,7 @@ class _ReserveListState extends State<ReserveList> {
         scrollDirection: Axis.vertical,
         itemBuilder: (context, index){
           this._reserveGame = snapshot.map((data) => GameListData.fromJson(data.data)).toList()[index];
-          return makeCard(this._reserveGame.gameName, this._reserveGame.startTime, this._reserveGame.endTime, this._reserveGame.groupSize, this._reserveGame.perPrice);
+          return makeCard(this._reserveGame.gameName, this._reserveGame.startTime, this._reserveGame.endTime, this._reserveGame.groupSize, this._reserveGame.totalPrice);
         },
       )
     );
