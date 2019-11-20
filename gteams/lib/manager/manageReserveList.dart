@@ -119,29 +119,29 @@ class _ReserveListState extends State<ReserveList> {
           children: <Widget>[
             custom.ExpansionTile(
               trailing: Icon(Icons.keyboard_arrow_right,
-                  color: Colors.white, size: 30.0),
-              headerBackgroundColor: Color(0xff20253d).withOpacity(0.6),
+                  color: Colors.black, size: 30.0),
+              headerBackgroundColor: Colors.white,
               title: Container(
                 child: Column(
                   children: <Widget>[
                     Text(
                       "Game Title ",
                       style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontWeight: FontWeight.w900,
                           fontSize: 18),
                     ),
                     Text(
                       title,
                       style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
+                          color: Colors.black, fontWeight: FontWeight.bold),
                     )
                   ],
                 ),
               ),
               children: <Widget>[
                 Card(
-                  elevation: 5,
+                  elevation: 500,
                   child: Column(
                     children: <Widget>[
                       _showGameInfo(startTime, endTime, groupSize, totalPrice),
@@ -236,8 +236,7 @@ class _ReserveListState extends State<ReserveList> {
           borderRadius: BorderRadius.all(Radius.circular(24.0)),
           boxShadow: <BoxShadow>[
             BoxShadow(
-              color: GameCreateTheme.buildLightTheme()
-                  .primaryColor
+              color: GameCreateTheme.buildLightTheme().primaryColor
                   .withOpacity(0.2),
               offset: Offset(4, 4),
             ),
@@ -283,6 +282,7 @@ class _ReserveListState extends State<ReserveList> {
             )),
             actions: <Widget>[
               FlatButton(
+                  color: Color(0xff20253d),
                   onPressed: () {
                     if (isAvailable) {
                       isAvailable = false;
@@ -290,8 +290,9 @@ class _ReserveListState extends State<ReserveList> {
                       isAvailable = true;
                     }
                   },
-                  child: Text('취소')),
+                  child: Text('취소', style: TextStyle(color: Colors.white))),
               FlatButton(
+                color: Color(0xff20253d),
                 onPressed: () {
                   if (isAvailable) {
                     isAvailable = false;
@@ -305,7 +306,7 @@ class _ReserveListState extends State<ReserveList> {
                     });
                   }
                 },
-                child: Text('승인'),
+                child: Text('승인', style:TextStyle(color: Colors.white)),
               )
             ],
           );
@@ -316,7 +317,7 @@ class _ReserveListState extends State<ReserveList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          centerTitle: true, elevation: 0.1, title: Text("경기장 예약 목록 관리")),
+          centerTitle: true, elevation: 0.1, title: Text("경기장 예약 승인", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white))),
       body: Container(
           child: reserveList != null
               ? ListView.builder(

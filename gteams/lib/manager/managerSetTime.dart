@@ -59,7 +59,7 @@ class _SetTimeState extends State<SetTime> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context){
     return Scaffold(
-        appBar: AppBar(title: Text("Available Times", style: TextStyle(
+        appBar: AppBar(title: Text("경기장 예약 관리 ", style: TextStyle(
             fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white)),
           centerTitle: true,
           backgroundColor: Color(0xff20253d),
@@ -91,7 +91,7 @@ class _SetTimeState extends State<SetTime> with TickerProviderStateMixin {
                             else {
                               return GridTile(child: Center(child: Text(
                                   week[index - 1], style: TextStyle(
-                                  fontSize: 22, fontWeight: FontWeight.bold))));
+                                  fontSize: 22, fontWeight: FontWeight.w400))));
                             }
                           }
                       ),
@@ -130,7 +130,7 @@ class _SetTimeState extends State<SetTime> with TickerProviderStateMixin {
                                                 2) == 0) ? '00' : '30'}",
                                             style: TextStyle(
                                                 fontSize: 20.0,
-                                                fontWeight: FontWeight.w600
+                                                fontWeight: FontWeight.w500
                                             )
                                         )
                                     )
@@ -216,8 +216,7 @@ class _SetTimeState extends State<SetTime> with TickerProviderStateMixin {
                                                     isClicked[8 * loopIndex +
                                                         remain] = true;
                                                     colorArr[8 * loopIndex +
-                                                        remain] = Colors
-                                                        .teal; //Color(0xff3B5998);
+                                                        remain] = Colors.teal; //Color(0xff3B5998);
                                                   }
                                                   borderArr[preNum] = false;
                                                   preNum = -1;

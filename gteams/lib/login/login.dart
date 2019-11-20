@@ -420,25 +420,6 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 3.0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ManagerMainMenuPage()));
-                    },
-                  child: Container(
-                    padding: const EdgeInsets.all(9.0),
-                    decoration: new BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                    ),
-                    child: new Icon(
-                      FontAwesomeIcons.facebook,
-                      color: Color(0xFF0084ff),
-                    ),
-                  ),
-                ),
-              )
             ],
           ),
         ],

@@ -227,7 +227,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                     ),
                     Expanded(
                         child: Center(
-                            child: Text("Search the Game", style: TextStyle(
+                            child: Text("게임 목록", style: TextStyle(
                                 fontFamily: 'Dosis',
                                 fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white))
                         )
