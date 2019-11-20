@@ -55,7 +55,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
     if (widget.reserve_status == 1) registGame();
   }
 
-  void registGame() {
+  void registGame() { // 경기장에 게임을 등록하는 과정
     crudObj.getDocumentByWhere('game3', 'sort', widget.gameData.sort).then((document) {
       // game의 DocId를 찾기 위함..
       gameDocId = document.documents[0].documentID;
