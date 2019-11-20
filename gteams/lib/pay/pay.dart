@@ -31,6 +31,9 @@ class _PayPageState extends State<PayPage> {
   }
 
   @override
+
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -333,9 +336,16 @@ class _PayPageState extends State<PayPage> {
                           ),
                         )),
                     InkWell(
-                        onTap: () {
-                          Navigator.push(
+                        onTap: () async {
+                          await Navigator.push(
                               context, MaterialPageRoute(builder: (context) => IamPortPayment(chargeType: _selectedCost, PayMethodType: _selectedPayMethod)));
+                          setState(() {
+                            PayMethods().getFund().then((data){
+                              setState(() {
+                                fund = data;
+                              });
+                            });
+                          });
                         },
                         child: Container(
                           height: MediaQuery.of(context).size.height * 0.13,
@@ -350,9 +360,16 @@ class _PayPageState extends State<PayPage> {
                               IconButton(
                                 color: Colors.white,
                                 icon: Icon(Icons.monetization_on, size: 40),
-                                onPressed: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) => IamPortPayment(chargeType: _selectedCost, PayMethodType: _selectedPayMethod)));
+                                onPressed: () async {
+                                  await Navigator.push(
+                                      context, MaterialPageRoute(builder: (context) => IamPortPayment(chargeType: _selectedCost, PayMethodType: _selectedPayMethod)));
+                                  setState(() {
+                                    PayMethods().getFund().then((data){
+                                      setState(() {
+                                        fund = data;
+                                      });
+                                    });
+                                  });
                                 },
                               ),
                               SizedBox(

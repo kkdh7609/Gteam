@@ -226,7 +226,7 @@ class _MapTestState extends State<MapTest> {
         }
         return Center(
           child: SizedBox(
-            height: Curves.easeInOut.transform(value) * 300.0,
+            height: Curves.easeInOut.transform(value) * 320.0,
             width: Curves.easeInOut.transform(value) * 500.0,
             child: widget,
           ),
@@ -241,9 +241,9 @@ class _MapTestState extends State<MapTest> {
     return Stack(
       children: <Widget>[
         Align(
-          alignment: Alignment.bottomLeft,
+          alignment: Alignment.topCenter,
           child: Container(
-            margin: EdgeInsets.symmetric(vertical: 20.0),
+            //margin: EdgeInsets.symmetric(vertical: 20.0),
             height: 200.0,
             child: ListView(
               //scrollDirection: Axis.horizontal,

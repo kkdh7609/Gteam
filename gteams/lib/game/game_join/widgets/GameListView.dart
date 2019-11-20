@@ -17,13 +17,13 @@ class GameListView extends StatelessWidget {
 
   Widget clearIcon(int isProvide){
     return isProvide >= 1 ?
-    Text("")  // 제공할경우
-        :
-    Icon( // 제공하지 않을경우 X 표시 출력
-      Icons.clear,
-      size: 70,
-      color: Colors.red,
-    );
+           Text("")  // 제공할경우
+           :
+           Icon( // 제공하지 않을경우 X 표시 출력
+             Icons.clear,
+             size: 70,
+             color: Color(0xFF880E4F),
+           );
   }
 
 
@@ -145,107 +145,107 @@ class GameListView extends StatelessWidget {
                                                 ],
                                               ),
                                               Padding(
-                                                padding: const EdgeInsets.only(top: 25),
-                                                child: Stack(
-                                                  children: <Widget>[
-                                                    Row(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                      children: <Widget>[
-                                                        //Padding(
-                                                        // padding: const EdgeInsets.only(left: 17),
-                                                        //child: Column(
-                                                        SizedBox(width: 10),
-                                                        Column(
-                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: <Widget>[
-                                                            stadiumData.isClothes != 0 ?
-                                                            Icon(FontAwesomeIcons.tshirt, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
-                                                            Icon(FontAwesomeIcons.tshirt, color: Colors.grey, size: 25),
-                                                            SizedBox(height: 5),
-                                                            Text(
-                                                              "팀 조끼",
-                                                              style: TextStyle(
-                                                                  fontWeight: FontWeight.w700,
-                                                                  fontSize: 14,
-                                                                  color: Colors.black.withOpacity(0.7),
-                                                                  fontFamily: 'Dosis'),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        //),
-                                                        SizedBox(width: 20),
-                                                        Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                                          children: <Widget>[
-                                                            stadiumData.isBall != 0 ?
-                                                            Icon(FontAwesomeIcons.volleyballBall, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35,) :
-                                                            Icon(FontAwesomeIcons.volleyballBall, color: Colors.grey, size: 25,),
-                                                            SizedBox(height: 5),
-                                                            Text(
-                                                              "공 대여",
-                                                              style: TextStyle(
-                                                                  fontWeight: FontWeight.w700,
-                                                                  fontSize: 14,
-                                                                  color: Colors.black.withOpacity(0.7),
-                                                                  fontFamily: 'Dosis'),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        SizedBox(width: 20),
-                                                        Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                                          children: <Widget>[
-                                                            stadiumData.isParking != 0 ?
-                                                            Icon(FontAwesomeIcons.parking, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
-                                                            Icon(FontAwesomeIcons.parking, color: Colors.grey, size: 25) ,
-                                                            SizedBox(height: 5),
-                                                            Text("주차장",
+                                                  padding: const EdgeInsets.only(top: 25),
+                                                  child: Stack(
+                                                    children: <Widget>[
+                                                      Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: <Widget>[
+                                                          //Padding(
+                                                          // padding: const EdgeInsets.only(left: 17),
+                                                          //child: Column(
+                                                          SizedBox(width: 10),
+                                                          Column(
+                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: <Widget>[
+                                                              stadiumData.isClothes != 0 ?
+                                                              Icon(FontAwesomeIcons.tshirt, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
+                                                              Icon(FontAwesomeIcons.tshirt, color: Colors.grey, size: 25),
+                                                              SizedBox(height: 5),
+                                                              Text(
+                                                                "팀 조끼",
                                                                 style: TextStyle(
                                                                     fontWeight: FontWeight.w700,
                                                                     fontSize: 14,
                                                                     color: Colors.black.withOpacity(0.7),
-                                                                    fontFamily: 'Dosis')),
-                                                          ],
-                                                        ),
-                                                        SizedBox(width: 20),
-                                                        Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                                    fontFamily: 'Dosis'),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          //),
+                                                          SizedBox(width: 20),
+                                                          Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            children: <Widget>[
+                                                              stadiumData.isBall != 0 ?
+                                                              Icon(FontAwesomeIcons.volleyballBall, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35,) :
+                                                              Icon(FontAwesomeIcons.volleyballBall, color: Colors.grey, size: 25,),
+                                                              SizedBox(height: 5),
+                                                              Text(
+                                                                "공 대여",
+                                                                style: TextStyle(
+                                                                    fontWeight: FontWeight.w700,
+                                                                    fontSize: 14,
+                                                                    color: Colors.black.withOpacity(0.7),
+                                                                    fontFamily: 'Dosis'),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(width: 20),
+                                                          Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            children: <Widget>[
+                                                              stadiumData.isParking != 0 ?
+                                                              Icon(FontAwesomeIcons.parking, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
+                                                              Icon(FontAwesomeIcons.parking, color: Colors.grey, size: 25) ,
+                                                              SizedBox(height: 5),
+                                                              Text("주차장",
+                                                                  style: TextStyle(
+                                                                      fontWeight: FontWeight.w700,
+                                                                      fontSize: 14,
+                                                                      color: Colors.black.withOpacity(0.7),
+                                                                      fontFamily: 'Dosis')),
+                                                            ],
+                                                          ),
+                                                          SizedBox(width: 20),
+                                                          Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            children: <Widget>[
+                                                              stadiumData.isShower != 0 ?
+                                                              Icon(FontAwesomeIcons.shower, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
+                                                              Icon(FontAwesomeIcons.shower, color: Colors.grey, size: 25) ,
+                                                              SizedBox(height: 5),
+                                                              Text(
+                                                                "샤워장",
+                                                                style: TextStyle(
+                                                                    fontWeight: FontWeight.w700,
+                                                                    fontSize: 14,
+                                                                    color: Colors.black.withOpacity(0.7),
+                                                                    fontFamily: 'Dosis'),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(width: 20),
+                                                        ],
+                                                      ),
+                                                      Row(
                                                           children: <Widget>[
-                                                            stadiumData.isShower != 0 ?
-                                                            Icon(FontAwesomeIcons.shower, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
-                                                            Icon(FontAwesomeIcons.shower, color: Colors.grey, size: 25) ,
-                                                            SizedBox(height: 5),
-                                                            Text(
-                                                              "샤워장",
-                                                              style: TextStyle(
-                                                                  fontWeight: FontWeight.w700,
-                                                                  fontSize: 14,
-                                                                  color: Colors.black.withOpacity(0.7),
-                                                                  fontFamily: 'Dosis'),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        SizedBox(width: 20),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                        children: <Widget>[
-                                                          SizedBox(width: 7),
-                                                          clearIcon(stadiumData.isClothes,),
-                                                          SizedBox(width: 20),
-                                                          clearIcon(stadiumData.isBall),
-                                                          SizedBox(width: 20),
-                                                          clearIcon(stadiumData.isParking),
-                                                          SizedBox(width: 20),
-                                                          clearIcon(stadiumData.isShower),
-                                                        ]
-                                                    )
-                                                  ],
-                                                )
+                                                            SizedBox(width: 7),
+                                                            clearIcon(stadiumData.isClothes),
+                                                            SizedBox(width: 20),
+                                                            clearIcon(stadiumData.isBall),
+                                                            SizedBox(width: 20),
+                                                            clearIcon(stadiumData.isParking),
+                                                            SizedBox(width: 20),
+                                                            clearIcon(stadiumData.isShower),
+                                                          ]
+                                                      )
+                                                    ],
+                                                  )
                                               ),
                                             ],
                                           ),
