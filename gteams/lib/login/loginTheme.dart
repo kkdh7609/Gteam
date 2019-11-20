@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 
 class LoginTheme {
   const LoginTheme();
-
   static const Color loginGradientStart = const Color(0xFF083663);
   static const Color loginGradientEnd = const Color(0xFF82B1FF);
 

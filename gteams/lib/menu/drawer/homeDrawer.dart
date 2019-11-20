@@ -59,7 +59,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
         stream : Firestore.instance.collection("user").where('email',isEqualTo: RootPage.user_email).snapshots(),
         builder: (context, snapshot){
           if(!snapshot.hasData) return LinearProgressIndicator();
-          this._userData = snapshot.data.documents.map((data) => UserData.fromJson(data.data)).elementAt(0) ;
+          this._userData = snapshot.data.documents.map((data) => UserData.fromJson(data.data)).elementAt(0);
           return  Container(
             width: double.infinity,
             padding: EdgeInsets.only(top: 40.0),

@@ -38,6 +38,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
     this.memberlist = MemberListData.memberList;
     for(var i = 0; i < widget.currentUserList.length; i++){
       var userQuery = crudObj.getDocumentByWhere('user', 'email', widget.currentUserList[i]);
+
       userQuery.then((data){
         setState((){
           if(data.documents.length >= 1){

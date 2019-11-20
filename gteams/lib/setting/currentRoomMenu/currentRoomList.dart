@@ -22,11 +22,11 @@ class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
   void initState(){
     super.initState();
     var userQuery = crudObj.getDocumentByWhere('user','email',RootPage.user_email);
-      userQuery.then((document){
-        setState(() {
-          this.gameList=document.documents[0].data['gameList'];
-        });
+    userQuery.then((document){
+      setState(() {
+        this.gameList=document.documents[0].data['gameList'];
       });
+    });
   }
 
   @override
@@ -50,7 +50,7 @@ class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
                 child: Icon(Icons.receipt, color: Colors.black),
               ),
               title: Text(
-                  gameData.gameName,
+                gameData.gameName,
                 style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               ),
               subtitle: Row(

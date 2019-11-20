@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gteams/menu/widgets/page.dart';
-import 'package:gteams/menu/widgets/pager.dart';
+import 'package:gteams/manager_main/page.dart';
+import 'package:gteams/manager_main/pager.dart';
 import 'package:gteams/manager_main/model/FacilityTmpData.dart';
-import 'package:gteams/menu/widgets/aliment.dart';
-import 'package:gteams/menu/widgets/sports_content.dart';
+import 'package:gteams/manager_main/aliment.dart';
+import 'package:gteams/manager_main/facility_content.dart';
 
-class MainHomePageScreen extends StatelessWidget {
-  MainHomePageScreen() {
+class MainManagerPageScreen extends StatelessWidget {
+  MainManagerPageScreen() {
     SystemChrome.setPreferredOrientations(<DeviceOrientation>[DeviceOrientation.portraitUp]);
   }
 
@@ -17,18 +17,18 @@ class MainHomePageScreen extends StatelessWidget {
       body: Container(
         child: MenuPager(
           children: Facilities.facilities.map(
-                (aliment) => Page(
-              title: "G-TEAM",
-              background: aliment.background,
+                (facility) => Page(
+              title: "Facility Manager",
+              background: facility.background,
               child: CardItem(
-                child: AlimentWidget(
-                  aliment: aliment,
-                  theme: aliment.background,
+                child: FacilityWidget(
+                  facility: facility,
+                  theme: facility.background,
                 ),
+                lastindex: facility.lastindex == true ? true : false,
               ),
             ),
-          )
-              .toList(),
+          ).toList(),
         ),
       ),
     );
