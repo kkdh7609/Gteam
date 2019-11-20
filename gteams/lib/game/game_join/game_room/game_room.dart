@@ -467,7 +467,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                 Icon( // 제공하지 않을경우 X 표시 출력
                   Icons.clear,
                   size: 70,
-                  color: Colors.red,
+                  color: Color(0xFF880E4F),
                   ),
               ],
             ),

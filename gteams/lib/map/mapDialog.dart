@@ -67,6 +67,7 @@ class CustomDialog extends StatelessWidget{
             Card(
                 elevation: 4.0,
                 child: Container(
+
                     decoration: BoxDecoration(
                       color: Colors.white,
                     ),
@@ -77,13 +78,13 @@ class CustomDialog extends StatelessWidget{
                           PhotoWidget(photo: NetworkImage(this.stadiumData.imagePath)),
                           SizedBox(height: 4.0),
                           TextWidget(header: "경기장 이름", text: stadiumData.stadiumName),
-                          SizedBox(height: 4.0),
+                          SizedBox(height: 7.0),
                           TextWidget(header: "30분당 이용 요금(단위: 원)", text: stadiumData.price.toString()),
-                          SizedBox(height: 4.0),
+                          SizedBox(height: 7.0),
                           LocationWidget(location: stadiumData.location),
-                          SizedBox(height: 4.0),
+                          SizedBox(height: 7.0),
                           TimeWidget(checkTimes: times,),
-                          SizedBox(height: 4.0),
+                          SizedBox(height: 7.0),
                           PhoneWidget(text: stadiumData.telephone),
                           SizedBox(height: 4.0),
                           SegmentedControl(header: "유니폼 제공 여부", value: clothesVal, children: clothesSeg),

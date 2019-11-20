@@ -130,6 +130,9 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
           for(int i = 0; i < gameList.length ; i++){
             gameRef.add(snapshot.data.documents[i].reference);
           }
+          if(flag && snapshot.data.documents.length != stadiumList.length){
+            flag = false;
+          }
           if(!flag) {
             flag = true;
             stadiumList = new List(snapshot.data.documents.length);
@@ -225,6 +228,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                     Expanded(
                         child: Center(
                             child: Text("Search the Game", style: TextStyle(
+                                fontFamily: 'Dosis',
                                 fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white))
                         )
                     ),
@@ -293,7 +297,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                   padding: const EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 4),
                   child: TextField(
                     onChanged: (String txt) {},
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 18, fontFamily : 'Dosis'),
                     cursorColor: GameJoinTheme.buildLightTheme().primaryColor,
                     decoration: new InputDecoration(
                         border: InputBorder.none,

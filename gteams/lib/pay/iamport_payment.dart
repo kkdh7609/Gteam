@@ -85,10 +85,12 @@ class _IamPortPaymentState extends State<IamPortPayment> {
         'buyerPostcode': '06018',                                      // 구매자 우편번호
         'appScheme': 'example',                                        // 앱 URL scheme
       }),
+
       /* [필수입력] 콜백 함수 */
       callback: (Map<String, String> result) {
         PayMethods().getFund().then((data){
           int fund = data + chargeAmount;
+
           PayMethods().updateFund(fund).then((tempData){
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PayResultPage(payResult: chargeAmount)));
           });

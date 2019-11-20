@@ -241,7 +241,7 @@ class _MapTestState extends State<MapTest> {
         }
         return Center(
           child: SizedBox(
-            height: Curves.easeInOut.transform(value) * 300.0,
+            height: Curves.easeInOut.transform(value) * 320.0,
             width: Curves.easeInOut.transform(value) * 500.0,
             child: widget,
           ),
@@ -256,9 +256,9 @@ class _MapTestState extends State<MapTest> {
     return Stack(
       children: <Widget>[
         Align(
-          alignment: Alignment.bottomLeft,
+          alignment: Alignment.topCenter,
           child: Container(
-            margin: EdgeInsets.symmetric(vertical: 20.0),
+            //margin: EdgeInsets.symmetric(vertical: 20.0),
             height: 200.0,
             child: ListView(
               //scrollDirection: Axis.horizontal,
@@ -376,6 +376,7 @@ class _MapTestState extends State<MapTest> {
                   fontFamily: 'Dosis',
                   fontWeight: FontWeight.w600),
             )),
+        SizedBox(height: 5.0),
         Container(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -487,12 +488,12 @@ class _MapTestState extends State<MapTest> {
 
   Widget button(Function function, IconData icon, index) {
     return Theme(
-      data: ThemeData(primaryColor: Color(0xff3B5998)),
+      data: ThemeData(primaryColor: Color(0xff20253d)),
       child: FloatingActionButton(
         heroTag: "btn$index",
         onPressed: function,
         materialTapTargetSize: MaterialTapTargetSize.padded,
-        backgroundColor: Color(0xff3B5998),
+        backgroundColor: Color(0xff20253d),
         child: Icon(icon, size: 36.0),
       ),
     );
