@@ -143,11 +143,11 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Text(
-                                  widget.stadiumData.price.toString()+" 원",
+                                  "총 비용 :"+widget.stadiumData.price.toString()+" 원 / 인당 :" + widget.gameData.perPrice.toString()+" 원" ,
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w200,
-                                    fontSize: 22,
+                                    fontSize: 18,
                                     letterSpacing: 0.27,
                                     color: GameRoomTheme.nearlyBlue,
                                   ),
@@ -190,7 +190,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                                       getTimeBoxUI((widget.gameData.groupSize / 2).toInt().toString() +
                                           " vs " +
                                           (widget.gameData.groupSize / 2).toInt().toString(), "Match", Icon(FontAwesomeIcons.peopleCarry),1),
-                                      getTimeBoxUI("2시간", "Time", Icon(FontAwesomeIcons.clock),1),
+                                      getTimeBoxUI( widget.gameData.startTime+"-"+widget.gameData.endTime, "Time" , Icon(FontAwesomeIcons.clock),1),
                                       InkWell(
                                           child: getTimeBoxUI("위치", "Location", Icon(FontAwesomeIcons.mapMarkedAlt),1),
                                           onTap: () {
@@ -216,7 +216,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: <Widget>[
                                       getTimeBoxUI("팀 조끼", "Ball", Icon(FontAwesomeIcons.tshirt),widget.stadiumData.isClothes),
-                                      getTimeBoxUI("풋살화 ", "Skill", Icon(FontAwesomeIcons.shoePrints),widget.stadiumData.isShoes),
+                                      getTimeBoxUI("풋살화 ", "Shoes", Icon(FontAwesomeIcons.shoePrints),widget.stadiumData.isShoes),
                                       getTimeBoxUI("실력", "Level"+widget.gameData.gameLevel.toString(), Icon(FontAwesomeIcons.users),1),
                                     ],
                                   ),
@@ -326,8 +326,8 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                     onTap:(){
                       List<dynamic> newList = widget.currentUserList.toList();
                       newList.add(RootPage.user_email);
-                      crudObj.getDocumentById('game3', widget.docId).then((data){
-                        int price = data.data['perPrice'];
+                      //crudObj.getDocumentById('game3', widget.docId).then((data){
+                        int price =  widget.gameData.perPrice;
                         payObj.getFund().then((fundData){
                           if(fundData >= price){
                             int newFund = fundData - price;
@@ -347,7 +347,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                             );
                           }
                         });
-                      });
+                      //});
                     },
                     child: Container(
                       height: 48,
