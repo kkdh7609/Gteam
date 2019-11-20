@@ -56,6 +56,8 @@ class _GameCreatePageState extends State<GameCreatePage> {
   bool _completeStartTime = false;
   bool _completeEndTime = false;
 
+  bool isAvailable = true;
+
   @override
   void initState(){
     super.initState();
@@ -542,10 +544,6 @@ class _GameCreatePageState extends State<GameCreatePage> {
                 hintText: '모집 인원 입력',
                 hintStyle: TextStyle(color: Colors.grey),
               ),
-              validator: (value) {
-                _groupSize = int.parse(value);
-                return (_groupSize < 10 || _groupSize > 30) ? _showAlertDialog("생성 실패", "모집 인원: 10 ~ 30 사이의 값을 입력하세요") : null;
-              },
               onSaved: (value) {
                 _groupSize = int.parse(value);
               },
@@ -576,10 +574,6 @@ class _GameCreatePageState extends State<GameCreatePage> {
                 hintText: '희망 수준 입력',
                 hintStyle: TextStyle(color: Colors.grey),
               ),
-              validator: (value) {
-                _gameLevel = int.parse(value);
-                return (_gameLevel < 0 || _gameLevel > 10) ? _showAlertDialog("생성 실패", "희망 수준: 1 ~ 10 사이의 값을 입력하세요") : null;
-                },
               onSaved: (value) {
                 _gameLevel = int.parse(value);
               },
@@ -615,7 +609,8 @@ class _GameCreatePageState extends State<GameCreatePage> {
                   child: Text('취소', style: TextStyle(color: Colors.white))),
               FlatButton(
                 onPressed: () {
-                  if (_formKey.currentState.validate()) {
+                  if (isAvailable) {
+                    isAvailable = false;
                     _formKey.currentState.save();
                     int startMinute = _startTime.minute;
                     int endMinute = _endTime.minute;
@@ -671,6 +666,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
                             });
                             Navigator.pop(context);
                             Navigator.pop(context);
+                            isAvailable = true;
                           });
                         });
                       }
@@ -728,10 +724,15 @@ class _GameCreatePageState extends State<GameCreatePage> {
               else if(_textEditingController_size.text.length == 0){
                 _showAlertDialog("생성 실패", "총 인원을 입력해주세요.");
               }
+              else if(int.parse(_textEditingController_size.text) < 10 || int.parse(_textEditingController_size.text) > 30){
+                _showAlertDialog("생성 실패", "모집 인원: 10 ~ 30 사이의 값을 입력하세요");
+              }
               else if(_textEditingController_level.text.length == 0){
                 _showAlertDialog("생성 실패", "희망 수준을 선택해주세요.");
               }
-              // Todo 위의 내용 이외의 내용들 예외처리 필요
+              else if(int.parse(_textEditingController_level.text) < 1 || int.parse(_textEditingController_level.text) > 10){
+                _showAlertDialog("생성 실패", "희망 수준: 1 ~ 10 사이의 값을 입력하세요");
+              }
               else{
                 _showMaterialDialog();
               }
