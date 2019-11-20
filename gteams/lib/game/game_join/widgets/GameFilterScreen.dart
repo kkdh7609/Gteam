@@ -1,26 +1,33 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gteams/services/crud.dart';
+import 'package:gteams/menu/main_menu.dart';
+import 'package:gteams/setting/popularFilterList.dart';
 import 'package:gteams/game/game_join/widgets/SliderView.dart';
 import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
-import 'package:gteams/game/game_join/widgets/RangeSliderView.dart';
-import 'package:gteams/game/game_join/model/popularFilterList.dart';
 
 class GameFilterScreen extends StatefulWidget {
   @override
   _GameFilterScreenState createState() => _GameFilterScreenState();
 }
 
-class _GameFilterScreenState extends State<GameFilterScreen> {
-  List<PopularFilterListData> popularFilterListData = PopularFilterListData.popularFList;
-  List<PopularFilterListData> accomodationListData = PopularFilterListData.accomodationList;
+enum Gender { MALE, FEMALE }
 
-  RangeValues _values = RangeValues(100, 600);
+class _GameFilterScreenState extends State<GameFilterScreen> {
+  List<SettingListData> sportListData = SettingListData.sportList;
+
+  RangeValues _values = RangeValues(0, 24);
   double distValue = 50.0;
+  Gender _selectedGender = null;
+  List<int> checNum;
+
+  crudMedthods crudObj = new crudMedthods();
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: GameJoinTheme.buildLightTheme().backgroundColor,
+      color: Colors.white,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Column(
@@ -30,11 +37,11 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    priceBarFilter(),
+                    //timeRangeBar(),
                     Divider(
                       height: 1,
                     ),
-                    popularFilter(),
+                    preferenceSport(),
                     Divider(
                       height: 1,
                     ),
@@ -42,7 +49,7 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
                     Divider(
                       height: 1,
                     ),
-                    allAccommodationUI()
+                    _game_gender()
                   ],
                 ),
               ),
@@ -82,118 +89,51 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
                   ),
                 ),
               ),
-            ),
+            )
           ],
         ),
       ),
     );
   }
 
-  Widget allAccommodationUI() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
-          child: Text(
-            "Type of Accommodation",
-            textAlign: TextAlign.left,
-            style: TextStyle(
-                color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
+  Widget _game_gender() {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          new Padding(padding: const EdgeInsets.all(16.0), child: Icon(Icons.wc, color: Colors.grey)),
+          Container(
+            height: 30.0,
+            width: 1.0,
+            color: Colors.grey.withOpacity(0.5),
+            margin: const EdgeInsets.only(right: 10.0),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 16, left: 16),
-          child: Column(
-            children: getAccomodationListUI(),
-          ),
-        ),
-        SizedBox(
-          height: 8,
-        ),
-      ],
-    );
-  }
-
-  List<Widget> getAccomodationListUI() {
-    List<Widget> noList = List<Widget>();
-    for (var i = 0; i < accomodationListData.length; i++) {
-      final date = accomodationListData[i];
-      noList.add(
-        Material(
-          color: Colors.transparent,
-          child: InkWell(
-            borderRadius: BorderRadius.all(Radius.circular(4.0)),
-            onTap: () {
-              setState(() {
-                checkAppPosition(i);
-              });
+          Radio(
+            value: Gender.MALE,
+            groupValue: _selectedGender,
+            onChanged: (Gender value) {
+              setState(
+                    () {
+                  _selectedGender = value;
+                },
+              );
             },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Text(
-                      date.titleTxt,
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  CupertinoSwitch(
-                    activeColor: date.isSelected ? GameJoinTheme.buildLightTheme().primaryColor : Colors.grey.withOpacity(0.6),
-                    onChanged: (value) {
-                      setState(() {
-                        checkAppPosition(i);
-                      });
-                    },
-                    value: date.isSelected,
-                  ),
-                ],
-              ),
-            ),
           ),
-        ),
-      );
-      if (i == 0) {
-        noList.add(Divider(
-          height: 1,
-        ));
-      }
-    }
-    return noList;
-  }
-
-  void checkAppPosition(int index) {
-    if (index == 0) {
-      if (accomodationListData[0].isSelected) {
-        accomodationListData.forEach((d) {
-          d.isSelected = false;
-        });
-      } else {
-        accomodationListData.forEach((d) {
-          d.isSelected = true;
-        });
-      }
-    } else {
-      accomodationListData[index].isSelected = !accomodationListData[index].isSelected;
-
-      var count = 0;
-      for (var i = 0; i < accomodationListData.length; i++) {
-        if (i != 0) {
-          var data = accomodationListData[i];
-          if (data.isSelected) {
-            count += 1;
-          }
-        }
-      }
-
-      if (count == accomodationListData.length - 1) {
-        accomodationListData[0].isSelected = true;
-      } else {
-        accomodationListData[0].isSelected = false;
-      }
-    }
+          Text("Male", style: TextStyle(color: Colors.grey, fontSize: 16)),
+          Radio(
+            value: Gender.FEMALE,
+            groupValue: _selectedGender,
+            onChanged: (Gender value) {
+              setState(
+                    () {
+                  _selectedGender = value;
+                },
+              );
+            },
+          ),
+          Text("Female", style: TextStyle(color: Colors.grey, fontSize: 16)),
+        ],
+      ),
+    );
   }
 
   Widget distanceViewUI() {
@@ -223,7 +163,7 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
     );
   }
 
-  Widget popularFilter() {
+  Widget preferenceSport() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,7 +171,7 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
         Padding(
           padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
           child: Text(
-            "Popular filters",
+            "선택 종목",
             textAlign: TextAlign.left,
             style: TextStyle(
                 color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
@@ -254,45 +194,50 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
     List<Widget> noList = List<Widget>();
     var cout = 0;
     final columCount = 2;
-    for (var i = 0; i < popularFilterListData.length / columCount; i++) {
+    for (var i = 0; i < sportListData.length / columCount; i++) {
       List<Widget> listUI = List<Widget>();
       for (var i = 0; i < columCount; i++) {
         try {
-          final date = popularFilterListData[cout];
-          listUI.add(Expanded(
-            child: Row(
-              children: <Widget>[
-                Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                    onTap: () {
-                      setState(() {
-                        date.isSelected = !date.isSelected;
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            date.isSelected ? Icons.check_box : Icons.check_box_outline_blank,
-                            color: date.isSelected ? GameJoinTheme.buildLightTheme().primaryColor : Colors.grey.withOpacity(0.6),
-                          ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Text(
-                            date.titleTxt,
-                          ),
-                        ],
+          final sport = sportListData[cout];
+          listUI.add(
+            Expanded(
+              child: Row(
+                children: <Widget>[
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                      onTap: () {
+                        setState(
+                              () {
+                            sport.isSelected = !sport.isSelected;
+                          },
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: <Widget>[
+                            Icon(
+                              sport.isSelected ? Icons.check_box : Icons.check_box_outline_blank,
+                              color:
+                              sport.isSelected ? GameJoinTheme.buildLightTheme().primaryColor : Colors.grey.withOpacity(0.6),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              sport.titleTxt,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ));
+          );
           cout += 1;
         } catch (e) {
           print(e);
@@ -310,37 +255,10 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
     return noList;
   }
 
-  Widget priceBarFilter() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            "Price (for 1 night)",
-            textAlign: TextAlign.left,
-            style: TextStyle(
-                color: Colors.grey, fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16, fontWeight: FontWeight.normal),
-          ),
-        ),
-        RangeSliderView(
-          values: _values,
-          onChangeRangeValues: (values) {
-            _values = values;
-          },
-        ),
-        SizedBox(
-          height: 8,
-        ),
-      ],
-    );
-  }
-
   Widget getAppBarUI() {
     return Container(
       decoration: BoxDecoration(
-        color: GameJoinTheme.buildLightTheme().backgroundColor,
+        color: GameJoinTheme.buildLightTheme().primaryColor,
         boxShadow: <BoxShadow>[
           BoxShadow(color: Colors.grey.withOpacity(0.2), offset: Offset(0, 2), blurRadius: 4.0),
         ],
@@ -372,10 +290,11 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
             Expanded(
               child: Center(
                 child: Text(
-                  "Filters",
+                  "필터 설정",
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 22,
+                    color: Colors.white,
                   ),
                 ),
               ),

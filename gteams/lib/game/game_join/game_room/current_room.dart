@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gteams/game/game_join/model/MemberListData.dart';
 import 'package:gteams/game/game_join/game_room/GameRoomTheme.dart';
+import 'package:gteams/map/StadiumListData.dart';
+import 'package:gteams/map/google_map.dart';
 import 'package:gteams/services/crud.dart';
 import 'package:gteams/game/game_join/model/GameListData.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class currentRoomPage extends StatefulWidget {
-
-  currentRoomPage({Key key, this.currentUserList,this.gameData,this.isFull}) : super(key: key);
+  currentRoomPage({Key key, this.currentUserList, this.gameData, this.stadiumData, this.isFull}) : super(key: key);
 
   List<dynamic> currentUserList;
+  final StadiumListData stadiumData;
   GameListData gameData;
   bool isFull;
 
@@ -23,25 +24,27 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
   var memberlist = MemberListData.memberList;
 
   final infoHeight = 100.0;
+  final infoHeight2 = 800.0;
   var opacity1 = 0.0;
   var opacity2 = 0.0;
   var opacity3 = 0.0;
+  bool isAvailable = true;
 
   var gameDocId;
   List<dynamic> gameDocIdList = [];
   List<dynamic> gameDocIdList2 = [];
-  bool flag =false;
+  bool flag = false;
 
   @override
   void initState() {
     super.initState();
+    this.isAvailable = true;
     this.memberlist = MemberListData.memberList;
-    for(var i = 0; i < widget.currentUserList.length; i++){
+    for (var i = 0; i < widget.currentUserList.length; i++) {
       var userQuery = crudObj.getDocumentByWhere('user', 'email', widget.currentUserList[i]);
-
-      userQuery.then((data){
-        setState((){
-          if(data.documents.length >= 1){
+      userQuery.then((data) {
+        setState(() {
+          if (data.documents.length >= 1) {
             var name = data.documents[0].data['name'];
             var address = data.documents[0].data['prferenceLoc'];
             this.memberlist.add(MemberListData(name: name, address: address));
@@ -50,20 +53,24 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
       });
     }
 
-    if(widget.isFull) registGame();
+    if (widget.isFull) registGame();
   }
 
-  void registGame(){
-    crudObj.getDocumentByWhere('game3', 'sort', widget.gameData.sort).then((document){ // game의 DocId를 찾기 위함..
+  void registGame() {
+    crudObj.getDocumentByWhere('game3', 'sort', widget.gameData.sort).then((document) {
+      // game의 DocId를 찾기 위함..
       gameDocId = document.documents[0].documentID;
-      widget.gameData.stadiumRef.get().then((document){ //경기장의 document 접근
-        if(!flag && document.data['gameList'] == null){ //경기장에 데이터가 없을때
+      widget.gameData.stadiumRef.get().then((document) {
+        //경기장의 document 접근
+        if (!flag && document.data['gameList'] == null) {
+          //경기장에 데이터가 없을때
           flag = true;
           gameDocIdList.add(gameDocId);
           crudObj.updateDataThen('stadium', document.documentID, {
             'gameList': gameDocIdList,
           });
-        }else{ // 경기장에 데이터 있을때
+        } else {
+          // 경기장에 데이터 있을때
           gameDocIdList2 = document.data['gameList'];
           if (gameDocIdList2.contains(gameDocId)) {
             print("이미 있는 데이터임");
@@ -85,46 +92,45 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
   }
 
   List<Widget> _tabTwoParameters() => [
-    Tab(
-      text: "Member",
-      icon: Icon(Icons.group),
-    ),
-    Tab(
-        text: "Chatting",
-        icon: Icon(Icons.chat)),
-    Tab(
-      text: "details",
-      icon: Icon(Icons.details),
-    ),
-  ];
+        Tab(
+          text: "Member",
+          icon: Icon(Icons.group),
+        ),
+        Tab(text: "Chatting", icon: Icon(Icons.chat)),
+        Tab(
+          text: "details",
+          icon: Icon(Icons.details),
+        ),
+      ];
 
   TabBar _tabBarLabel() => TabBar(
-    tabs: _tabTwoParameters(),
-    labelColor: Colors.redAccent,
-    labelStyle: TextStyle(fontSize: 12),
-    unselectedLabelColor: Colors.blueGrey,
-    unselectedLabelStyle: TextStyle(fontSize: 12),
-    onTap: (index) {
-      var content = "";
-      switch (index) {
-        case 0:
-          content = "Member";
-          break;
-        case 1:
-          content = "Chatting";
-          break;
-        case 2:
-          content = "details";
-          break;
-        default:
-          content = "Other";
-          break;
-      }
-    },
-  );
+        tabs: _tabTwoParameters(),
+        labelColor: Colors.redAccent,
+        labelStyle: TextStyle(fontSize: 12),
+        unselectedLabelColor: Color(0xff20253d),
+        unselectedLabelStyle: TextStyle(fontSize: 12),
+        onTap: (index) {
+          var content = "";
+          switch (index) {
+            case 0:
+              content = "Member";
+              break;
+            case 1:
+              content = "Chatting";
+              break;
+            case 2:
+              content = "details";
+              break;
+            default:
+              content = "Other";
+              break;
+          }
+        },
+      );
 
   @override
   Widget build(BuildContext context) {
+    final tempHeight = (MediaQuery.of(context).size.height - (MediaQuery.of(context).size.width / 1.2) + 24.0);
     return Scaffold(
       body: DefaultTabController(
         length: 3,
@@ -135,17 +141,16 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
 //              constraints: BoxConstraints.expand(height: 50),
               child: _tabBarLabel(),
             ),
+            Divider(color: Colors.black, thickness: 1.0),
             Expanded(
               child: Container(
                 child: TabBarView(children: [
                   ListView.builder(
                     itemCount: this.memberlist.length,
-                    itemBuilder: (BuildContext context, int index){
-                      return this.memberlist.length != 0 ?_member_info(
-                          this.memberlist[index].name, this.memberlist[index].address
-                      ):LinearProgressIndicator();
+                    itemBuilder: (BuildContext context, int index) {
+                      return this.memberlist.length != 0 ? _member_info(this.memberlist[index].name, this.memberlist[index].address) : LinearProgressIndicator();
                     },
-                   ),
+                  ),
                   Container(
                     child: Text("Chatting ui"),
                   ),
@@ -159,47 +164,41 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
     );
   }
 
-  Widget _member_info(String name, String address){
+  Widget _member_info(String name, String address) {
     return Card(
       key: ValueKey(name),
       elevation: 8.0,
       margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
       child: Container(
-        decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .5)),
+        decoration: BoxDecoration(color: Colors.white),
         child: ListTile(
           contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
           leading: Container(
               padding: EdgeInsets.only(right: 12.0),
-              decoration: new BoxDecoration(
-                  border: new Border(
-                      right: new BorderSide(width: 1.0, color: Colors.white24))),
+              decoration: new BoxDecoration(border: new Border(right: new BorderSide(width: 1.0, color: Colors.white24))),
               child: Hero(
                   tag: "avatar_" + name,
                   child: CircleAvatar(
                     radius: 32,
                     backgroundImage: AssetImage("assets/image/userImage.png"),
-                  )
-              )
-          ),
+                  ))),
           title: Text(
             name,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
           subtitle: Row(
             children: <Widget>[
               new Flexible(
-                  child: new Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        RichText(
-                          text: TextSpan(
-                            text: address,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          maxLines: 3,
-                          softWrap: true,
-                        )
-                      ]))
+                  child: new Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+                RichText(
+                  text: TextSpan(
+                    text: address,
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  maxLines: 3,
+                  softWrap: true,
+                )
+              ]))
             ],
           ),
         ),
@@ -215,21 +214,16 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
       child: Container(
         decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
         child: ListTile(
-          contentPadding:
-          EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+          contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
           leading: Container(
               padding: EdgeInsets.only(right: 12.0),
-              decoration: new BoxDecoration(
-                  border: new Border(
-                      right: new BorderSide(width: 1.0, color: Colors.white24))),
+              decoration: new BoxDecoration(border: new Border(right: new BorderSide(width: 1.0, color: Colors.white24))),
               child: Hero(
                   tag: "avatar_" + member.name,
                   child: CircleAvatar(
                     radius: 32,
                     backgroundImage: NetworkImage(member.photo),
-                  )
-              )
-          ),
+                  ))),
           title: Text(
             member.name,
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -237,64 +231,61 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
           subtitle: Row(
             children: <Widget>[
               new Flexible(
-                  child: new Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        RichText(
-                          text: TextSpan(
-                            text: member.address,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          maxLines: 3,
-                          softWrap: true,
-                        )
-                      ]))
+                  child: new Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+                RichText(
+                  text: TextSpan(
+                    text: member.address,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  maxLines: 3,
+                  softWrap: true,
+                )
+              ]))
             ],
           ),
-          trailing:
-          Icon(Icons.group, color: Colors.white, size: 30.0),
+          trailing: Icon(Icons.group, color: Colors.white, size: 30.0),
         ),
       ),
     );
   }
 
-  Widget _main_info(){
+  Widget _main_info() {
     return Container(
         child: Stack(
-          children: <Widget>[
-            Container(
-                padding: EdgeInsets.only(left: 10.0),
-                height: MediaQuery.of(context).size.height * 0.3,
-                decoration: new BoxDecoration(
-                  image: new DecorationImage(
-                    image: new AssetImage("assets/image/game/room/footsal_club.jpg"),
-                    fit: BoxFit.fill,
-                  ),
-                )),
-            Container(
-              height: MediaQuery.of(context).size.height * 0.3,
-              padding: EdgeInsets.all(40.0),
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(color: Color.fromRGBO(58, 66, 86, .9)),
-              child: Center(
-                child: _main_info_text(),
+      children: <Widget>[
+        Container(
+            padding: EdgeInsets.only(left: 10.0),
+            height: MediaQuery.of(context).size.height * 0.3,
+            decoration: new BoxDecoration(
+              image: new DecorationImage(
+                image: new AssetImage("assets/image/game/room/footsal_club.jpg"),
+                fit: BoxFit.fill,
               ),
-            ),
-            Positioned(
-              left: 8.0,
-              top: 50.0,
-              child: InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Icon(Icons.arrow_back, color: Colors.white),
-              ),
-            )
-          ],
-        ));
+            )),
+        Container(
+          height: MediaQuery.of(context).size.height * 0.3,
+          padding: EdgeInsets.all(40.0),
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(color: Color.fromRGBO(58, 66, 86, .9)),
+          child: Center(
+            child: _main_info_text(),
+          ),
+        ),
+        Positioned(
+          left: 8.0,
+          top: 50.0,
+          child: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(Icons.arrow_back, color: Colors.white),
+          ),
+        )
+      ],
+    ));
   }
 
-  Widget _main_info_text(){
+  Widget _main_info_text() {
     return Padding(
         padding: EdgeInsets.only(left: 10.0),
         child: Column(
@@ -312,24 +303,21 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                 Padding(
                     padding: EdgeInsets.only(left: 10.0),
                     child: Text(
-                      "시작: "+widget.gameData.startTime,
+                      "시작: " + widget.gameData.startTime,
                       style: TextStyle(color: Colors.white, fontSize: 15),
-                    )
-                ),
+                    )),
                 Padding(
                     padding: EdgeInsets.only(left: 10.0),
                     child: Text(
                       "/",
                       style: TextStyle(color: Colors.white, fontSize: 15),
-                    )
-                ),
+                    )),
                 Padding(
                     padding: EdgeInsets.only(left: 10.0),
                     child: Text(
-                      "종료: "+widget.gameData.endTime,
+                      "종료: " + widget.gameData.endTime,
                       style: TextStyle(color: Colors.white, fontSize: 15),
-                    )
-                ),
+                    )),
               ],
             ),
             Row(
@@ -342,52 +330,47 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                         child: Text(
                           "희망 수준: " + widget.gameData.gameLevel.toString(),
                           style: TextStyle(color: Colors.white),
-                        )
-                    )
-                ),
+                        ))),
                 Expanded(
                   flex: 3,
-                    child: widget.isFull ?
-                    Container(
-                        padding: const EdgeInsets.all(7.0),
-                        decoration: new BoxDecoration(
-                            border: new Border.all(color: Colors.white),
-                            borderRadius: BorderRadius.circular(5.0)),
-                      child: Text(
-                       "예약 접수중",
-                       style: TextStyle(color: Colors.amberAccent, fontSize: 15.0, fontWeight: FontWeight.w600),
-                      )
-                    )
-                        :
-                    Container(
-                      padding: const EdgeInsets.all(4.0),
-                      decoration: new BoxDecoration(
-                          border: new Border.all(color: Colors.white),
-                          borderRadius: BorderRadius.circular(5.0)),
-                      child: Center(
-                        child : Row(
-                        children: <Widget>[
-                          InkWell(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(32.0),
+                  child: widget.isFull
+                      ? Container(
+                          padding: const EdgeInsets.all(7.0),
+                          decoration: new BoxDecoration(border: new Border.all(color: Colors.white), borderRadius: BorderRadius.circular(5.0)),
+                          child: Text(
+                            "예약 접수중",
+                            style: TextStyle(color: Colors.amberAccent, fontSize: 15.0, fontWeight: FontWeight.w600),
+                          ))
+                      : Container(
+                          padding: const EdgeInsets.all(4.0),
+                          decoration: new BoxDecoration(border: new Border.all(color: Colors.white), borderRadius: BorderRadius.circular(5.0)),
+                          child: Center(
+                            child: Row(
+                              children: <Widget>[
+                                InkWell(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(32.0),
+                                  ),
+                                  onTap: () {},
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(1.0),
+                                    child: Icon(
+                                      Icons.people,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 3),
+                                Text(
+                                  widget.currentUserList.length.toString() + " / " + widget.gameData.groupSize.toString(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
                             ),
-                            onTap: () {},
-                            child: Padding(
-                              padding: const EdgeInsets.all(1.0),
-                              child: Icon(
-                                Icons.people,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 3),
-                          Text(
-                            widget.currentUserList.length.toString()+" / "+widget.gameData.groupSize.toString(),
-                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600,),
-                          ),
-                        ],
-                      ),)
-                    ),
+                          )),
                 )
               ],
             ),
@@ -395,10 +378,11 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
         ));
   }
 
-  Widget getTimeBoxUI(String text1, String text2, Icon icon1) {
+  Widget getTimeBoxUI(String text1, String text2, Icon icon1, int isProvide) {
+    text1 = isProvide == 2 ? text1 + "(유료)" : text1;
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.28,
-      height: 110,
+      height: 115,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
@@ -410,34 +394,47 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
             ],
           ),
           child: Padding(
-            padding: const EdgeInsets.only(left: 18.0, right: 18.0, top: 12.0, bottom: 12.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+            padding: const EdgeInsets.only(left: 11.0, right: 11.0, top: 12.0, bottom: 12.0),
+            child: Stack(
+              alignment: Alignment.bottomCenter,
               children: <Widget>[
-                icon1,
-                Text(
-                  text1,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'Dosis',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
-                    letterSpacing: 0.27,
-                    color: GameRoomTheme.nearlyBlue,
-                  ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    icon1,
+                    Text(
+                      text1,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Dosis',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                        letterSpacing: 0.27,
+                        color: GameRoomTheme.nearlyBlue,
+                      ),
+                    ),
+                    Text(
+                      text2,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Dosis',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        letterSpacing: 0.27,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
                 ),
-                Text(
-                  text2,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'Dosis',
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
-                    letterSpacing: 0.27,
-                    color: Colors.black,
-                  ),
-                ),
+                isProvide >= 1
+                    ? Text("") // 제공할경우
+                    : Icon(
+                        // 제공하지 않을경우 X 표시 출력
+                        Icons.clear,
+                        size: 70,
+                        color: Colors.red,
+                      ),
               ],
             ),
           ),
@@ -446,125 +443,143 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
     );
   }
 
-  void _changeState(String tempStr) {
+  void _changeState(String tempStr, String tempStr2) {
     print(tempStr);
   }
 
-  Widget _detail_tab(){
+  Widget _detail_tab() {
     final tempHeight = (MediaQuery.of(context).size.height - (MediaQuery.of(context).size.width / 1.2) + 24.0);
     return SingleChildScrollView(
         child: Container(
-          constraints:
-          BoxConstraints(minHeight: infoHeight, maxHeight: tempHeight > infoHeight ? tempHeight : infoHeight),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 32.0, left: 18, right: 16),
-                child: Text(
-                  "Suwon-World Cup Stadium, Suwon, Gyeonggi-do",
+      constraints: BoxConstraints(minHeight: infoHeight2, maxHeight: tempHeight > infoHeight2 ? tempHeight : infoHeight2),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 32.0, left: 18, right: 16),
+            child: Text(
+              widget.stadiumData.location,
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 15,
+                letterSpacing: 0.27,
+                color: GameRoomTheme.darkerText,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8, top: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "총 비용 :" + widget.gameData.totalPrice.toString() + " 원 / 인당 :" + widget.gameData.perPrice.toString() + " 원",
                   textAlign: TextAlign.left,
                   style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
+                    fontWeight: FontWeight.w200,
+                    fontSize: 22,
                     letterSpacing: 0.27,
-                    color: GameRoomTheme.darkerText,
+                    color: GameRoomTheme.nearlyBlue,
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8, top: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Container(
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        "4.3",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w200,
+                          fontSize: 22,
+                          letterSpacing: 0.27,
+                          color: GameRoomTheme.grey,
+                        ),
+                      ),
+                      Icon(
+                        Icons.star,
+                        color: GameRoomTheme.nearlyBlue,
+                        size: 24,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(8),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Text(
-                      "10,000 원",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w200,
-                        fontSize: 22,
-                        letterSpacing: 0.27,
-                        color: GameRoomTheme.nearlyBlue,
-                      ),
-                    ),
-                    Container(
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            "4.3",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w200,
-                              fontSize: 22,
-                              letterSpacing: 0.27,
-                              color: GameRoomTheme.grey,
-                            ),
-                          ),
-                          Icon(
-                            Icons.star,
-                            color: GameRoomTheme.nearlyBlue,
-                            size: 24,
-                          ),
-                        ],
-                      ),
-                    ),
+                    getTimeBoxUI((widget.gameData.groupSize / 2).toInt().toString() + " vs " + (widget.gameData.groupSize / 2).toInt().toString(), "Match", Icon(FontAwesomeIcons.peopleCarry), 1),
+                    getTimeBoxUI(widget.gameData.startTime + "-" + widget.gameData.endTime, "Time", Icon(FontAwesomeIcons.clock), 1),
+                    InkWell(
+                        child: getTimeBoxUI("위치", "Location", Icon(FontAwesomeIcons.mapMarkedAlt), 1),
+                        onTap: () {
+                          if (isAvailable) {
+                            isAvailable = false;
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MapTest(
+                                          onSelected: _changeState,
+                                          nowReq: mapReq.mapCheck,
+                                          stadiumData: widget.stadiumData,
+                                        )));
+                          }
+                        })
                   ],
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Column(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        getTimeBoxUI("5 vs 5", "Match", Icon(FontAwesomeIcons.peopleCarry)),
-                        getTimeBoxUI("2시간", "Time", Icon(FontAwesomeIcons.clock)),
-                        getTimeBoxUI("신발 대여", "Shoe", Icon(FontAwesomeIcons.shoePrints)),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        getTimeBoxUI("위치", "Location", Icon(FontAwesomeIcons.mapMarkedAlt)),
-                        getTimeBoxUI("초보", "Skill", Icon(FontAwesomeIcons.users)),
-                        getTimeBoxUI("옷 대여", "Clothes", Icon(FontAwesomeIcons.tshirt)),
-                      ],
-                    ),
+                    getTimeBoxUI("공 대여", "Ball", Icon(FontAwesomeIcons.volleyballBall), widget.stadiumData.isBall),
+                    getTimeBoxUI("주차장 ", "Skill", Icon(FontAwesomeIcons.parking), widget.stadiumData.isParking),
+                    getTimeBoxUI("샤워장", "Shower", Icon(FontAwesomeIcons.shower), widget.stadiumData.isShower),
                   ],
                 ),
-              ),
-              Expanded(
-                child: AnimatedOpacity(
-                  duration: Duration(milliseconds: 500),
-                  opacity: opacity2,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
-                    child: Text(
-                      "초보자분들 환영합니다. 풋살을 즐기시는 누구나 참가 신청 가능합니다.",
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                        fontFamily: 'Dosis',
-                        fontWeight: FontWeight.w200,
-                        fontSize: 14,
-                        letterSpacing: 0.27,
-                        color: GameRoomTheme.grey,
-                      ),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    getTimeBoxUI("팀 조끼", "Clothes", Icon(FontAwesomeIcons.tshirt), widget.stadiumData.isClothes),
+                    getTimeBoxUI("풋살화 ", "Shoes", Icon(FontAwesomeIcons.shoePrints), widget.stadiumData.isShoes),
+                    getTimeBoxUI("실력", "Level" + widget.gameData.gameLevel.toString(), Icon(FontAwesomeIcons.users), 1),
+                  ],
                 ),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).padding.bottom,
-              )
-            ],
+              ],
+            ),
           ),
-        ));
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+              child: Text(
+                "초보자분들 환영합니다. 풋살을 즐기시는 누구나 참가 신청 가능합니다.",
+                textAlign: TextAlign.justify,
+                style: TextStyle(
+                  fontFamily: 'Dosis',
+                  fontWeight: FontWeight.w200,
+                  fontSize: 14,
+                  letterSpacing: 0.27,
+                  color: GameRoomTheme.grey,
+                ),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).padding.bottom,
+          )
+        ],
+      ),
+    ));
   }
 }

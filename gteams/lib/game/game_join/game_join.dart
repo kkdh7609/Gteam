@@ -259,7 +259,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                       ),
                       onTap: () {
                         this.stadiumListForMap=snapshot.data.documents.map((data) => StadiumListData.fromJson(data.data)).toList();
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTest(onSelected: _changeLoc,stadiumList: stadiumListForMap,)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTest(onSelected: _changeLoc,stadiumList: stadiumListForMap, nowReq: mapReq.mapCheck,)));
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),

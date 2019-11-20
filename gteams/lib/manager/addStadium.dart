@@ -38,6 +38,12 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
   TextEditingController _priceController = TextEditingController();
   TextEditingController _callController = TextEditingController();
 
+  bool isAvailable = true;
+  String _address;
+  String _locId;
+  double _lat;
+  double _lng;
+
   final Map<int, Widget> clothesSeg = const <int, Widget>{
     0: Text('제공 안함'),
     1: Text('무료 제공'),
@@ -121,12 +127,21 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
     _callController.text = _call;
   }
 
+  void _getLocateData(address, locId, lat, lng){
+    _locName = address;
+    _locId = locId;
+    _lat = lat;
+    _lng = lng;
+  }
+
   void locationPress(){
-    setState(() {
-      _stadiumName = 'hi';
-      _stadiumName = "tt";
-      _nameController.text = "tkt";
-    });
+    if(isAvailable){
+      isAvailable = false;
+      Navigator.push(context, MaterialPageRoute(
+          builder: (context) =>
+              MapTest(needData: _getLocateData, nowReq: mapReq.newLocation)));
+      isAvailable = true;
+    }
   }
 
   @override
@@ -197,8 +212,7 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
                         Card(
                             elevation: 4.0,
                             child: Container(
-                                color: Colors.cyanAccent
-
+                                color: Color(0xff20253d)
                               // Todo add child
                             )
                         ),

@@ -674,6 +674,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
                               'Gender': _selectedGender.toString(),
                               'loc_name': _loc_name,
                               'perPrice' : perPrice,
+                              'totalPrice' : totalPrice,
                               'dateNumber': _dateNumber,
                               'sort' : FieldValue.serverTimestamp(),
                               'stadiumRef' : _stadiumRef,
