@@ -192,7 +192,7 @@ class _PayPageState extends State<PayPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Text("Choose your Pay Method",
+                        Text("Choose Your Pay Method",
                             style: TextStyle(fontSize: 17, fontFamily: 'Dosis', fontWeight: FontWeight.w600))
                       ],
                     ),
