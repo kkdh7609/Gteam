@@ -174,9 +174,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   color: Colors.red,
                 ),
                 onTap: () { widget.onSignedOut();
-                            Navigator.pop(context);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => MyApp()));
+                            /*Navigator.pop(context);
+                              Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => MyApp()));*/
+                            // 혹시 나중에 로그아웃 검은화면 뜨면 이부분 확인
                             },
               ),
               SizedBox(

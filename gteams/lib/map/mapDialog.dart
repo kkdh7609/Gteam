@@ -87,13 +87,13 @@ class CustomDialog extends StatelessWidget{
                           SizedBox(height: 7.0),
                           PhoneWidget(text: stadiumData.telephone),
                           SizedBox(height: 4.0),
-                          SegmentedControl(header: "유니폼 제공 여부", value: clothesVal, children: clothesSeg),
+                          SegmentedControl(header: "유니폼 제공 여부", value: stadiumData.isClothes, children: clothesSeg),
                           SizedBox(height: 4.0),
-                          SegmentedControl(header: "축구화 제공 여부", value: shoesVal, children: shoesSeg),
+                          SegmentedControl(header: "축구화 제공 여부", value: stadiumData.isShoes, children: shoesSeg),
                           SizedBox(height: 4.0),
-                          SegmentedControl(header: "주차장 제공 여부", value: parkVal, children: parkSeg),
+                          SegmentedControl(header: "주차장 제공 여부", value: stadiumData.isParking, children: parkSeg),
                           SizedBox(height: 4.0),
-                          SegmentedControl(header: "샤워 시설 제공 여부", value: showerVal, children: showerSeg),
+                          SegmentedControl(header: "샤워 시설 제공 여부", value: stadiumData.isShower, children: showerSeg),
                           SizedBox(height: 48.0)
                         ]
                     )
