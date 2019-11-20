@@ -53,6 +53,7 @@ class CustomDialog extends StatelessWidget{
       isAvailable = false;
       onSelected(stadiumData.stadiumName,stadiumData.id);
       onPop();
+      isAvailable = true;
     }
   }
 
@@ -73,7 +74,7 @@ class CustomDialog extends StatelessWidget{
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           SizedBox(height: 16.0),
-                          PhotoWidget(),
+                          PhotoWidget(photo: NetworkImage(this.stadiumData.imagePath)),
                           SizedBox(height: 4.0),
                           TextWidget(header: "경기장 이름", text: stadiumData.stadiumName),
                           SizedBox(height: 4.0),
