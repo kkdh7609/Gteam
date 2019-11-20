@@ -40,6 +40,8 @@ class _MapTestState extends State<MapTest> {
   PageController _pageController;
   int prevPage;
 
+  bool isAvailable = true;
+
   @override
   void initState() {
     super.initState();
@@ -56,7 +58,7 @@ class _MapTestState extends State<MapTest> {
               draggable: false,
               infoWindow: InfoWindow(title: element.stadiumName, snippet: element.location),
               position: element.locationCoords,
-              onTap: () => _onMarkerPressed(coordinates, index))
+              onTap: () => _onMarkerPressed(index))
           );
         });
   }
@@ -118,30 +120,26 @@ class _MapTestState extends State<MapTest> {
     Navigator.pop(context);
   }
 
-  _onMarkerPressed(coordinates, index){
-    if(_pageController.page.toInt() == index)      _goToNewPosition(makePosition(widget.stadiumList[index].locationCoords));
-    _pageController.animateToPage(index, duration: Duration(seconds: 1), curve: Curves.ease);
+  _onMarkerPressed(index){
+    if(isAvailable) {
+      isAvailable = false;
+      if (_pageController.page.toInt() == index) _goToNewPosition(makePosition(widget.stadiumList[index].locationCoords));
+      _pageController.animateToPage(index, duration: Duration(seconds: 1), curve: Curves.ease);
 
-    showDialog(
-      context: context,
-      builder: (context){
-        return CustomDialog(stadiumData: widget.stadiumList[index], onSelected: widget.onSelected, onPop: _doPop,);
-      }
-    );
-    // 아래는 해당 정보 전으로 이동시키는 것. 추후 코드 다른 메소드로 필요
-   /*NewGeocoder(kGoogleApiKey, language: 'ko-KR,ko;').findAddressFromCoordinates(coordinates).then((results) {
-      var first = results.first;
-      print("${first.featureName} : ${first.addressLine}");
       showDialog(
           context: context,
-          builder: (context){
-            return CustomDialog(location: first.addressLine, onSelected: widget.onSelected, onPop: _doPop);
+          builder: (context) {
+            return CustomDialog(stadiumData: widget.stadiumList[index], onSelected: widget.onSelected, onPop: _doPop,);
           }
       );
+      isAvailable = true;
+    }
+  }
 
-      // widget.onSelected(first.addressLine);
-      // Navigator.pop(context);
-    });*/
+  Future<String> _coordToAddress(coordinates) async{
+    var results = await NewGeocoder(kGoogleApiKey, language: 'ko-KR,ko;').findAddressFromCoordinates(coordinates);
+    var first = results.first;
+    return first.addressLine;
   }
 
 
@@ -525,12 +523,17 @@ class _MapTestState extends State<MapTest> {
               child: Container(
                   height: 200.0,
                   width: MediaQuery.of(context).size.width,
-                  child: PageView.builder(
-                      controller: _pageController,
-                      itemCount: widget.stadiumList.length,
-                      itemBuilder: (BuildContext context, int index){
-                        return _stadiumList(index);
-                      }
+                  child: InkWell(
+                    child: PageView.builder(
+                        controller: _pageController,
+                        itemCount: widget.stadiumList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return _stadiumList(index);
+                        }
+                    ),
+                    onTap: () => {
+                      _onMarkerPressed(_pageController.page.toInt())
+                    },
                   )
               )
           ),
