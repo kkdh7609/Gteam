@@ -39,7 +39,7 @@ class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
     super.dispose();
   }
 
-  Widget makeCard(int index,GameListData gameData){
+  Widget makeCard(int index, GameListData gameData){
     return Card(
         elevation: 10.0,
         margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),

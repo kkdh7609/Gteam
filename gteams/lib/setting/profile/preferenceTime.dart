@@ -4,6 +4,7 @@ import 'package:gteams/setting/popularFilterList.dart';
 import 'package:gteams/setting/profile/PreferListView.dart';
 import 'package:gteams/menu/drawer/UserData.dart';
 import 'package:gteams/game/game_create/GameCreateTheme.dart';
+import 'package:gteams/util/customTimePicker.dart';
 
 class PreferenceTime extends StatefulWidget {
   PreferenceTime({this.userData, this.userDocID});
@@ -24,6 +25,8 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
 
   List<SettingListData> dayListData = SettingListData.dayList;
   bool _isExpanded = false;
+  bool _completeStartTime = false;
+  bool _completeEndTime = false;
 
   AnimationController _expandAnimationController;
   AnimationController animationController;
@@ -57,6 +60,34 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
     super.dispose();
   }
 
+  Widget _alertButton(){
+    return FlatButton(
+      color: Color(0xff20253d),
+      child: Text("OK", style: TextStyle(color: Colors.white)),
+      onPressed: (){
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  AlertDialog _alertDialog(title, text){
+    return AlertDialog(
+        title: Text(title),
+        content: Text(text),
+        actions: <Widget>[
+          _alertButton(),
+        ]
+    );
+  }
+
+  _showAlertDialog(title, text){
+    showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return _alertDialog(title, text);
+        }
+    );
+  }
   void _showMaterialDialog(String show) {
     showDialog(
         context: context,
@@ -172,25 +203,55 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
   }
 
   Future<Null> _selectStart(BuildContext context) async {
-    final TimeOfDay _pickedStart =
-    await showTimePicker(context: context, initialTime: _startTime);
+    final TimeOfDay _pickedStart = await showCustomTimePicker(context: context, initialTime: _startTime);
 
-    if (_pickedStart != null && _pickedStart != _startTime) {
+    if (_pickedStart != null && (_pickedStart != _startTime || !_completeStartTime)) {
       setState(() {
-        _startTime = _pickedStart;
-        _startTimeText = _startTime.toString().split("(")[1].split(")")[0];
+        if(_completeEndTime){
+          int intPickedStart = _pickedStart.hour * 100 + _pickedStart.minute;
+          int intEndTime = _endTime.hour * 100 + _endTime.minute;
+
+          if(intPickedStart >= intEndTime){
+            _showAlertDialog("변경 실패", "시작 시간은 종료 시간보다 빨라야 합니다.");
+          }
+          else{
+            _completeStartTime = true;
+            _startTime = _pickedStart;
+            _startTimeText = _startTime.toString().split("(")[1].split(")")[0];
+          }
+        }
+        else {
+          _completeStartTime = true;
+          _startTime = _pickedStart;
+          _startTimeText = _startTime.toString().split("(")[1].split(")")[0];
+        }
       });
     }
   }
 
   Future<Null> _selectEnd(BuildContext context) async {
-    final TimeOfDay _pickedEnd =
-    await showTimePicker(context: context, initialTime: _endTime);
+    final TimeOfDay _pickedEnd = await showCustomTimePicker(context: context, initialTime: _endTime);
 
-    if (_pickedEnd != null && _pickedEnd != _endTime) {
+    if (_pickedEnd != null && (_pickedEnd != _endTime || !_completeEndTime)) {
       setState(() {
-        _endTime = _pickedEnd;
-        _endTimeText = _endTime.toString().split("(")[1].split(")")[0];
+        if(_completeStartTime){
+          int intPickedStart = _pickedEnd.hour * 100 + _pickedEnd.minute;
+          int intStartTime = _startTime.hour * 100 + _startTime.minute;
+
+          if(intPickedStart <= intStartTime){
+            _showAlertDialog("변경 실패", "종료 시간은 시작 시간보다 늦어야 합니다.");
+          }
+          else{
+            _completeEndTime = true;
+            _endTime = _pickedEnd;
+            _endTimeText = _endTime.toString().split("(")[1].split(")")[0];
+          }
+        }
+        else {
+          _completeEndTime = true;
+          _endTime = _pickedEnd;
+          _endTimeText = _endTime.toString().split("(")[1].split(")")[0];
+        }
       });
     }
   }

@@ -147,7 +147,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                   ListView.builder(
                     itemCount: this.memberlist.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return this.memberlist.length != 0 ? _member_info(this.memberlist[index].name, this.memberlist[index].address) : LinearProgressIndicator();
+                      return this.memberlist.length != 0 ? _member_info(this.memberlist[index].name, this.memberlist[index].address, index) : LinearProgressIndicator();
                     },
                   ),
                   Container(
@@ -163,7 +163,12 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
     );
   }
 
-  Widget _member_info(String name, String address) {
+  Widget _member_info(String name, String address, int idx) {
+    String img;
+    if(idx % 2==0)
+      img = "assets/image/userImage.png";
+    else
+      img = "assets/image/userImage2.png";
     return Card(
       key: ValueKey(name),
       elevation: 8.0,
@@ -179,7 +184,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                   tag: "avatar_" + name,
                   child: CircleAvatar(
                     radius: 32,
-                    backgroundImage: AssetImage("assets/image/userImage.png"),
+                    backgroundImage: AssetImage(img),
                   ))),
           title: Text(
             name,
