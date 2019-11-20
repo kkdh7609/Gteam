@@ -32,6 +32,7 @@ class PhotoWidget extends StatelessWidget{
     );
   }
 }
+
 class TextWidget extends StatelessWidget{
   TextWidget({this.text, this.header});
 
@@ -49,14 +50,14 @@ class TextWidget extends StatelessWidget{
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(header, style: TextStyle(
-                            color: Colors.blueGrey, fontWeight: FontWeight.bold, fontSize: 13
+                            color: Colors.blueGrey, fontFamily: 'Dosis', fontWeight: FontWeight.w900, fontSize: 13
                         )),
                         Text(
                           text,
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
-                            fontSize: 16
+                            fontSize: 14
                           ),
                         ),
                         Divider(height: 1.0, color: Colors.black)
@@ -81,9 +82,16 @@ class PhoneWidget extends StatelessWidget{
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text("연 락 처", style: TextStyle(
-                            color: Colors.blueGrey, fontWeight: FontWeight.bold, fontSize: 13
-                        )),
+                        Row(
+                          children: <Widget>[
+                            Text("전화번호", style: TextStyle(
+                                color: Colors.blueGrey, fontWeight: FontWeight.bold, fontSize: 13
+                            )),
+                            SizedBox(width: 8.0),
+                            Icon(FontAwesomeIcons.phone, size: 15),
+                          ],
+                        ),
+                        SizedBox(height: 5),
                         Text(
                           text,
                           style: TextStyle(
@@ -115,20 +123,24 @@ class LocationWidget extends StatelessWidget{
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Icon(FontAwesomeIcons.mapMarkedAlt),
-                  SizedBox(width: 16.0),
                   Expanded(
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text("위 치", style: TextStyle(
-                                color: Colors.blueGrey, fontWeight: FontWeight.bold, fontSize: 13
-                            )),
+                            Row(
+                              children: <Widget>[
+                                Text("주소", style: TextStyle(
+                                    color: Colors.blueGrey, fontWeight: FontWeight.bold, fontSize: 13
+                                )),
+                                SizedBox(width: 8.0),
+                                Icon(FontAwesomeIcons.mapMarkedAlt, size: 15),
+                              ],
+                            ),
                             SizedBox(height: 4.0),
                             AutoSizeText(
                               location,
-                              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-                              minFontSize: 13.0,
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                              minFontSize: 13,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -157,15 +169,19 @@ class TimeWidget extends StatelessWidget{
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Icon(FontAwesomeIcons.clock),
-                  SizedBox(width: 16.0),
                   Expanded(
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text("운영시간", style: TextStyle(
-                                color: Colors.blueGrey, fontWeight: FontWeight.bold, fontSize: 13
-                            )),
+                            Row(
+                              children: <Widget>[
+                                Text("운영시간", style: TextStyle(
+                                    color: Colors.blueGrey, fontWeight: FontWeight.bold, fontSize: 13
+                                )),
+                                SizedBox(width: 8.0),
+                                Icon(FontAwesomeIcons.clock, size: 15),
+                              ],
+                            ),
                             SizedBox(height: 4.0),
                             AutoSizeText(
                                 checkTimes,
@@ -208,8 +224,9 @@ class SegmentedControl extends StatelessWidget{
               child: CupertinoSegmentedControl<int>(
                 children: children,
                 groupValue: value,
-                selectedColor: Color(0x400B5998),
-                pressedColor: Color(0x000B5998),
+                borderColor: Color(0xff20253d),
+                selectedColor: Color(0xff20253d),
+                pressedColor: Color(0x0000253d),
                 onValueChanged: (result){},
               )
           )

@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
+import 'package:gteams/manager/managerSetTime.dart';
+import 'package:gteams/manager/manageReserveList.dart';
 
 class FacilityMenuPage extends StatefulWidget {
+  FacilityMenuPage({Key key}) : super(key: key);
+
   @override
   _FacilityMenuPageState createState() => _FacilityMenuPageState();
 }
 
 class _FacilityMenuPageState extends State<FacilityMenuPage> {
+
   @override
   Widget build(BuildContext context) {
+
     var size = MediaQuery.of(context).size;
 
     return SafeArea(
@@ -47,7 +53,7 @@ class _FacilityMenuPageState extends State<FacilityMenuPage> {
                             child: FittedBox(
                               child: Center(
                                 child: Text(
-                                  "Wooil Games",
+                                  "에스빌드 풋살장",
                                   style: TextStyle(
                                       color: Color(0xfff1e4d4),
                                       fontWeight: FontWeight.w600,
@@ -137,7 +143,7 @@ class _FacilityMenuPageState extends State<FacilityMenuPage> {
                                                   child: Icon(Icons.receipt, color: Colors.black),
                                                 ),
                                                 title: Text(
-                                                  "시설 정보 관리",
+                                                  "시설 예약 관리",
                                                   style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20, fontFamily: 'Dosis'),
                                                 ),
                                                 subtitle: Row(
@@ -146,7 +152,10 @@ class _FacilityMenuPageState extends State<FacilityMenuPage> {
                                                   ],
                                                 ),
                                                 trailing: Icon(Icons.keyboard_arrow_right, color: Colors.black, size: 30.0),
-                                                onTap: (){}
+                                                onTap: (){
+                                                  Navigator.push(context,
+                                                      MaterialPageRoute(builder: (context) => SetTime()));
+                                                }
                                             ),
                                             Divider(color: Colors.black, thickness: 0.5),
                                           ],
@@ -187,7 +196,7 @@ class _FacilityMenuPageState extends State<FacilityMenuPage> {
                                                   child: Icon(Icons.receipt, color: Colors.black),
                                                 ),
                                                 title: Text(
-                                                  "시설 정보 관리",
+                                                  "시설 예약 승인",
                                                   style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20, fontFamily: 'Dosis'),
                                                 ),
                                                 subtitle: Row(
@@ -196,7 +205,10 @@ class _FacilityMenuPageState extends State<FacilityMenuPage> {
                                                   ],
                                                 ),
                                                 trailing: Icon(Icons.keyboard_arrow_right, color: Colors.black, size: 30.0),
-                                                onTap: (){}
+                                                onTap: (){
+                                                  Navigator.push(context,
+                                                      MaterialPageRoute(builder: (context) => ReserveList()));
+                                                }
                                             ),
                                             Divider(color: Colors.black, thickness: 0.5),
                                           ],

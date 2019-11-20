@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:gteams/manager_main/ManagerMenuScreen.dart';
+import 'package:gteams/root_page.dart';
 
 class ManagerMainMenuPage extends StatefulWidget {
+
+  ManagerMainMenuPage({Key key, this.onSignedOut}) : super(key: key);
+
+  final VoidCallback onSignedOut;
+
   @override
   _ManagerMainMenuPageState createState() => _ManagerMainMenuPageState();
 }
 
 class _ManagerMainMenuPageState extends State<ManagerMainMenuPage> {
-  Widget screenView;
+
   AnimationController sliderAnimationController;
 
   @override
   void initState() {
-    screenView = MainManagerPageScreen();
     super.initState();
   }
 
@@ -23,10 +28,9 @@ class _ManagerMainMenuPageState extends State<ManagerMainMenuPage> {
         top: false,
         bottom: false,
         child: Scaffold(
-          body: screenView,
+          body: MainManagerPageScreen(onSignedOut: widget.onSignedOut),
         ),
       ),
     );
   }
-
 }

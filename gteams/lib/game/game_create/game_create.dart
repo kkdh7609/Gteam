@@ -42,13 +42,15 @@ class _GameCreatePageState extends State<GameCreatePage> {
   Gender _selectedGender = null;
 
   List<DropdownMenuItem<String>> _sportsList = [];
-  List<String> _sports = ["Football", "Table Tennis", "Bowling", "Basketball", "Baseball"];
+  List<String> _sports = ["Futsal", "Table Tennis", "Bowling", "Basketball", "Baseball"];
 
   DateTime _date = DateTime.now();
   TimeOfDay _startTime = TimeOfDay.now();
   TimeOfDay _endTime = TimeOfDay.now();
 
   TextEditingController _textEditingController = TextEditingController();
+  TextEditingController _textEditingController_size = TextEditingController();
+  TextEditingController _textEditingController_level = TextEditingController();
 
   bool _completeDate = false;
   bool _completeStartTime = false;
@@ -71,7 +73,8 @@ class _GameCreatePageState extends State<GameCreatePage> {
 
   Widget _alertButton(){
     return FlatButton(
-      child: Text("OK"),
+      color: Color(0xff20253d),
+      child: Text("OK", style: TextStyle(color: Colors.white)),
       onPressed: (){
         Navigator.of(context).pop();
       },
@@ -514,19 +517,6 @@ class _GameCreatePageState extends State<GameCreatePage> {
             },
           ),
           Text("Female", style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w700, fontSize: 16)),
-          Radio(
-            value: Gender.ALL,
-            groupValue: _selectedGender,
-            activeColor: GameCreateTheme.buildLightTheme().primaryColor,
-            onChanged: (Gender value) {
-              setState(
-                    () {
-                  _selectedGender = value;
-                },
-              );
-            },
-          ),
-          Text("All", style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w700, fontSize: 16)),
         ],
       ),
     );
@@ -545,14 +535,16 @@ class _GameCreatePageState extends State<GameCreatePage> {
           ),
           Flexible(
             child: TextFormField(
+              controller: _textEditingController_size,
               inputFormatters: [LengthLimitingTextInputFormatter(2)],
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                hintText: 'Group Size',
+                hintText: '모집 인원 입력',
                 hintStyle: TextStyle(color: Colors.grey),
               ),
               validator: (value) {
-                return value.isEmpty ? "Group size can\'t be empty" : null;
+                _groupSize = int.parse(value);
+                return (_groupSize < 10 || _groupSize > 30) ? _showAlertDialog("생성 실패", "모집 인원: 10 ~ 30 사이의 값을 입력하세요") : null;
               },
               onSaved: (value) {
                 _groupSize = int.parse(value);
@@ -577,15 +569,17 @@ class _GameCreatePageState extends State<GameCreatePage> {
           ),
           Flexible(
             child: TextFormField(
+              controller: _textEditingController_level,
               inputFormatters: [LengthLimitingTextInputFormatter(2)],
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                hintText: 'Game Level (',
+                hintText: '희망 수준 입력',
                 hintStyle: TextStyle(color: Colors.grey),
               ),
               validator: (value) {
-                return value.isEmpty ? "Game level can\'t be empty" : null;
-              },
+                _gameLevel = int.parse(value);
+                return (_gameLevel < 0 || _gameLevel > 10) ? _showAlertDialog("생성 실패", "희망 수준: 1 ~ 10 사이의 값을 입력하세요") : null;
+                },
               onSaved: (value) {
                 _gameLevel = int.parse(value);
               },
@@ -617,7 +611,8 @@ class _GameCreatePageState extends State<GameCreatePage> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('취소')),
+                  color: Color(0xff20253d),
+                  child: Text('취소', style: TextStyle(color: Colors.white))),
               FlatButton(
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
@@ -685,7 +680,8 @@ class _GameCreatePageState extends State<GameCreatePage> {
                     });
                   }
                 },
-                child: Text('생성'),
+                  color: Color(0xff20253d),
+                  child: Text('생성', style: TextStyle(color: Colors.white))
               )
             ],
           );
@@ -728,6 +724,12 @@ class _GameCreatePageState extends State<GameCreatePage> {
               }
               else if(!_completeEndTime){
                 _showAlertDialog("생성 실패", "종료 시간을 선택해주세요.");
+              }
+              else if(_textEditingController_size.text.length == 0){
+                _showAlertDialog("생성 실패", "총 인원을 입력해주세요.");
+              }
+              else if(_textEditingController_level.text.length == 0){
+                _showAlertDialog("생성 실패", "희망 수준을 선택해주세요.");
               }
               // Todo 위의 내용 이외의 내용들 예외처리 필요
               else{

@@ -93,7 +93,6 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    print(isEnter);
     final tempHeight = (MediaQuery.of(context).size.height - (MediaQuery.of(context).size.width / 1.2) + 24.0);
     return Container(
       color: GameRoomTheme.nearlyWhite,
@@ -221,14 +220,14 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                                     children: <Widget>[
                                       getTimeBoxUI("공 대여", "Ball", Icon(FontAwesomeIcons.volleyballBall),widget.stadiumData.isBall),
                                       getTimeBoxUI("주차장 ", "Skill", Icon(FontAwesomeIcons.parking),widget.stadiumData.isParking),
-                                      getTimeBoxUI("샤워장", "Clothes", Icon(FontAwesomeIcons.shower),widget.stadiumData.isClothes),
+                                      getTimeBoxUI("샤워장", "Shower", Icon(FontAwesomeIcons.shower),widget.stadiumData.isShower),
                                     ],
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: <Widget>[
-                                      getTimeBoxUI("팀 조끼", "Ball", Icon(FontAwesomeIcons.tshirt),widget.stadiumData.isClothes),
+                                      getTimeBoxUI("팀 조끼", "Clothes", Icon(FontAwesomeIcons.tshirt),widget.stadiumData.isClothes),
                                       getTimeBoxUI("풋살화 ", "Shoes", Icon(FontAwesomeIcons.shoePrints),widget.stadiumData.isShoes),
                                       getTimeBoxUI("실력", "Level"+widget.gameData.gameLevel.toString(), Icon(FontAwesomeIcons.users),1),
                                     ],
@@ -318,7 +317,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                                 bool isFull = widget.gameData.groupSize == currentUserList.length ? true : false;
                                 if (isAvailable) {
                                   isAvailable = false;
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList,gameData: widget.gameData,isFull: isFull,), fullscreenDialog: true)).then((data){
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList,gameData: widget.gameData,stadiumData: widget.stadiumData,isFull: isFull,), fullscreenDialog: true)).then((data){
                                     if(this.mounted){
                                       setState(() {
                                         isEnter = false;
@@ -369,7 +368,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                   ) : InkWell( // 현재 참여중일경우
                     onTap:(){
                       bool isFull = widget.gameData.groupSize == widget.initialUserList.length ? true : false;
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList,gameData: widget.gameData,isFull: isFull,), fullscreenDialog: true)).then((data){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList,gameData: widget.gameData,stadiumData: widget.stadiumData,isFull: isFull,), fullscreenDialog: true)).then((data){
                         if(this.mounted){
                           setState(() {
                             isEnter = false;

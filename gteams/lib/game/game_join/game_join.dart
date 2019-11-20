@@ -225,6 +225,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                     Expanded(
                         child: Center(
                             child: Text("Search the Game", style: TextStyle(
+                                fontFamily: 'Dosis',
                                 fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white))
                         )
                     ),
@@ -259,7 +260,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                       ),
                       onTap: () {
                         this.stadiumListForMap=snapshot.data.documents.map((data) => StadiumListData.fromJson(data.data)).toList();
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTest(onSelected: _changeLoc,stadiumList: stadiumListForMap,)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTest(onSelected: _changeLoc,stadiumList: stadiumListForMap, nowReq: mapReq.mapCheck,)));
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -293,7 +294,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                   padding: const EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 4),
                   child: TextField(
                     onChanged: (String txt) {},
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 18, fontFamily : 'Dosis'),
                     cursorColor: GameJoinTheme.buildLightTheme().primaryColor,
                     decoration: new InputDecoration(
                         border: InputBorder.none,

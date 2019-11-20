@@ -6,9 +6,25 @@ import 'package:gteams/manager_main/model/FacilityTmpData.dart';
 import 'package:gteams/manager_main/aliment.dart';
 import 'package:gteams/manager_main/facility_content.dart';
 
-class MainManagerPageScreen extends StatelessWidget {
+class MainManagerPageScreen extends StatefulWidget {
+/*
   MainManagerPageScreen() {
     SystemChrome.setPreferredOrientations(<DeviceOrientation>[DeviceOrientation.portraitUp]);
+  }
+*/
+  MainManagerPageScreen({Key key, this.onSignedOut}) : super(key: key);
+
+  final VoidCallback onSignedOut;
+
+  @override
+  _MainManagerPageScreenState createState() => _MainManagerPageScreenState();
+}
+
+class _MainManagerPageScreenState extends State<MainManagerPageScreen> {
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override

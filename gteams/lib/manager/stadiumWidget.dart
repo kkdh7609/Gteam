@@ -53,7 +53,7 @@ class TextWidget extends StatelessWidget{
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(header, style: TextStyle(
-          color: Color(0xff20253d), fontWeight: FontWeight.bold, fontSize: 13
+          color: Colors.blueGrey, fontWeight: FontWeight.bold, fontSize: 13
         )),
         TextFormField(
           //key: _formKey,
@@ -123,7 +123,7 @@ class PhoneWidget extends StatelessWidget{
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text("연 락 처", style: TextStyle(
-                            color: Color(0xff20253d), fontWeight: FontWeight.bold, fontSize: 13
+                            color: Colors.blueGrey, fontWeight: FontWeight.bold, fontSize: 13
                         )),
                         TextFormField(
                             key: formKey,
@@ -219,7 +219,7 @@ class TimeWidget extends StatelessWidget{
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text("운영시간", style: TextStyle(
-                    color: Color(0xff20253d), fontWeight: FontWeight.bold, fontSize: 13
+                    color: Colors.blueGrey, fontWeight: FontWeight.bold, fontSize: 13
                   )),
                   SizedBox(height: 4.0),
                   AutoSizeText(
@@ -256,7 +256,7 @@ class SegmentedControl extends StatelessWidget{
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Text(header, style:TextStyle(
-              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13
+              color: Colors.blueGrey, fontWeight: FontWeight.bold, fontSize: 13
           ))
         ),
         SizedBox(
@@ -265,7 +265,7 @@ class SegmentedControl extends StatelessWidget{
             children: children,
             groupValue: value,
             selectedColor: Color(0xff20253d),
-            pressedColor: Color(0xff20253d),
+            pressedColor: Color(0x0000253d),
             onValueChanged: onValueChanged,
           )
         )

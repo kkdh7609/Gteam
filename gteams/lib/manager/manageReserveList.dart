@@ -5,13 +5,11 @@ import 'package:gteams/game/game_create/GameCreateTheme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gteams/services/crud.dart';
 import 'package:gteams/manager/AdminData.dart';
+import 'package:gteams/root_page.dart';
 import 'package:gteams/pay/payMethod.dart';
 
 class ReserveList extends StatefulWidget {
-  ReserveList({Key key, this.adminData, this.onSignedOut}) : super(key: key);
-
-  final VoidCallback onSignedOut;
-  final AdminData adminData;
+  ReserveList({Key key}) : super(key: key);
 
   @override
   _ReserveListState createState() => _ReserveListState();
@@ -28,6 +26,7 @@ class _ReserveListState extends State<ReserveList> {
 
   @override
   void initState() {
+
     super.initState();
     this.flag = false;
   }
@@ -94,6 +93,7 @@ class _ReserveListState extends State<ReserveList> {
             ),
             onPressed: () {
               _showMaterialDialog();
+
               // 승인 이후 처리할 부분
             },
             child: Center(
@@ -120,7 +120,7 @@ class _ReserveListState extends State<ReserveList> {
             title: Text('확인'),
             content: SingleChildScrollView(
                 child: ListBody(
-              children: <Widget>[Text("예약 신청을 승인하시겠습니까?")],
+                  children: <Widget>[Text("예약 신청을 승인하시겠습니까?")],
             )),
             actions: <Widget>[
               FlatButton(
@@ -131,7 +131,8 @@ class _ReserveListState extends State<ReserveList> {
                       isAvailable = true;
                     }
                   },
-                  child: Text('취소')),
+                  child: Text('취소')
+              ),
               FlatButton(
                 onPressed: () {
                   if(isAvailable) {
@@ -252,7 +253,7 @@ class _ReserveListState extends State<ReserveList> {
 
   Widget gameInfo(){
     return StreamBuilder<QuerySnapshot>(
-        stream : Firestore.instance.collection("game3").where('loc_name', isEqualTo: widget.adminData.myStadium[0]).snapshots(),
+        stream : Firestore.instance.collection("game3").where('loc_name', isEqualTo: RootPage.adminData.myStadium[0]).snapshots(),
         builder: (context, snapshot){
           if(!snapshot.hasData) return LinearProgressIndicator();
           return reserveList(context,snapshot.data.documents);

@@ -12,7 +12,8 @@ import 'package:gteams/map/StadiumListData.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 
-typedef selectFunc = void Function(String,String);
+typedef selectFunc = void Function(String,String);                 // 경기장 이름, 경기장 id
+typedef createFunc = void Function(String, String, double, double);     // 주소, 경기장 id, 좌표값 2개
 
 String kGoogleApiKey = getSecureKey();
 GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
@@ -20,11 +21,12 @@ GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 enum mapReq { mapCheck, findLocation, newLocation }
 
 class MapTest extends StatefulWidget {
-  MapTest({this.onSelected, this.nowReq,this.stadiumData,this.stadiumList});
+  MapTest({this.onSelected, this.nowReq,this.stadiumData,this.stadiumList, this.needData});
   List<StadiumListData> stadiumList;
   final StadiumListData stadiumData; // GameRoom에서 한가지 방정보만 가지고 왔을때..
   final selectFunc onSelected;
-  final mapReq nowReq;
+  final mapReq nowReq; // mapCheck 는 목록 보임, 클릭시 정보 없음 / findLocation 은 목록 보임, 클릭시 정보 보임 / newLocation 은 목록 보임, 클릭은 좌표 가져오는 것
+  final createFunc needData;
 
   @override
   _MapTestState createState() => _MapTestState();
@@ -45,22 +47,27 @@ class _MapTestState extends State<MapTest> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: 1, viewportFraction: 0.8)..addListener(_onScroll);
-    if(widget.stadiumData != null ) {widget.stadiumList = [widget.stadiumData];}
-    widget.stadiumList.asMap().forEach(
-            (index,element){
-          element.locationCoords = new LatLng(element.lat, element.lng) ;
-          String nowLoc =
-          [element.locationCoords.latitude.toStringAsFixed(6), element.locationCoords.longitude.toStringAsFixed(6)].toString();
-          final coordinates = Coordinates(element.locationCoords.latitude, element.locationCoords.longitude);
-          _markers.add(Marker(
+    if(widget.nowReq != mapReq.newLocation) {
+      _pageController = PageController(initialPage: 1, viewportFraction: 0.8)
+        ..addListener(_onScroll);
+      if (widget.stadiumData != null) {
+        widget.stadiumList = [widget.stadiumData];
+      }
+      widget.stadiumList.asMap().forEach(
+              (index, element) {
+            element.locationCoords = new LatLng(element.lat, element.lng);
+            String nowLoc =
+            [element.locationCoords.latitude.toStringAsFixed(6), element.locationCoords.longitude.toStringAsFixed(6)].toString();
+            final coordinates = Coordinates(element.locationCoords.latitude, element.locationCoords.longitude);
+            _markers.add(Marker(
               markerId: MarkerId(nowLoc),
               draggable: false,
               infoWindow: InfoWindow(title: element.stadiumName, snippet: element.location),
               position: element.locationCoords,
-              onTap: () => _onMarkerPressed(index))
-          );
-        });
+              onTap: () => (widget.nowReq == mapReq.findLocation ? _onMarkerPressed(index) : {}),
+            ));
+          });
+    }
   }
 
   void _onScroll() {
@@ -136,6 +143,46 @@ class _MapTestState extends State<MapTest> {
     }
   }
 
+  Widget _alertOKButton(address, locId, lat, lng){
+    return FlatButton(
+      child: Text("OK"),
+      onPressed: (){
+        widget.needData(address, locId, lat, lng);
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  Widget _alertCancelButton(){
+    return FlatButton(
+      child: Text("Cancel"),
+      onPressed: (){
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  AlertDialog _alertDialog(title, address, lat, lng, locId){
+    return AlertDialog(
+        title: Text(title),
+        content: Text("\'" + address + "\'로 선택하시겠습니까?"),
+        actions: <Widget>[
+          _alertOKButton(address, locId, lat, lng),
+          _alertCancelButton()
+        ]
+    );
+  }
+
+  _showAlertDialog(title, address, lat, lng, locId) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return _alertDialog(title, address, lat, lng, locId);
+        }
+    );
+  }
+
   Future<String> _coordToAddress(coordinates) async{
     var results = await NewGeocoder(kGoogleApiKey, language: 'ko-KR,ko;').findAddressFromCoordinates(coordinates);
     var first = results.first;
@@ -145,66 +192,34 @@ class _MapTestState extends State<MapTest> {
 
   _onAddMarkerButtonPressed() {
     String nowLoc = [_lastMapPosition.latitude.toStringAsFixed(6), _lastMapPosition.longitude.toStringAsFixed(6)].toString();
-    String title = "This is a title";
+    String title = "선택된 위치";
     double latitude = _lastMapPosition.latitude;
     double longtitude = _lastMapPosition.longitude;
+    String _address;
     setState(
       () {
-        if (_tempMarker == nowLoc) {
-          _tempMarker = null;
-          _markers.remove(Marker(markerId: MarkerId(nowLoc)));
-        }
         _markers.add(
           Marker(
             markerId: MarkerId(nowLoc),
             position: _lastMapPosition,
             infoWindow: InfoWindow(
               title: title,
-              snippet: "This is snippet",
             ),
             onTap: () {
-              // print(nowLoc);
-              final coordinates = new Coordinates(latitude, longtitude);
-              /*_getAddress(coordinates).then((results) {
-                widget.onSelected(results);
-                Navigator.pop(context);
-              });*/
+              if(isAvailable){
+                isAvailable = false;
+
+                Coordinates coordinates = Coordinates(latitude, longtitude);
+                _coordToAddress(coordinates).then((address){
+                  _address = address;
+                  _showAlertDialog("주소 확인", _address, latitude, longtitude, nowLoc);
+                });
+                isAvailable = true;
+              }
             },
             icon: BitmapDescriptor.defaultMarker,
           ),
         );
-      },
-    );
-  }
-
-  _onAddMarkerButtonPressed2() {
-    String nowLoc = [_lastMapPosition.latitude.toStringAsFixed(6), _lastMapPosition.longitude.toStringAsFixed(6)].toString();
-
-    // print(_markers);
-    String title = "This is a title";
-    setState(
-      () {
-        if (!_markers.contains(Marker(markerId: MarkerId(nowLoc)))) {
-          // print(11);
-          // print(_lastMapPosition);
-          _tempMarker = nowLoc;
-          _markers.add(
-            Marker(
-              markerId: MarkerId(nowLoc),
-              position: _lastMapPosition,
-              infoWindow: InfoWindow(
-                title: title,
-                snippet: "This is snippet",
-              ),
-              onTap: () {
-                // print(nowLoc);
-                widget.onSelected(title,"loc");
-                Navigator.pop(context);
-              },
-              icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-            ),
-          );
-        }
       },
     );
   }
@@ -361,6 +376,7 @@ class _MapTestState extends State<MapTest> {
                   fontFamily: 'Dosis',
                   fontWeight: FontWeight.w600),
             )),
+        SizedBox(height: 5.0),
         Container(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -466,18 +482,18 @@ class _MapTestState extends State<MapTest> {
         _markers.remove(Marker(markerId: MarkerId(_tempMarker)));
       }
       _onCameraMove(newPosition);
-      _onAddMarkerButtonPressed2();
+      _onAddMarkerButtonPressed();
     }
   }
 
   Widget button(Function function, IconData icon, index) {
     return Theme(
-      data: ThemeData(primaryColor: Color(0xff3B5998)),
+      data: ThemeData(primaryColor: Color(0xff20253d)),
       child: FloatingActionButton(
         heroTag: "btn$index",
         onPressed: function,
         materialTapTargetSize: MaterialTapTargetSize.padded,
-        backgroundColor: Color(0xff3B5998),
+        backgroundColor: Color(0xff20253d),
         child: Icon(icon, size: 36.0),
       ),
     );
@@ -524,25 +540,32 @@ class _MapTestState extends State<MapTest> {
               mapType: _currentMapType,
               markers: _markers,
               onCameraMove: _onCameraMove),
-          Positioned(
-              bottom: 20.0,
-              child: Container(
-                  height: 200.0,
-                  width: MediaQuery.of(context).size.width,
-                  child: InkWell(
-                    child: PageView.builder(
-                        controller: _pageController,
-                        itemCount: widget.stadiumList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return _stadiumList(index);
-                        }
-                    ),
-                    onTap: () => {
-                      _onMarkerPressed(_pageController.page.toInt())
-                    },
-                  )
-              )
-          ),
+
+          if(widget.nowReq != mapReq.newLocation) ... [
+            Positioned(
+                bottom: 20.0,
+                child: Container(
+                    height: 200.0,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
+                    child: InkWell(
+                        child: PageView.builder(
+                            controller: _pageController,
+                            itemCount: widget.stadiumList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return _stadiumList(index);
+                            }
+                        ),
+                        onTap: () =>
+                        widget.nowReq == mapReq.findLocation ? {
+                          _onMarkerPressed(_pageController.page.toInt())
+                        } : {}
+                    )
+                )
+            ),
+          ],
           Padding(padding: EdgeInsets.all(16.0), child: Align(alignment: Alignment.topRight, child: mapButtons()))
         ],
       ),

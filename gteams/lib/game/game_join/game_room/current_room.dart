@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gteams/game/game_join/model/MemberListData.dart';
 import 'package:gteams/game/game_join/game_room/GameRoomTheme.dart';
+import 'package:gteams/map/StadiumListData.dart';
+import 'package:gteams/map/google_map.dart';
 import 'package:gteams/services/crud.dart';
 import 'package:gteams/game/game_join/model/GameListData.dart';
 
 class currentRoomPage extends StatefulWidget {
-  currentRoomPage({Key key, this.currentUserList, this.gameData, this.isFull}) : super(key: key);
+  currentRoomPage({Key key, this.currentUserList, this.gameData, this.stadiumData, this.isFull}) : super(key: key);
 
   List<dynamic> currentUserList;
+  final StadiumListData stadiumData;
   GameListData gameData;
   bool isFull;
 
@@ -21,9 +24,11 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
   var memberlist = MemberListData.memberList;
 
   final infoHeight = 100.0;
+  final infoHeight2 = 800.0;
   var opacity1 = 0.0;
   var opacity2 = 0.0;
   var opacity3 = 0.0;
+  bool isAvailable = true;
 
   var gameDocId;
   List<dynamic> gameDocIdList = [];
@@ -33,10 +38,10 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
   @override
   void initState() {
     super.initState();
+    this.isAvailable = true;
     this.memberlist = MemberListData.memberList;
     for (var i = 0; i < widget.currentUserList.length; i++) {
       var userQuery = crudObj.getDocumentByWhere('user', 'email', widget.currentUserList[i]);
-
       userQuery.then((data) {
         setState(() {
           if (data.documents.length >= 1) {
@@ -125,6 +130,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
+    final tempHeight = (MediaQuery.of(context).size.height - (MediaQuery.of(context).size.width / 1.2) + 24.0);
     return Scaffold(
       body: DefaultTabController(
         length: 3,
@@ -138,21 +144,18 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
             Divider(color: Colors.black, thickness: 1.0),
             Expanded(
               child: Container(
-                child: TabBarView(
-                    children: [
-                      ListView.builder(
-                        itemCount: this.memberlist.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return this.memberlist.length != 0
-                                 ? _member_info(this.memberlist[index].name, this.memberlist[index].address)
-                                 : LinearProgressIndicator();
-                          },
-                      ),
-                      Container(
-                        child: Text("Chatting ui"),
-                      ),
-                      _detail_tab()
-                    ]),
+                child: TabBarView(children: [
+                  ListView.builder(
+                    itemCount: this.memberlist.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return this.memberlist.length != 0 ? _member_info(this.memberlist[index].name, this.memberlist[index].address) : LinearProgressIndicator();
+                    },
+                  ),
+                  Container(
+                    child: Text("Chatting ui"),
+                  ),
+                  _detail_tab()
+                ]),
               ),
             )
           ],
@@ -333,16 +336,14 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                   child: widget.isFull
                       ? Container(
                           padding: const EdgeInsets.all(7.0),
-                          decoration: new BoxDecoration(
-                              border: new Border.all(color: Colors.white), borderRadius: BorderRadius.circular(5.0)),
+                          decoration: new BoxDecoration(border: new Border.all(color: Colors.white), borderRadius: BorderRadius.circular(5.0)),
                           child: Text(
                             "예약 접수중",
                             style: TextStyle(color: Colors.amberAccent, fontSize: 15.0, fontWeight: FontWeight.w600),
                           ))
                       : Container(
                           padding: const EdgeInsets.all(4.0),
-                          decoration: new BoxDecoration(
-                              border: new Border.all(color: Colors.white), borderRadius: BorderRadius.circular(5.0)),
+                          decoration: new BoxDecoration(border: new Border.all(color: Colors.white), borderRadius: BorderRadius.circular(5.0)),
                           child: Center(
                             child: Row(
                               children: <Widget>[
@@ -377,10 +378,11 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
         ));
   }
 
-  Widget getTimeBoxUI(String text1, String text2, Icon icon1) {
+  Widget getTimeBoxUI(String text1, String text2, Icon icon1, int isProvide) {
+    text1 = isProvide == 2 ? text1 + "(유료)" : text1;
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.28,
-      height: 110,
+      height: 115,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
@@ -392,34 +394,47 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
             ],
           ),
           child: Padding(
-            padding: const EdgeInsets.only(left: 18.0, right: 18.0, top: 12.0, bottom: 12.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+            padding: const EdgeInsets.only(left: 11.0, right: 11.0, top: 12.0, bottom: 12.0),
+            child: Stack(
+              alignment: Alignment.bottomCenter,
               children: <Widget>[
-                icon1,
-                Text(
-                  text1,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'Dosis',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
-                    letterSpacing: 0.27,
-                    color: GameRoomTheme.nearlyBlue,
-                  ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    icon1,
+                    Text(
+                      text1,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Dosis',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                        letterSpacing: 0.27,
+                        color: GameRoomTheme.nearlyBlue,
+                      ),
+                    ),
+                    Text(
+                      text2,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Dosis',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        letterSpacing: 0.27,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
                 ),
-                Text(
-                  text2,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'Dosis',
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
-                    letterSpacing: 0.27,
-                    color: Colors.black,
-                  ),
-                ),
+                isProvide >= 1
+                    ? Text("") // 제공할경우
+                    : Icon(
+                        // 제공하지 않을경우 X 표시 출력
+                        Icons.clear,
+                        size: 70,
+                        color: Colors.red,
+                      ),
               ],
             ),
           ),
@@ -428,7 +443,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
     );
   }
 
-  void _changeState(String tempStr) {
+  void _changeState(String tempStr, String tempStr2) {
     print(tempStr);
   }
 
@@ -436,7 +451,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
     final tempHeight = (MediaQuery.of(context).size.height - (MediaQuery.of(context).size.width / 1.2) + 24.0);
     return SingleChildScrollView(
         child: Container(
-      constraints: BoxConstraints(minHeight: infoHeight, maxHeight: tempHeight > infoHeight ? tempHeight : infoHeight),
+      constraints: BoxConstraints(minHeight: infoHeight2, maxHeight: tempHeight > infoHeight2 ? tempHeight : infoHeight2),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -444,7 +459,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
           Padding(
             padding: const EdgeInsets.only(top: 32.0, left: 18, right: 16),
             child: Text(
-              "Suwon-World Cup Stadium, Suwon, Gyeonggi-do",
+              widget.stadiumData.location,
               textAlign: TextAlign.left,
               style: TextStyle(
                 fontWeight: FontWeight.w600,
@@ -461,7 +476,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  "10,000 원",
+                  "총 비용 :" + widget.gameData.totalPrice.toString() + " 원 / 인당 :" + widget.gameData.perPrice.toString() + " 원",
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontWeight: FontWeight.w200,
@@ -502,42 +517,61 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    getTimeBoxUI("5 vs 5", "Match", Icon(FontAwesomeIcons.peopleCarry)),
-                    getTimeBoxUI("2시간", "Time", Icon(FontAwesomeIcons.clock)),
-                    getTimeBoxUI("신발 대여", "Shoe", Icon(FontAwesomeIcons.shoePrints)),
+                    getTimeBoxUI((widget.gameData.groupSize / 2).toInt().toString() + " vs " + (widget.gameData.groupSize / 2).toInt().toString(), "Match", Icon(FontAwesomeIcons.peopleCarry), 1),
+                    getTimeBoxUI(widget.gameData.startTime + "-" + widget.gameData.endTime, "Time", Icon(FontAwesomeIcons.clock), 1),
+                    InkWell(
+                        child: getTimeBoxUI("위치", "Location", Icon(FontAwesomeIcons.mapMarkedAlt), 1),
+                        onTap: () {
+                          if (isAvailable) {
+                            isAvailable = false;
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MapTest(
+                                          onSelected: _changeState,
+                                          nowReq: mapReq.mapCheck,
+                                          stadiumData: widget.stadiumData,
+                                        )));
+                          }
+                        })
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    getTimeBoxUI("위치", "Location", Icon(FontAwesomeIcons.mapMarkedAlt)),
-                    getTimeBoxUI("초보", "Skill", Icon(FontAwesomeIcons.users)),
-                    getTimeBoxUI("옷 대여", "Clothes", Icon(FontAwesomeIcons.tshirt)),
+                    getTimeBoxUI("공 대여", "Ball", Icon(FontAwesomeIcons.volleyballBall), widget.stadiumData.isBall),
+                    getTimeBoxUI("주차장 ", "Skill", Icon(FontAwesomeIcons.parking), widget.stadiumData.isParking),
+                    getTimeBoxUI("샤워장", "Shower", Icon(FontAwesomeIcons.shower), widget.stadiumData.isShower),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    getTimeBoxUI("팀 조끼", "Clothes", Icon(FontAwesomeIcons.tshirt), widget.stadiumData.isClothes),
+                    getTimeBoxUI("풋살화 ", "Shoes", Icon(FontAwesomeIcons.shoePrints), widget.stadiumData.isShoes),
+                    getTimeBoxUI("실력", "Level" + widget.gameData.gameLevel.toString(), Icon(FontAwesomeIcons.users), 1),
                   ],
                 ),
               ],
             ),
           ),
           Expanded(
-            child: AnimatedOpacity(
-              duration: Duration(milliseconds: 500),
-              opacity: opacity2,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
-                child: Text(
-                  "초보자분들 환영합니다. 풋살을 즐기시는 누구나 참가 신청 가능합니다.",
-                  textAlign: TextAlign.justify,
-                  style: TextStyle(
-                    fontFamily: 'Dosis',
-                    fontWeight: FontWeight.w200,
-                    fontSize: 14,
-                    letterSpacing: 0.27,
-                    color: GameRoomTheme.grey,
-                  ),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+              child: Text(
+                "초보자분들 환영합니다. 풋살을 즐기시는 누구나 참가 신청 가능합니다.",
+                textAlign: TextAlign.justify,
+                style: TextStyle(
+                  fontFamily: 'Dosis',
+                  fontWeight: FontWeight.w200,
+                  fontSize: 14,
+                  letterSpacing: 0.27,
+                  color: GameRoomTheme.grey,
                 ),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ),
