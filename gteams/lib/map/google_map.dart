@@ -123,8 +123,10 @@ class _MapTestState extends State<MapTest> {
   }
 
   _doPop(){
-    Navigator.pop(context);
-    Navigator.pop(context);
+      Navigator.pop(context);
+    if(this.mounted) {
+      Navigator.pop(context);
+    }
   }
 
   _onMarkerPressed(index){
