@@ -36,7 +36,7 @@ class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
 
   Widget makeCard(int index,GameListData gameData){
     return Card(
-        elevation: 8.0,
+        elevation: 10.0,
         margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
         child: Container(
           decoration: BoxDecoration(color: Colors.white),
@@ -51,7 +51,7 @@ class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
               ),
               title: Text(
                 gameData.gameName,
-                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontFamily: 'Dosis'),
               ),
               subtitle: Row(
                 children: <Widget>[

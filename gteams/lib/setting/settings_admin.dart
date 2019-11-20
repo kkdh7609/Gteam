@@ -10,10 +10,9 @@ import 'package:gteams/services/crud.dart';
 
 
 class SettingAdminPage extends StatefulWidget {
-  SettingAdminPage({Key key, this.gameData, this.onSignedOut}) : super(key: key);
+  SettingAdminPage({Key key, this.onSignedOut}) : super(key: key);
 
   final VoidCallback onSignedOut;
-  final GameListData gameData;
 
   @override
   State<StatefulWidget> createState() => new _SettingAdminPageState();

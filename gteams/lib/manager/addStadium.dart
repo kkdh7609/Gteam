@@ -197,8 +197,7 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
                         Card(
                             elevation: 4.0,
                             child: Container(
-                                color: Colors.cyanAccent
-
+                                color: Color(0xff20253d)
                               // Todo add child
                             )
                         ),

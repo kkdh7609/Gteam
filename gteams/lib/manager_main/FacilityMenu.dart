@@ -70,9 +70,9 @@ class _FacilityMenuPageState extends State<FacilityMenuPage> {
                                       child: Container(
                                         height: size.height * 0.2,
                                         decoration: BoxDecoration(color: Colors.white,
-                                            borderRadius: new BorderRadius.all(
-                                              Radius.circular(50.0),
-                                            ),
+                                          borderRadius: new BorderRadius.all(
+                                            Radius.circular(50.0),
+                                          ),
                                         ),
                                         child: Column(
                                           children: <Widget>[
