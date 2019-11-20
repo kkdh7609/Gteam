@@ -104,12 +104,12 @@ class _SettingUserState extends State<SettingUser> {
                         },
                       );
                       Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MainMenuPage(
-                                    onSignedOut: widget.onSignedOut,
-                                  ),
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MainMenuPage(
+                            onSignedOut: widget.onSignedOut,
                           ),
+                        ),
                       );
                     },
                     child: Center(
@@ -144,7 +144,7 @@ class _SettingUserState extends State<SettingUser> {
             groupValue: _selectedGender,
             onChanged: (Gender value) {
               setState(
-                () {
+                    () {
                   _selectedGender = value;
                 },
               );
@@ -156,7 +156,7 @@ class _SettingUserState extends State<SettingUser> {
             groupValue: _selectedGender,
             onChanged: (Gender value) {
               setState(
-                () {
+                    () {
                   _selectedGender = value;
                 },
               );
@@ -168,7 +168,7 @@ class _SettingUserState extends State<SettingUser> {
             groupValue: _selectedGender,
             onChanged: (Gender value) {
               setState(
-                () {
+                    () {
                   _selectedGender = value;
                 },
               );
@@ -253,7 +253,7 @@ class _SettingUserState extends State<SettingUser> {
                       borderRadius: BorderRadius.all(Radius.circular(4.0)),
                       onTap: () {
                         setState(
-                          () {
+                              () {
                             sport.isSelected = !sport.isSelected;
                           },
                         );
@@ -265,7 +265,7 @@ class _SettingUserState extends State<SettingUser> {
                             Icon(
                               sport.isSelected ? Icons.check_box : Icons.check_box_outline_blank,
                               color:
-                                  sport.isSelected ? GameJoinTheme.buildLightTheme().primaryColor : Colors.grey.withOpacity(0.6),
+                              sport.isSelected ? GameJoinTheme.buildLightTheme().primaryColor : Colors.grey.withOpacity(0.6),
                             ),
                             SizedBox(
                               width: 10,

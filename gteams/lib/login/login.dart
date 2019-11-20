@@ -13,8 +13,8 @@ import 'package:gteams/validator/login_validator.dart';
 import 'package:gteams/manager/usePhoto.dart';
 import 'package:gteams/manager/addStadium.dart';
 import 'package:gteams/manager/managerSetTime.dart';
-
 import 'package:gteams/manager_main/ManagerMainMenu.dart';
+import 'package:gteams/setting/settings_user.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({this.auth, this.onSignedIn});
@@ -425,7 +425,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                 child: GestureDetector(
                   onTap: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => ManagerMainMenuPage()));
-                  },
+                    },
                   child: Container(
                     padding: const EdgeInsets.all(9.0),
                     decoration: new BoxDecoration(

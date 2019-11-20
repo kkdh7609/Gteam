@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:gteams/game/game_join/model/GameListData.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gteams/root_page.dart';
 import 'package:gteams/login/login_auth.dart';
-import 'package:gteams/manager/managerSetTime.dart';
-import 'package:gteams/manager/manageReserveList.dart';
 import 'package:gteams/manager/AdminData.dart';
 import 'package:gteams/services/crud.dart';
-
+import 'package:gteams/manager_main/ManagerMainMenu.dart';
 
 class SettingAdminPage extends StatefulWidget {
-  SettingAdminPage({Key key, this.gameData, this.onSignedOut}) : super(key: key);
+  SettingAdminPage({Key key, this.onSignedOut}) : super(key: key);
 
   final VoidCallback onSignedOut;
-  final GameListData gameData;
 
   @override
   State<StatefulWidget> createState() => new _SettingAdminPageState();
 }
 
 class _SettingAdminPageState extends State<SettingAdminPage> {
-  AdminData _adminData;
+  AdminData _adminData = AdminData();
   crudMedthods crudObj = new crudMedthods();
 
   @override
@@ -29,17 +25,20 @@ class _SettingAdminPageState extends State<SettingAdminPage> {
     var userQuery = crudObj.getDocumentByWhere('user', 'email', RootPage.user_email);
 
     userQuery.then((data){
-      setState((){
-        if(data.documents.length >= 1){
-          _adminData.name = data.documents[0].data['name'];
-          _adminData.email = data.documents[0].data['email'];
-          _adminData.myStadium = data.documents[0].data['myStadium'];
-        }
-      });
+      if(data.documents.length >= 1) {
+        _adminData.name = data.documents[0].data['name'];
+        _adminData.email = data.documents[0].data['email'];
+        _adminData.myStadium = data.documents[0].data['myStadium'];
+
+        Navigator.pushReplacement(context, MaterialPageRoute(
+            builder: (context) =>
+                ManagerMainMenuPage(onSignedOut: widget.onSignedOut)));
+      }
     });
+
   }
 
-  Widget userInfo(){
+/*  Widget userInfo(){
     return StreamBuilder<QuerySnapshot>(
         stream : Firestore.instance.collection("user").where('email',isEqualTo: RootPage.user_email).snapshots(),
         builder: (context, snapshot){
@@ -75,13 +74,12 @@ class _SettingAdminPageState extends State<SettingAdminPage> {
           );
         }
     );
-  }
-
+  }*/
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: AppBar(
+        /*appBar: AppBar(
           title: Text("Setting Admin"),
           actions: <Widget>[
             new IconButton(
@@ -98,22 +96,11 @@ class _SettingAdminPageState extends State<SettingAdminPage> {
                 child: Column(
           children: <Widget>[
             userInfo(),
-            RaisedButton(
-              child: Text("경기장 예약 관리", style: TextStyle(color: Colors.black)),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SetTime()));
-              },
-            ),
-            RaisedButton(
-              child: Text("경기장 예약 승인", style: TextStyle(color: Colors.black)),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ReserveList(adminData: _adminData)));
-              },
-            ),
-
           ],
-        ))));
+        )
+            )
+        )*/
+        body: Text("loading")
+    );
   }
 }
