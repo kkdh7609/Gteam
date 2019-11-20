@@ -88,9 +88,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                 BoxShadow(color: DrawerTheme.grey.withOpacity(0.6), offset: Offset(2.0, 4.0), blurRadius: 8),
                               ],
                             ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.all(Radius.circular(60.0)),
-                              child: Image.asset("assets/image/userImage.png"),
+                            child: CircleAvatar(
+                              minRadius: 10,
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: AssetImage(
+                                "assets/image/userImage.png",
+                              ),
                             ),
                           ),
                         ),

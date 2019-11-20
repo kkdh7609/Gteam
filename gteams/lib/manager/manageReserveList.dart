@@ -78,18 +78,6 @@ class _ReserveListState extends State<ReserveList> {
     );
   }
 
-/*
-  Widget gameInfo(){
-    return StreamBuilder<QuerySnapshot>(
-        stream : Firestore.instance.collection("game3").where('id', isEqualTo: RootPage.adminData.myStadium[0]).snapshots(),
-        builder: (context, snapshot){
-          if(!snapshot.hasData) return LinearProgressIndicator();
-          return reserveListUI(context,snapshot.data.documents);
-        }
-    );
-  }
-*/
-
   Widget reserveListUI(BuildContext context, List<DocumentSnapshot> snapshot) {
     return Container(
         child: ListView.builder(
@@ -334,7 +322,8 @@ class _ReserveListState extends State<ReserveList> {
               gameData.startTime,
               gameData.endTime,
               gameData.groupSize,
-              gameData.totalPrice)
+              gameData.totalPrice
+          )
               : LinearProgressIndicator();
         });
   }
