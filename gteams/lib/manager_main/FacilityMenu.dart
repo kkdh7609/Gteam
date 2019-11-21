@@ -19,7 +19,7 @@ class _FacilityMenuPageState extends State<FacilityMenuPage> {
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
-            title: Text("에스빌드 풋살장", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white)),
+            title: Text("HM풋살파크 서수원점", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white)),
             centerTitle: true,
             backgroundColor: Color(0xff20253d)),
         body: SafeArea(

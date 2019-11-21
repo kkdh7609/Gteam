@@ -71,7 +71,7 @@ class _MenuPagerState extends State<MenuPager> {
           titleText,
           style: TextStyle(
             color: Colors.white,
-            fontSize: 40.0,
+            fontSize: 30.0,
             fontWeight: FontWeight.w600,
             fontFamily: 'Dosis',
           ),
