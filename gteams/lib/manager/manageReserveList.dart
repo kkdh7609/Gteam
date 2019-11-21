@@ -78,25 +78,6 @@ class _ReserveListState extends State<ReserveList> {
     );
   }
 
-  Widget reserveListUI(BuildContext context, List<DocumentSnapshot> snapshot) {
-    return Container(
-        child: ListView.builder(
-      itemCount: snapshot.length,
-      scrollDirection: Axis.vertical,
-      itemBuilder: (context, index) {
-        this._reserveGame = snapshot
-            .map((data) => GameListData.fromJson(data.data))
-            .toList()[index];
-        return makeCard(
-            this._reserveGame.gameName,
-            this._reserveGame.startTime,
-            this._reserveGame.endTime,
-            this._reserveGame.groupSize,
-            this._reserveGame.totalPrice);
-      },
-    ));
-  }
-
   Widget makeCard(String title, String startTime, String endTime, int groupSize,
       int totalPrice) {
     return Card(
@@ -339,7 +320,7 @@ class _ReserveListState extends State<ReserveList> {
       appBar: AppBar(
           centerTitle: true, elevation: 0.1, title: Text("경기장 예약 목록 관리")),
       body: Container(
-          child: reserveList != null ? _buildbody() : LinearProgressIndicator()
+          child: _buildbody()
       ),
     );
   }

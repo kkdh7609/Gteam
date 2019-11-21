@@ -164,11 +164,6 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
   }
 
   Widget _member_info(String name, String address, int idx) {
-    String img;
-    if(idx % 2==0)
-      img = "assets/image/userImage.png";
-    else
-      img = "assets/image/userImage2.png";
     return Card(
       key: ValueKey(name),
       elevation: 8.0,
@@ -184,7 +179,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                   tag: "avatar_" + name,
                   child: CircleAvatar(
                     radius: 32,
-                    backgroundImage: AssetImage(img),
+                    backgroundImage: AssetImage("assets/image/userImage.png"),
                   ))),
           title: Text(
             name,
@@ -205,49 +200,6 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
               ]))
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildListItem(BuildContext context, MemberListData member) {
-    return Card(
-      key: ValueKey(member.name),
-      elevation: 8.0,
-      margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-      child: Container(
-        decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
-        child: ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-          leading: Container(
-              padding: EdgeInsets.only(right: 12.0),
-              decoration: new BoxDecoration(border: new Border(right: new BorderSide(width: 1.0, color: Colors.white24))),
-              child: Hero(
-                  tag: "avatar_" + member.name,
-                  child: CircleAvatar(
-                    radius: 32,
-                    backgroundImage: NetworkImage(member.photo),
-                  ))),
-          title: Text(
-            member.name,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-          subtitle: Row(
-            children: <Widget>[
-              new Flexible(
-                  child: new Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                RichText(
-                  text: TextSpan(
-                    text: member.address,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  maxLines: 3,
-                  softWrap: true,
-                )
-              ]))
-            ],
-          ),
-          trailing: Icon(Icons.group, color: Colors.white, size: 30.0),
         ),
       ),
     );
