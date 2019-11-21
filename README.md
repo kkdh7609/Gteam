@@ -25,10 +25,10 @@
 ---------------------------------------
 ## To-Do List 
 # DUE DATE : 2019-11-13 
-- 김도현: (로그인 창)       로그인 실패시에, Pop-up 창 </br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(상세 게임 방)    모임 신청시에 여부 묻는 Pop-up 창 </br>
-- 김영운: (로그인 창)       GoogleLogin / Email 인증 </br>
-          (현재 방 목록창)  chatting </br>
+- 김도현: (로그인 창)       로그인 실패시에, Pop-up 창 </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+(상세 게임 방)    모임 신청시에 여부 묻는 Pop-up 창 </br>
+- 김영운: (로그인 창)       GoogleLogin / Email 인증 </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          (현재 방 목록창)  chatting </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           (ALL PAGES)       풋살장 DB 구축  </br>
 - 김학준: (유저 프로필 수정) 사진 변경 추가  </br>
 - 안우일: (시설 관리자 메인) 시설 추가 </br>
