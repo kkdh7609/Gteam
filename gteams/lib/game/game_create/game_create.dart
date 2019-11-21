@@ -7,7 +7,6 @@ import 'package:gteams/map/google_map.dart';
 import 'package:gteams/game/game_create/GameCreateTheme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gteams/map/StadiumListData.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gteams/util/customTimePicker.dart';
 import 'package:gteams/pay/payMethod.dart';
 
@@ -27,10 +26,10 @@ class _GameCreatePageState extends State<GameCreatePage> {
 
   String _gameName;
   String _selectedSports = null;
-  String _dateText = "Select Date";
-  String _startTimeText = "Start Time";
-  String _endTimeText = "End Time";
-  String _loc_name = "Select Location";
+  String _dateText = "날짜 선택";
+  String _startTimeText = "시작 시간";
+  String _endTimeText = "종료 시간";
+  String _loc_name = "장소 선택";
   String _stadium_id = "temp Id";
   DocumentReference _stadiumRef;
 
@@ -44,7 +43,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
   Gender _selectedGender = null;
 
   List<DropdownMenuItem<String>> _sportsList = [];
-  List<String> _sports = ["Futsal", "Table Tennis", "Bowling", "Basketball", "Baseball"];
+  List<String> _sports = ["풋살", "탁구", "볼링", "농구", "야구"];
 
   DateTime _date = DateTime.now();
   TimeOfDay _startTime = TimeOfDay.now();
@@ -234,7 +233,10 @@ class _GameCreatePageState extends State<GameCreatePage> {
     ];
 
     return Scaffold(
-      appBar: AppBar(title: Text("Create the Game", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white)), centerTitle: true, backgroundColor: GameCreateTheme.buildLightTheme().primaryColor),
+      appBar: AppBar(
+          title: Text("게임 생성", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white)),
+          centerTitle: true,
+          backgroundColor: GameCreateTheme.buildLightTheme().primaryColor),
       body: Container(
         child: Form(
           key: _formKey,
@@ -500,7 +502,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
               );
             },
           ),
-          Text("Male", style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w700, fontSize: 16)),
+          Text("남성", style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w700, fontSize: 16)),
           Radio(
             value: Gender.FEMALE,
             groupValue: _selectedGender,
@@ -513,7 +515,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
               );
             },
           ),
-          Text("Female", style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w700, fontSize: 16)),
+          Text("여성", style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w700, fontSize: 16)),
         ],
       ),
     );
@@ -719,7 +721,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
                 _showAlertDialog("생성 실패", "종료 시간을 선택해주세요.");
               } else if (_textEditingController_size.text.length == 0) {
                 _showAlertDialog("생성 실패", "총 인원을 입력해주세요.");
-              } else if (int.parse(_textEditingController_size.text) < 10 || int.parse(_textEditingController_size.text) > 30) {
+              } else if (int.parse(_textEditingController_size.text) < 2 || int.parse(_textEditingController_size.text) > 30) {
                 _showAlertDialog("생성 실패", "모집 인원: 10 ~ 30 사이의 값을 입력하세요");
               } else if (_textEditingController_level.text.length == 0) {
                 _showAlertDialog("생성 실패", "희망 수준을 선택해주세요.");
@@ -731,7 +733,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
             },
             child: Center(
               child: Text(
-                "Create Game",
+                "게임 생성 완료",
                 style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w500, fontSize: 18, color: Colors.white),
               ),
             ),

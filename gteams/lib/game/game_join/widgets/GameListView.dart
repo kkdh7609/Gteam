@@ -255,8 +255,6 @@ class GameListView extends StatelessWidget {
                             ],
                           ),
                           onTap: () {
-                            print(2222222222222);
-                            print(docId);
                             Navigator.push(
                               context,
                               MaterialPageRoute(

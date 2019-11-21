@@ -76,7 +76,8 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
 
   Widget _alertButton(){
     return FlatButton(
-      child: Text("OK"),
+      color: Color(0xff20253d),
+      child: Text("OK", style: TextStyle(color:Colors.white)),
       onPressed: (){
         Navigator.of(context).pop();
       },

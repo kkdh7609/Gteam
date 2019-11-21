@@ -22,7 +22,7 @@ class FacilityWidget extends StatelessWidget {
         Container(
           child: Column(
             children: <Widget>[
-              Text(facility.name, style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.w800, fontFamily: 'Dosis')),
+              Text(facility.name, style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w800, fontFamily: 'Dosis')),
               Padding(
                 padding: EdgeInsets.only(top: 15.0),
                 child: facility.subtitle == null ? SizedBox(height: 17.0) :

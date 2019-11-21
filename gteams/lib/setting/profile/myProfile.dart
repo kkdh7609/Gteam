@@ -52,7 +52,7 @@ class _UserProfileState extends State<UserProfile> {
               });
             },
           ),
-          Text("남성", style: TextStyle(fontSize: 16, fontFamily: 'Dosis')),
+          Text("Male", style: TextStyle(fontSize: 16, fontFamily: 'Dosis')),
           SizedBox(
             width: 20,
           ),
@@ -66,7 +66,7 @@ class _UserProfileState extends State<UserProfile> {
               });
             },
           ),
-          Text("여성", style: TextStyle(fontSize: 16, fontFamily: 'Dosis')),
+          Text("Female", style: TextStyle(fontSize: 16, fontFamily: 'Dosis')),
         ],
       ),
     );
@@ -96,7 +96,7 @@ class _UserProfileState extends State<UserProfile> {
                     padding: EdgeInsets.symmetric(horizontal: 20.0),
                   ),
                   Text(
-                    "선호 시간목록 수정",
+                    "Modify Preference Time",
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w500,
@@ -145,11 +145,11 @@ class _UserProfileState extends State<UserProfile> {
 
   Widget _title(String title) {
     return Padding(
-      padding: const EdgeInsets.only(top: 20.0),
+      padding: const EdgeInsets.only(top: 15.0),
       child: Text(
         title,
         style: TextStyle(
-            color: Colors.black, fontWeight: FontWeight.w700, fontSize: 18.0),
+            color: Colors.black, fontWeight: FontWeight.w900, fontSize: 18.0, fontFamily:'Dosis'),
       ),
     );
   }
@@ -339,6 +339,7 @@ class _UserProfileState extends State<UserProfile> {
                                     child: Column(
                                       children: <Widget>[
                                         _title("선호 종목"),
+                                        SizedBox(height: 10),
                                         _preferenceSport(),
                                         _title("선호 시간"),
                                         _preferenceTime(),

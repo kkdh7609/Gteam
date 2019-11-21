@@ -9,23 +9,23 @@ class SettingListData {
 
   static List<SettingListData> sportList = [
     SettingListData(
-      titleTxt: '축구',
+      titleTxt: 'Futsal',
       isSelected: false,
     ),
     SettingListData(
-      titleTxt: '풋살',
+      titleTxt: 'Table Tennis',
       isSelected: false,
     ),
     SettingListData(
-      titleTxt: '탁구',
+      titleTxt: 'Bowling',
       isSelected: true,
     ),
     SettingListData(
-      titleTxt: '볼링',
+      titleTxt: 'Basketball',
       isSelected: false,
     ),
     SettingListData(
-      titleTxt: '테니스',
+      titleTxt: 'Baseball',
       isSelected: false,
     ),
   ];
