@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gteams/menu/drawer/DrawerTheme.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gteams/game/game_join/model/MemberListData.dart';
 import 'package:gteams/game/game_join/game_room/GameRoomTheme.dart';
@@ -47,7 +48,9 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
           if (data.documents.length >= 1) {
             var name = data.documents[0].data['name'];
             var address = data.documents[0].data['prferenceLoc'];
-            this.memberlist.add(MemberListData(name: name, address: address));
+            var imagePath = data.documents[0].data['imagePath'];
+
+            this.memberlist.add(MemberListData(name: name, address: address, imagePath: imagePath));
           }
         });
       });
@@ -147,7 +150,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                   ListView.builder(
                     itemCount: this.memberlist.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return this.memberlist.length != 0 ? _member_info(this.memberlist[index].name, this.memberlist[index].address, index) : LinearProgressIndicator();
+                      return this.memberlist.length != 0 ? _member_info(this.memberlist[index].name, this.memberlist[index].address, this.memberlist[index].imagePath, index) : LinearProgressIndicator();
                     },
                   ),
                   Container(
@@ -163,7 +166,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
     );
   }
 
-  Widget _member_info(String name, String address, int idx) {
+  Widget _member_info(String name, String address, String imagePath, int idx) {
     return Card(
       key: ValueKey(name),
       elevation: 8.0,
@@ -173,14 +176,23 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
         child: ListTile(
           contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
           leading: Container(
-              padding: EdgeInsets.only(right: 12.0),
-              decoration: new BoxDecoration(border: new Border(right: new BorderSide(width: 1.0, color: Colors.white24))),
-              child: Hero(
-                  tag: "avatar_" + name,
-                  child: CircleAvatar(
-                    radius: 32,
-                    backgroundImage: AssetImage("assets/image/userImage.png"),
-                  ))),
+            height: 70,
+            width: 70,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: <BoxShadow>[
+                BoxShadow(color: DrawerTheme.grey.withOpacity(0.6), offset: Offset(2.0, 4.0), blurRadius: 8),
+              ],
+            ),
+            child: CircleAvatar(
+                minRadius: 10,
+                backgroundColor: Colors.transparent,
+                backgroundImage: imagePath == null ?
+                AssetImage("assets/image/profile_pic.png"): NetworkImage(
+                    imagePath
+                )
+            ),
+          ),
           title: Text(
             name,
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),

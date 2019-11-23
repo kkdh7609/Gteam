@@ -91,9 +91,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
                             child: CircleAvatar(
                               minRadius: 10,
                               backgroundColor: Colors.transparent,
-                              backgroundImage: AssetImage(
-                                "assets/image/userImage.png",
-                              ),
+                              backgroundImage: _userData.imagePath == null ?
+                              AssetImage("assets/image/profile_pic.png"): NetworkImage(
+                                  _userData.imagePath
+                              )
                             ),
                           ),
                         ),

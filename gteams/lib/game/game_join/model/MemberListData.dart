@@ -2,19 +2,19 @@
 class MemberListData {
   String name;
   String address;
-  String photo;
+  String imagePath;
 
   MemberListData({
     this.name,
     this.address,
-    this.photo
+    this.imagePath
   });
 
   factory MemberListData.fromJson(Map<String, dynamic> json){
     return MemberListData(
       name: json['name'],
       address: json['address'],
-//      photo: json['photo'],
+      imagePath: json['imagePath'],
     );
   }
 

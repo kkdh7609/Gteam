@@ -4,6 +4,7 @@ class UserData {
   String gender;
   String preferenceLoc;
   List<dynamic> preferenceSports;
+  String imagePath;
 
   UserData({
     this.name = "",
@@ -11,6 +12,7 @@ class UserData {
     this.gender = "",
     this.preferenceLoc = "",
     this.preferenceSports,
+    this.imagePath = "",
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class UserData {
       gender: json['gender'],
       preferenceLoc: json['prferenceLoc'],
       preferenceSports: json['sportList'],
+      imagePath: json['imagePath'],
     );
   }
 
