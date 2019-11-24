@@ -8,10 +8,11 @@ import 'package:gteams/game/game_join/widgets/SliderView.dart';
 import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 
 class SettingUser extends StatefulWidget {
-  SettingUser({Key key, this.onSignedOut, this.userDocID}) : super(key: key);
+  SettingUser({Key key, this.onSignedOut, this.userDocID, this.changeInfoStatus}) : super(key: key);
 
   final String userDocID;
   final VoidCallback onSignedOut;
+  final VoidCallback changeInfoStatus;
 
   @override
   _SettingUserState createState() => _SettingUserState();
@@ -103,14 +104,15 @@ class _SettingUserState extends State<SettingUser> {
                           // It can update array type field
                         },
                       );
-                      Navigator.pushReplacement(
+                      /*Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => MainMenuPage(
                             onSignedOut: widget.onSignedOut,
                           ),
                         ),
-                      );
+                      );*/
+                      widget.changeInfoStatus();
                     },
                     child: Center(
                       child: Text(

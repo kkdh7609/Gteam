@@ -90,6 +90,7 @@ class _RootPageState extends State<RootPage> {
           return new SettingUser(
             onSignedOut: _onSignedOut,
             userDocID: _userDocID,
+            changeInfoStatus: changeInfoStatus,
           );
         } else {
           //초기로그인이 아닐때
@@ -110,6 +111,12 @@ class _RootPageState extends State<RootPage> {
       default:
         return _buildWaitingScreen();
     }
+  }
+
+  void changeInfoStatus(){
+    setState(() {
+      _infoStatus = true;
+    });
   }
 
   void onLoggedIn() {
