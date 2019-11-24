@@ -17,7 +17,7 @@ class GameListView extends StatelessWidget {
 
   Widget clearIcon(int isProvide){
     return isProvide >= 1 ?
-    SizedBox(width: 60,)  // 제공할경우
+    SizedBox(width: 60)  // 제공할경우
         :
     Icon( // 제공하지 않을경우 X 표시 출력
       Icons.clear,
@@ -29,7 +29,6 @@ class GameListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return AnimatedBuilder(
       animation: animationController,
       builder: (BuildContext context, Widget child) {
@@ -146,9 +145,7 @@ class GameListView extends StatelessWidget {
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.only(top: 25),
-                                                child: Stack(
-                                                  children: <Widget>[
-                                                    Row(
+                                                child: Row(
                                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                       children: <Widget>[
                                                         //Padding(
@@ -159,9 +156,15 @@ class GameListView extends StatelessWidget {
                                                           mainAxisAlignment: MainAxisAlignment.start,
                                                           crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: <Widget>[
-                                                            stadiumData.isClothes != 0 ?
-                                                            Icon(FontAwesomeIcons.tshirt, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
-                                                            Icon(FontAwesomeIcons.tshirt, color: Colors.grey, size: 28),
+                                                            stadiumData.isClothes == 0 ?
+                                                                Stack(
+                                                                  children: <Widget>[
+                                                                    Icon(FontAwesomeIcons.tshirt, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35),
+//                                                                    child: Icon( Icons.clear, size: 70, color: Color(0xFF880E4F))
+                                                                  ]
+                                                                ) :
+                                                            Icon(FontAwesomeIcons.tshirt, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35),
+//                                                            Icon(FontAwesomeIcons.tshirt, color: Colors.grey, size: 28),
                                                             SizedBox(height: 5),
                                                             Text(
                                                               "팀 조끼",
@@ -180,7 +183,11 @@ class GameListView extends StatelessWidget {
                                                           crossAxisAlignment: CrossAxisAlignment.center,
                                                           children: <Widget>[
                                                             stadiumData.isBall != 0 ?
-                                                            Icon(FontAwesomeIcons.volleyballBall, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35,) :
+                                                            Stack(children: <Widget>[
+                                                              Icon(FontAwesomeIcons.volleyballBall, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35),
+
+                                                            ],):
+                                                            //Icon(FontAwesomeIcons.volleyballBall, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35,) :
                                                             Icon(FontAwesomeIcons.volleyballBall, color: Colors.grey, size: 28,),
                                                             SizedBox(height: 5),
                                                             Text(
@@ -232,20 +239,6 @@ class GameListView extends StatelessWidget {
                                                         SizedBox(width: 20),
                                                       ],
                                                     ),
-                                                    Row(
-                                                        children: <Widget>[
-                                                          SizedBox(width: 10),
-                                                          clearIcon(stadiumData.isClothes,),
-                                                          SizedBox(width: 20),
-                                                          clearIcon(stadiumData.isBall),
-                                                          SizedBox(width: 20),
-                                                          clearIcon(stadiumData.isParking),
-                                                          SizedBox(width: 20),
-                                                          clearIcon(stadiumData.isShower),
-                                                        ]
-                                                    )
-                                                  ],
-                                                )
                                               ),
                                             ],
                                           ),
