@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gteams/game/game_join/game_room/current_room.dart';
@@ -8,6 +9,7 @@ import 'package:gteams/game/game_join/game_room/GameRoomTheme.dart';
 import 'package:gteams/root_page.dart';
 import 'package:gteams/services/crud.dart';
 import 'package:gteams/pay/payMethod.dart';
+import 'package:gteams/util/alertUtil.dart';
 
 class GameRoomPage extends StatefulWidget {
   final String docId;
@@ -92,6 +94,39 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
         _alertButton(),
       ]
     );
+  }
+
+  joinGame(fundData, price) async {
+    if (isAvailable) {
+      isAvailable = false;
+      // 여기에 한번 다시 받아야 함( 방 들어와 있는 동안 새로운 인원 들어갔을 때 문제 )
+      if (widget.gameData.groupSize >= currentUserList.length) {
+        int newFund = fundData - price;
+        //reserve_status = widget.gameData.groupSize == currentUserList.length ? 1 : 0; // 1 => 방이 가득찼을때 0 방 가득 안찼을때
+        await payObj.updateFund(newFund);
+        await crudObj.updateDataThen('game3', widget.docId, { 'userList': currentUserList, 'reserve_status': widget.gameData.groupSize == currentUserList.length ? 1 : 0,});
+        DocumentSnapshot gameDocumentary = await crudObj.getDocumentById('game3', widget.docId);
+        reserve_status = gameDocumentary.data['reserve_status'];
+        DocumentSnapshot userDoc = await crudObj.getDocumentById('user', RootPage.userDocID);
+        userGameList = List.from(userDoc.data['gameList']);
+        userGameList.add(widget.docId);
+        await crudObj.updateDataThen('user', RootPage.userDocID, {'gameList': userGameList});
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>
+            currentRoomPage(currentUserList: currentUserList, gameData: widget.gameData, stadiumData: widget.stadiumData, reserve_status: reserve_status,),
+            fullscreenDialog: true)).then((data) {});
+        //Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList,gameData: widget.gameData,stadiumData: widget.stadiumData,reserve_status: reserve_status,), fullscreenDialog: true)).then((data){
+        if (this.mounted) {
+          setState(() {
+            isEnter = false;
+            isAvailable = true;
+          });
+        }
+      }
+      else {
+        isAvailable = true;
+        showAlertDialog("참가 실패", "방이 이미 가득찼습니다.", context);
+      }
+    }
   }
 
   @override
@@ -307,60 +342,100 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                 children: <Widget>[
                   isEnter ?
                     InkWell( //현재 참여중 아닐때
-                    onTap:(){
-                      currentUserList = widget.initialUserList.toList();
-                      currentUserList.add(RootPage.user_email);
-                      //crudObj.getDocumentById('game3', widget.docId).then((data){
-                        int price =  widget.gameData.perPrice;
-                        payObj.getFund().then((fundData){
-                          if(fundData >= price){
-                            int newFund = fundData - price;
-                            //reserve_status = widget.gameData.groupSize == currentUserList.length ? 1 : 0; // 1 => 방이 가득찼을때 0 방 가득 안찼을때
-                            payObj.updateFund(newFund).then((waitData1){
-                              crudObj.updateDataThen('game3', widget.docId, {
-                                'userList' : currentUserList,
-                                'reserve_status' : widget.gameData.groupSize == currentUserList.length ? 1 : 0,
-                              }).then((waitData2){
-                                crudObj.getDocumentById('game3', widget.docId).then((gameDocument1){
-                                  reserve_status = gameDocument1.data['reserve_status'];
-                                });
-                                crudObj.getDocumentById('user',RootPage.userDocID).then((userDoc){
-                                  userGameList=List.from(userDoc.data['gameList']);
-                                  userGameList.add(widget.docId);
-                                  crudObj.updateDataThen('user', RootPage.userDocID, {'gameList' : userGameList}).then((data){
-                                    print("성공..");
-                                  });
-                                });
-                                if (isAvailable) {
-                                  isAvailable = false;
-                                  //int reserve_status = widget.gameData.groupSize == currentUserList.length ? 1 : 0; // 1 => 방이 가득찼을때 0 방 가득 안찼을때
-                                  crudObj.getDocumentById('game3', widget.docId).then((gameDocument1){
-                                    reserve_status = gameDocument1.data['reserve_status'];
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList,gameData: widget.gameData,stadiumData: widget.stadiumData,reserve_status: reserve_status,), fullscreenDialog: true)).then((data){
-                                    });
-                                  //Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList,gameData: widget.gameData,stadiumData: widget.stadiumData,reserve_status: reserve_status,), fullscreenDialog: true)).then((data){
-                                    if(this.mounted){
-                                      setState(() {
-                                        isEnter = false;
-                                        isAvailable =true;
-                                      });
-                                    }
-                                  });
-                                }
-                              });
-                            });
-                          }
-                          else{
+                      onTap: () async {
+                          currentUserList = widget.initialUserList.toList();
+                          currentUserList.add(RootPage.user_email);
+                          //crudObj.getDocumentById('game3', widget.docId).then((data){
+                          int price = widget.gameData.perPrice;
+                          int fundData = await payObj.getFund();
+                          if (fundData >= price) {
                             showDialog(
                               context: context,
                               builder: (BuildContext context){
-                                return _alertDialog("참가 실패", "포인트가 부족합니다");
+                                return AlertDialog(
+                                  title: Text("알림"),
+                                  content: Text("$price 포인트가 소모됩니다. 방에 참여하시겠습니까?"),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      color: Color(0xff20253d),
+                                      child: Text('OK', style: TextStyle(color: Colors.white)),
+                                      onPressed: (){
+                                        Navigator.of(context).pop();
+                                        joinGame(fundData, price);
+                                      },
+                                    ),
+                                    FlatButton(
+                                      color: Color(0xff20253d),
+                                      child: Text("Cancel", style: TextStyle(color: Colors.white)),
+                                      onPressed: (){
+                                        Navigator.of(context).pop();
+                                      },
+                                    )
+                                  ]
+                                );
                               }
                             );
                           }
+                          else {
+                            showAlertDialog("참가 실패", "포인트가 부족합니다.", context);
+                          }
+                        },
+              /*onTap:(){
+                if (isAvailable) {
+                  isAvailable = false;
+                  currentUserList = widget.initialUserList.toList();
+                  currentUserList.add(RootPage.user_email);
+                  //crudObj.getDocumentById('game3', widget.docId).then((data){
+                  int price = widget.gameData.perPrice;
+                  payObj.getFund().then((fundData) {
+                    if (fundData >= price) {
+                      if(widget.gameData.groupSize >= currentUserList.length) {
+                        int newFund = fundData - price;
+                        //reserve_status = widget.gameData.groupSize == currentUserList.length ? 1 : 0; // 1 => 방이 가득찼을때 0 방 가득 안찼을때
+                        payObj.updateFund(newFund).then((waitData1) {
+                          crudObj.updateDataThen('game3', widget.docId, {
+                            'userList': currentUserList,
+                            'reserve_status': widget.gameData.groupSize == currentUserList.length ? 1 : 0,
+                          }).then((waitData2) {
+                            crudObj.getDocumentById('game3', widget.docId).then((gameDocument1) {
+                              reserve_status = gameDocument1.data['reserve_status'];
+                              crudObj.getDocumentById('user', RootPage.userDocID).then((userDoc) {
+                                userGameList = List.from(userDoc.data['gameList']);
+                                userGameList.add(widget.docId);
+                                crudObj.updateDataThen('user', RootPage.userDocID, {'gameList': userGameList}).then((data) {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                                      currentRoomPage(currentUserList: currentUserList, gameData: widget.gameData, stadiumData: widget.stadiumData, reserve_status: reserve_status,),
+                                      fullscreenDialog: true)).then((data) {});
+                                  //Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList,gameData: widget.gameData,stadiumData: widget.stadiumData,reserve_status: reserve_status,), fullscreenDialog: true)).then((data){
+                                  if (this.mounted) {
+                                    setState(() {
+                                      isEnter = false;
+                                      isAvailable = true;
+                                    });
+                                  }
+                                });
+                              });
+                            });
+                          });
                         });
-                      //});
-                    },
+                      }
+                      else{
+                        showAlertDialog("참가 실패", "방이 이미 가득찼습니다.", context);
+                      }
+                    }
+                    else {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return _alertDialog("참가 실패", "포인트가 부족합니다");
+                          }
+                      );
+                      isAvailable = true;
+                    }
+                  });
+                }
+                //});
+              },*/
                     child: Container(
                       height: 48,
                       width: 350,

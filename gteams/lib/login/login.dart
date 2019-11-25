@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,6 +16,7 @@ import 'package:gteams/manager/addStadium.dart';
 import 'package:gteams/manager/managerSetTime.dart';
 import 'package:gteams/manager_main/ManagerMainMenu.dart';
 import 'package:gteams/setting/settings_user.dart';
+import 'package:gteams/util/alertUtil.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({this.auth, this.onSignedIn});
@@ -43,8 +45,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   FormMode _formMode = FormMode.LOGIN;
   bool isAdmin = false;
   bool _isLoading;
+  bool _isIos = Platform.isIOS;
   String _success = "";
-  bool _isIos;
 
   final FocusNode myFocusNodeEmailLogin = FocusNode();
   final FocusNode myFocusNodePasswordLogin = FocusNode();
@@ -702,6 +704,31 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
         }
       } catch (e) {
         print('Error: $e');
+        String errorMsg;
+        if(Platform.isAndroid){
+          if(e.message == 'There is no user record corresponding to this identifier. The user may have been deleted.' || e.message == 'The password is invalid or the user does not have a password.'){
+            errorMsg = "잘못된 아이디 혹은 비밀번호입니다. 다시 한 번 확인해 주세요.";
+          }
+          else if(e.message == 'A network error (such as timeout, interrupted connection or unreachable host) has occurred.'){
+            errorMsg = "네트워크 연결을 확인해 주세요.";
+          }
+          else{
+            errorMsg = "알 수 없는 오류가 발생했습니다. 다시 시도해 주세요";
+          }
+        }
+        else if(Platform.isIOS){
+          if(e.code == 'Error 17011' || e.code == 'Error 17009'){
+            errorMsg = "잘못된 아이디 혹은 비밀번호입니다. 다시 한 번 확인해 주세요.";
+          }
+          else if(e.code == 'Error 17020'){
+            errorMsg = "네트워크 연결을 확인해 주세요.";
+          }
+          else{
+            errorMsg = "알 수 없는 오류가 발생했습니다. 다시 시도해 주세요";
+          }
+        }
+
+        showAlertDialog("로그인 실패", errorMsg, context);
         setState(
           () {
             _isLoading = false;
