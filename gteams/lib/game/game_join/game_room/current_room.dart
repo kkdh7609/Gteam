@@ -73,13 +73,13 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
           });
         } else {
           // 경기장에 데이터 있을때
-          gameDocIdList2 = document.data['gameList'];
+          gameDocIdList2 = new List<dynamic>.from(document.data['gameList']);
           if (gameDocIdList2.contains(gameDocId)) {
             print("이미 있는 데이터임");
           } else {
-            gameDocIdList.add(gameDocId);
+            gameDocIdList2.add(gameDocId);
             crudObj.updateDataThen('stadium', document.documentID, {
-              'gameList': gameDocIdList,
+              'gameList': gameDocIdList2,
             });
           }
         }

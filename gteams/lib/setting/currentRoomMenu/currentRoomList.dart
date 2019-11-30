@@ -15,7 +15,8 @@ class CurrentRoomListPage extends StatefulWidget {
 class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
 
   List<dynamic> gameList;
-  GameListData gameData;
+  List<GameListData> gameDataList;
+
   crudMedthods crudObj = new crudMedthods();
   StadiumListData stadiumData;
   bool isAvailable =true ;
@@ -30,6 +31,8 @@ class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
       setState(() {
         this.gameList=document.documents[0].data['gameList'];
         isAvailable =true ;
+
+        gameDataList = List<GameListData>(this.gameList.length);
       });
     });
   }
@@ -98,14 +101,15 @@ class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
             shrinkWrap: true,
             itemCount: gameList.length,
             itemBuilder: (BuildContext context, int index) {
+
               crudObj.getDocumentById('game3', gameList[index]).then((document){
                 if (this.mounted) {
                   setState(() {
-                    gameData = GameListData.fromJson(document.data);
+                    gameDataList[index] = GameListData.fromJson(document.data);
                   });
                 }
               });
-              return this.gameData != null ? makeCard(index,gameData) : LinearProgressIndicator();
+              return this.gameDataList[index] != null ? makeCard(index, gameDataList[index]) : LinearProgressIndicator();
             },
           ) : LinearProgressIndicator(),
         )

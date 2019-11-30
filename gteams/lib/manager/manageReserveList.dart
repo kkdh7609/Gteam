@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gteams/game/game_join/model/GameListData.dart';
 import 'package:gteams/manager/custon_expansion_tile.dart' as custom;
 import 'package:gteams/game/game_create/GameCreateTheme.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gteams/services/crud.dart';
 import 'package:gteams/root_page.dart';
 import 'package:gteams/pay/payMethod.dart';
@@ -17,12 +16,12 @@ class ReserveList extends StatefulWidget {
 class _ReserveListState extends State<ReserveList> {
   crudMedthods crudObj = new crudMedthods();
   PayMethods payObj = new PayMethods();
-  GameListData gameData;
+  List<GameListData> gameDataList;
 
   bool flag = false;
-  GameListData _reserveGame = new GameListData();
   bool isAvailable = true;
   bool isDialogAvailable = true;
+  bool isFirst = true;
 
   List<dynamic> stadiumList;
   List<dynamic> gameList;
@@ -33,31 +32,29 @@ class _ReserveListState extends State<ReserveList> {
   @override
   void initState() {
     super.initState();
-    this.flag = false;
 
-    var userQuery =
-        crudObj.getDocumentByWhere('user', 'email', RootPage.user_email);
-    userQuery.then((document) {
+    crudObj.getDocumentByWhere('user', 'email', RootPage.user_email).then((document) {
       setState(() {
         isAvailable = true;
-
         this.stadiumList = document.documents[0].data['myStadium'];
 
         for (var index = 0; index < this.stadiumList.length; index++) {
-          crudObj
-              .getDocumentByWhere('stadium', 'id', stadiumList[index])
-              .then((document) {
+          crudObj.getDocumentByWhere('stadium', 'id', stadiumList[index]).then((document) {
             setState(() {
               this.gameList = document.documents[index].data['gameList'];
 
               for (var len = 0; len < this.gameList.length; len++) {
                 this.reserveList.add(this.gameList[len]);
               }
+
+              gameDataList = List<GameListData>(this.reserveList.length);
             });
           });
         }
       });
     });
+
+
   }
 
   @override
@@ -79,7 +76,7 @@ class _ReserveListState extends State<ReserveList> {
   }
 
   Widget makeCard(String title, String startTime, String endTime, int groupSize,
-      int totalPrice) {
+      int totalPrice, int index) {
     return Card(
         elevation: 8.0,
         margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
@@ -113,7 +110,7 @@ class _ReserveListState extends State<ReserveList> {
                   elevation: 500,
                   child: Column(
                     children: <Widget>[
-                      _showGameInfo(startTime, endTime, groupSize, totalPrice),
+                      _showGameInfo(startTime, endTime, groupSize, totalPrice, index),
                     ],
                   ),
                 )
@@ -124,7 +121,7 @@ class _ReserveListState extends State<ReserveList> {
   }
 
   Widget _showGameInfo(
-      String startTime, String endTime, int groupSize, int totalPrice) {
+      String startTime, String endTime, int groupSize, int totalPrice, int index) {
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -134,7 +131,7 @@ class _ReserveListState extends State<ReserveList> {
           _rowItem("종료시간", endTime),
           _rowItem("총원", groupSize.toString()),
           _rowItem("금액", totalPrice.toString()),
-          _acceptButton()
+          _acceptButton(index)
         ],
       ),
     );
@@ -196,7 +193,7 @@ class _ReserveListState extends State<ReserveList> {
         });
   }
 
-  Widget _acceptButton() {
+  Widget _acceptButton(int index) {
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 8),
       child: Container(
@@ -219,8 +216,7 @@ class _ReserveListState extends State<ReserveList> {
               borderRadius: BorderRadius.all(Radius.circular(24.0)),
             ),
             onPressed: () {
-              _showMaterialDialog();
-
+              _showMaterialDialog(index);
               // 승인 이후 처리할 부분
             },
             child: Center(
@@ -239,7 +235,7 @@ class _ReserveListState extends State<ReserveList> {
     );
   }
 
-  void _showMaterialDialog() {
+  void _showMaterialDialog(int index) {
     showDialog(
         context: context,
         builder: (context) {
@@ -266,7 +262,7 @@ class _ReserveListState extends State<ReserveList> {
                   if (isAvailable) {
                     isAvailable = false;
                     payObj.getFund().then((fund) {
-                      int newFund = this.gameData.totalPrice + fund;
+                      int newFund = this.gameDataList[index].totalPrice + fund;
                       payObj.updateFund(newFund).then((tempVal) {
                         Navigator.pop(context);
                         isAvailable = true;
@@ -293,23 +289,28 @@ class _ReserveListState extends State<ReserveList> {
         shrinkWrap: true,
         itemCount: reserveList.length,
         itemBuilder: (BuildContext context, int index) {
-          crudObj
-              .getDocumentById('game3', reserveList[index])
-              .then((document) {
-            if (this.mounted) {
-              setState(() {
-                gameData = GameListData.fromJson(document.data);
-              });
-            }
-          });
-          return (gameData != null &&
-              gameData.groupSize == gameData.userList.length)
+
+          if(isFirst) {
+            crudObj.getDocumentById('game3', reserveList[index]).then((
+                document) {
+              if (this.mounted) {
+                setState(() {
+                  gameDataList[index] = GameListData.fromJson(document.data);
+                });
+              }
+            });
+          }
+
+          if(index == reserveList.length - 1)   isFirst = false;
+
+          return (gameDataList[index] != null && gameDataList[index].groupSize == gameDataList[index].userList.length)
               ? makeCard(
-              gameData.gameName,
-              gameData.startTime,
-              gameData.endTime,
-              gameData.groupSize,
-              gameData.totalPrice
+              gameDataList[index].gameName,
+              gameDataList[index].startTime,
+              gameDataList[index].endTime,
+              gameDataList[index].groupSize,
+              gameDataList[index].totalPrice,
+              index
           )
               : LinearProgressIndicator();
         });
