@@ -276,6 +276,7 @@ class _UserProfileState extends State<UserProfile> {
           if(newImage != null) {
             _image = newImage;
             _checkedImage = true;
+            _userData.imagePath = "not updated";
           }
         });
       });
