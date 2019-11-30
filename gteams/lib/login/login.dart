@@ -619,7 +619,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ManagerSignUpPage(auth: widget.auth)));
                 },
                 child: Text(
-                  "you are Facility Manager? click here.",
+                  "Are you Facility Manager? click here.",
                   style:
                       TextStyle(decoration: TextDecoration.underline, color: Colors.white, fontSize: 16.0, fontFamily: "Dosis"),
                 )),

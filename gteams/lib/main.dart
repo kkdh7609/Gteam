@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:gteams/root_page.dart';
 import 'package:gteams/login/login_auth.dart';
-import 'package:gteams/pay/result.dart';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(

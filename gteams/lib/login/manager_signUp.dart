@@ -315,7 +315,7 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
                 Navigator.pop(context);
               },
               child: Text(
-                "you are G-TEAM User? click here.",
+                "Are you G-TEAM User? click here.",
                 style: TextStyle(decoration: TextDecoration.underline, color: Colors.white, fontSize: 16.0, fontFamily: "Dosis"),
               ),
             ),
