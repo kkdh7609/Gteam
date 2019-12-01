@@ -27,11 +27,9 @@
 # DUE DATE : 2019-12-10 
 - ALL : 시간 지난 것 관리 / 예약 시간 관리 / 그룹 채팅 / 구글로그인&이메일 인증 / 풋살장 DB 구축
 - 김도현: </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    </br>
 - 김영운: </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          </br>
-- 김학준:  </br>
-- 안우일:  </br>
+- 김학준: </br>
+- 안우일: </br>
 
  
 ---------------------------------------
