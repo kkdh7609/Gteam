@@ -34,6 +34,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
   var gameDocId;
   List<dynamic> gameDocIdList = [];
   List<dynamic> gameDocIdList2 = [];
+  List<dynamic> notPermitList = [];
   bool flag = false;
 
   @override
@@ -70,16 +71,21 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
           gameDocIdList.add(gameDocId);
           crudObj.updateDataThen('stadium', document.documentID, {
             'gameList': gameDocIdList,
+            'notPermitList': gameDocIdList
           });
-        } else {
+        } else if(!flag){             // flag 왜 있는지 몰라서 일단 넣어둔거, 이상하면 이 부분 확인 필요
+          flag = true;
           // 경기장에 데이터 있을때
           gameDocIdList2 = new List<dynamic>.from(document.data['gameList']);
+          notPermitList = new List<dynamic>.from(document.data['notPermitList']);
           if (gameDocIdList2.contains(gameDocId)) {
             print("이미 있는 데이터임");
           } else {
             gameDocIdList2.add(gameDocId);
+            notPermitList.add(gameDocId);
             crudObj.updateDataThen('stadium', document.documentID, {
               'gameList': gameDocIdList2,
+              'notPermitList': notPermitList
             });
           }
         }
