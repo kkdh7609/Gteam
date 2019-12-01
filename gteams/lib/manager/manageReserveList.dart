@@ -27,30 +27,17 @@ class _ReserveListState extends State<ReserveList> {
 
   List<dynamic> stadiumList;
   List<dynamic> gameList;
-  List<dynamic> reserveList = [];
+  List<dynamic> reserveList;
 
   String temp;
 
   @override
   void initState() {
     super.initState();
+    this.gameDataList = [];
     this.gameList = widget.staRef.data["gameList"];
-    if(this.gameList != null) {
-      for (var len = 0; len < this.gameList.length; len++) {
-        Firestore.instance.collection("game3").document(this.gameList[len]).get().then((doc){
-          setState(() {
-            if(doc.data["reserve_status"] == 1){
-              this.reserveList.add(this.gameList[len]);
-            }
-
-            if(len == this.gameList.length - 1) {
-              gameDataList = List<GameListData>(this.reserveList.length);
-            }
-
-          });
-        });
-      }
-    }
+    this.reserveList = List<dynamic>.of(widget.staRef.data["permitList"]);
+    this.gameDataList = [];
   }
 
   @override
@@ -260,16 +247,17 @@ class _ReserveListState extends State<ReserveList> {
                     payObj.getFund().then((fund) {
                       int newFund = this.gameDataList[index].totalPrice + fund;
                       payObj.updateFund(newFund).then((tempVal) {
-                        Navigator.pop(context);
-                        isAvailable = true;
-
                         crudObj.updateDataThen('game3', this.reserveList[index], {"reserve_status": 2}).then((tempVal){
                           setState((){
                             this.reserveList.removeAt(index);
-
-
+                            this.gameDataList = [];
+                            widget.staRef.data["permitList"] = List<dynamic>.of(this.reserveList);
                           });
-                          _showAlertDialog("성공", "승인에 성공하였습니다.");
+                          crudObj.updateDataThen('stadium', widget.staRef.documentID, {"permitList": this.reserveList}).then((tempval2){
+                            Navigator.pop(context);
+                            isAvailable = true;
+                            _showAlertDialog("성공", "승인에 성공하였습니다.");
+                          });
                         });
                       });
                     });
@@ -288,17 +276,18 @@ class _ReserveListState extends State<ReserveList> {
         shrinkWrap: true,
         itemCount: reserveList.length,
         itemBuilder: (BuildContext context, int index) {
-
             crudObj.getDocumentById('game3', reserveList[index]).then((
                 document) {
               if (this.mounted) {
                 setState(() {
-                  gameDataList[index] = GameListData.fromJson(document.data);
+                  if(gameDataList.length < index + 1) {
+                    gameDataList.add(GameListData.fromJson(document.data));
+                  }
                 });
               }
             });
 
-          return (gameDataList[index] != null && gameDataList[index].groupSize == gameDataList[index].userList.length)
+          return gameDataList.length > index ? ((gameDataList[index] != null && gameDataList[index].groupSize == gameDataList[index].userList.length)
               ? makeCard(
               gameDataList[index].gameName,
               gameDataList[index].startTime,
@@ -307,7 +296,8 @@ class _ReserveListState extends State<ReserveList> {
               gameDataList[index].totalPrice,
               index
           )
-              : LinearProgressIndicator();
+              : LinearProgressIndicator()
+          ) : LinearProgressIndicator();
         });
   }
 
