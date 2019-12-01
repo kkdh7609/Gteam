@@ -2,7 +2,6 @@
 ---------------------------------------
 ## About G-TEAM
 - 2040 직장인들이 쉽게 단체운동을 즐길 수 있도록 사람을 모아주는 앱 서비스
-
 ---------------------------------------
 ## Authors & Role (가나다 순)
 - 김도현:
@@ -28,10 +27,8 @@
 - ALL : 시간 지난 것 관리 / 예약 시간 관리 / 그룹 채팅 / 구글로그인&이메일 인증 / 풋살장 DB 구축
 - 김도현: </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 - 김영운: </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-- 김학준: </br>
-- 안우일: </br>
-
- 
+- 김학준: </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+- 안우일: </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 ---------------------------------------
 ## Reference
 - flutter UI      <https://flutterawesome.com/> 
