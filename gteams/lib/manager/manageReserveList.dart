@@ -19,7 +19,7 @@ class ReserveList extends StatefulWidget {
 class _ReserveListState extends State<ReserveList> {
   crudMedthods crudObj = new crudMedthods();
   PayMethods payObj = new PayMethods();
-  List<GameListData> gameDataList;
+  List<GameListData> gameDataList = [];
 
   bool flag = false;
   bool isAvailable = true;
@@ -34,10 +34,16 @@ class _ReserveListState extends State<ReserveList> {
   @override
   void initState() {
     super.initState();
+
     this.gameList = widget.staRef.data["gameList"];
+
     if(this.gameList != null) {
+
       for (var len = 0; len < this.gameList.length; len++) {
         Firestore.instance.collection("game3").document(this.gameList[len]).get().then((doc){
+
+
+
           setState(() {
             if(doc.data["reserve_status"] == 1){
               this.reserveList.add(this.gameList[len]);
@@ -48,6 +54,7 @@ class _ReserveListState extends State<ReserveList> {
             }
 
           });
+
         });
       }
     }
@@ -266,8 +273,7 @@ class _ReserveListState extends State<ReserveList> {
                         crudObj.updateDataThen('game3', this.reserveList[index], {"reserve_status": 2}).then((tempVal){
                           setState((){
                             this.reserveList.removeAt(index);
-
-
+                            this.gameDataList.removeAt(index);
                           });
                           _showAlertDialog("성공", "승인에 성공하였습니다.");
                         });
@@ -286,7 +292,7 @@ class _ReserveListState extends State<ReserveList> {
     return ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
-        itemCount: reserveList.length,
+        itemCount: gameDataList.length,
         itemBuilder: (BuildContext context, int index) {
 
             crudObj.getDocumentById('game3', reserveList[index]).then((
