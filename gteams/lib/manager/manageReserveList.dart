@@ -36,7 +36,7 @@ class _ReserveListState extends State<ReserveList> {
     super.initState();
     this.gameDataList = [];
     this.gameList = widget.staRef.data["gameList"];
-    this.reserveList = List<dynamic>.of(widget.staRef.data["permitList"]);
+    this.reserveList = List<dynamic>.of(widget.staRef.data["notPermitList"]);
     this.gameDataList = [];
   }
 
@@ -251,9 +251,9 @@ class _ReserveListState extends State<ReserveList> {
                           setState((){
                             this.reserveList.removeAt(index);
                             this.gameDataList = [];
-                            widget.staRef.data["permitList"] = List<dynamic>.of(this.reserveList);
+                            widget.staRef.data["notPermitList"] = List<dynamic>.of(this.reserveList);
                           });
-                          crudObj.updateDataThen('stadium', widget.staRef.documentID, {"permitList": this.reserveList}).then((tempval2){
+                          crudObj.updateDataThen('stadium', widget.staRef.documentID, {"notPermitList": this.reserveList}).then((tempval2){
                             Navigator.pop(context);
                             isAvailable = true;
                             _showAlertDialog("성공", "승인에 성공하였습니다.");

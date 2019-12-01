@@ -71,7 +71,8 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
           crudObj.updateDataThen('stadium', document.documentID, {
             'gameList': gameDocIdList,
           });
-        } else {
+        } else if(!flag){             // flag 왜 있는지 몰라서 일단 넣어둔거, 이상하면 이 부분 확인 필요
+          flag = true;
           // 경기장에 데이터 있을때
           gameDocIdList2 = new List<dynamic>.from(document.data['gameList']);
           if (gameDocIdList2.contains(gameDocId)) {
