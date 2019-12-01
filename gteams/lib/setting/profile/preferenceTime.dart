@@ -401,30 +401,30 @@ class _PreferenceTimeState extends State<PreferenceTime> with TickerProviderStat
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: NestedScrollView(
-            controller: _scrollController,
-            headerSliverBuilder:
-                (BuildContext context, bool innerBoxIsScrolled) {
-              return <Widget>[
-                AnimatedBuilder(
-                  animation: _bottomSize,
-                  builder: (BuildContext context, Widget child) {
-                    return SliverAppBar(
-                      backgroundColor: Color(0xff20253d),
-                      pinned: true,
-                      floating: true,
-                      title: Text('선호 시간 목록',
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.w900),
-                          textAlign: TextAlign.center),
-                      bottom: _buildBottom(),
-                    );
-                  },
-                ),
-              ];
-            },
-            body: _buildBody()
-        )
+          body: NestedScrollView(
+              controller: _scrollController,
+              headerSliverBuilder:
+                  (BuildContext context, bool innerBoxIsScrolled) {
+                return <Widget>[
+                  AnimatedBuilder(
+                    animation: _bottomSize,
+                    builder: (BuildContext context, Widget child) {
+                      return SliverAppBar(
+                        backgroundColor: Color(0xff20253d),
+                        pinned: true,
+                        floating: true,
+                        title: Text('선호 시간 목록',
+                            style: TextStyle(
+                                color: Colors.white, fontWeight: FontWeight.w900),
+                            textAlign: TextAlign.center),
+                        bottom: _buildBottom(),
+                      );
+                    },
+                  ),
+                ];
+              },
+              body: _buildBody()
+          )
     );
   }
 }

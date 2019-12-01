@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gteams/manager/calendar/calendarView.dart';
 import 'package:gteams/manager/managerSetTime.dart';
 import 'package:gteams/manager/manageReserveList.dart';
+import 'package:gteams/manager/calendar/managerCalendar.dart';
 
 class FacilityMenuPage extends StatefulWidget {
   FacilityMenuPage({Key key}) : super(key: key);
@@ -21,7 +23,8 @@ class _FacilityMenuPageState extends State<FacilityMenuPage> {
         appBar: AppBar(
             title: Text("HM풋살파크 서수원점", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white)),
             centerTitle: true,
-            backgroundColor: Color(0xff20253d)),
+            backgroundColor: Color(0xff20253d)
+        ),
         body: SafeArea(
           child: Center(
             child: Container(
@@ -72,7 +75,10 @@ class _FacilityMenuPageState extends State<FacilityMenuPage> {
                                             ],
                                           ),
                                           trailing: Icon(Icons.keyboard_arrow_right, color: Colors.black, size: 30.0),
-                                          onTap: (){}
+                                          onTap: (){
+                                            Navigator.push(context,
+                                                MaterialPageRoute(builder: (context) => SetTime()));
+                                          }
                                       ),
                                       Divider(color: Colors.black, thickness: 0.5),
                                     ],
@@ -124,7 +130,7 @@ class _FacilityMenuPageState extends State<FacilityMenuPage> {
                                           trailing: Icon(Icons.keyboard_arrow_right, color: Colors.black, size: 30.0),
                                           onTap: (){
                                             Navigator.push(context,
-                                                MaterialPageRoute(builder: (context) => SetTime()));
+                                                MaterialPageRoute(builder: (context) => CalendarViewApp()));
                                           }
                                       ),
                                       Divider(color: Colors.black, thickness: 0.5),
