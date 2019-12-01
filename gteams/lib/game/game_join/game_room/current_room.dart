@@ -39,6 +39,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
   @override
   void initState() {
     super.initState();
+    this.flag = false;
     this.isAvailable = true;
     this.memberlist = MemberListData.memberList;
     for (var i = 0; i < widget.currentUserList.length; i++) {

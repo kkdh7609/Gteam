@@ -24,10 +24,12 @@ class _ReserveListState extends State<ReserveList> {
   bool flag = false;
   bool isAvailable = true;
   bool isDialogAvailable = true;
+  bool listFlag = true;
 
   List<dynamic> stadiumList;
   List<dynamic> gameList;
   List<dynamic> reserveList;
+  int idx;
 
   String temp;
 
@@ -37,7 +39,8 @@ class _ReserveListState extends State<ReserveList> {
     this.gameDataList = [];
     this.gameList = widget.staRef.data["gameList"];
     this.reserveList = List<dynamic>.of(widget.staRef.data["notPermitList"]);
-    this.gameDataList = [];
+    this.gameDataList = List<GameListData>(this.reserveList.length);
+    this.idx = 0;
   }
 
   @override
@@ -250,7 +253,8 @@ class _ReserveListState extends State<ReserveList> {
                         crudObj.updateDataThen('game3', this.reserveList[index], {"reserve_status": 2}).then((tempVal){
                           setState((){
                             this.reserveList.removeAt(index);
-                            this.gameDataList = [];
+                            this.gameDataList = List<GameListData>(this.reserveList.length);
+                            this.idx = 0;
                             widget.staRef.data["notPermitList"] = List<dynamic>.of(this.reserveList);
                           });
                           crudObj.updateDataThen('stadium', widget.staRef.documentID, {"notPermitList": this.reserveList}).then((tempval2){
@@ -280,9 +284,7 @@ class _ReserveListState extends State<ReserveList> {
                 document) {
               if (this.mounted) {
                 setState(() {
-                  if(gameDataList.length < index + 1) {
-                    gameDataList.add(GameListData.fromJson(document.data));
-                  }
+                    gameDataList[index] = GameListData.fromJson(document.data);
                 });
               }
             });
