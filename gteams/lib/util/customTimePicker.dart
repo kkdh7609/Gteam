@@ -44,6 +44,8 @@ enum _TimePickerHeaderId {
   hString, // French Canadian "h" literal
 }
 
+bool isChanged;
+
 /// Provides properties for rendering time picker header fragments.
 @immutable
 class _TimePickerFragmentContext {
@@ -1573,23 +1575,18 @@ class _CustomTimePickerDialogState extends State<_CustomTimePickerDialog> {
       int hour;
       if(value.minute > 15 && value.minute <= 30){
         minute = 30;
-        hour = _selectedTime.hour;
       }
       else if(value.minute > 30 && value.minute <= 45){
         minute = 30;
-        if(_selectedTime.minute == 0) hour = (_selectedTime.hour > 1) ? _selectedTime.hour - 1 : 23;
-        else hour = _selectedTime.hour;
       }
       else if(value.minute > 45){
         minute = 0;
-        if(_selectedTime.minute == 0) hour = _selectedTime.hour;
-        else hour = (_selectedTime.hour < 23) ? _selectedTime.hour + 1 : 0 ;
       }
       else{
         minute = 0;
-        hour = value.hour;
       }
 
+      hour = value.hour;
       TimeOfDay newTime = TimeOfDay(hour: hour, minute: minute);
       _selectedTime = newTime;
     });

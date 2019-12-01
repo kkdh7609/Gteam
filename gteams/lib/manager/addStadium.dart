@@ -7,6 +7,9 @@ import 'package:gteams/manager/stadiumWidget.dart';
 import 'package:gteams/manager/managerSetTime.dart';
 
 class StadiumCreatePage extends StatefulWidget{
+  StadiumCreatePage({@required this.refreshData});
+
+  final VoidCallback refreshData;
   @override
   _StadiumCreatePageState createState() => _StadiumCreatePageState();
 }
@@ -167,7 +170,9 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
         actions: <Widget>[
           CheckButton(formKey: _formKey, stadiumName: _nameController.text,
               price : _priceController.text, location : _locName, lat : _lat,lng : _lng,
-              locId : _locId,telephone : _callController.text, isParking : _parking, isClothes :_clothes, isShower :_shower,isShoes : _shoes,isBall : _ball)
+              locId : _locId,telephone : _callController.text, isParking : _parking, isClothes :_clothes, isShower :_shower,isShoes : _shoes,isBall : _ball,
+              refreshData: widget.refreshData
+          )
         ]
       ),
       body: Form(

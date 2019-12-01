@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gteams/manager_main/page.dart';
 import 'package:gteams/manager_main/pager.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gteams/manager_main/model/FacilityTmpData.dart';
 import 'package:gteams/manager_main/aliment.dart';
+import 'package:gteams/manager_main/model/FacilitySchema.dart';
 import 'package:gteams/manager_main/facility_content.dart';
 import 'package:gteams/fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gteams/manager_main/ManagePay.dart';
+import 'package:gteams/root_page.dart';
 
 
 class MainManagerPageScreen extends StatefulWidget {
@@ -26,9 +29,53 @@ class MainManagerPageScreen extends StatefulWidget {
 
 class _MainManagerPageScreenState extends State<MainManagerPageScreen> {
 
+  List<Facility> facilities;
+  List<DocumentSnapshot> staRefList = [];
   @override
   void initState() {
+    facilities = [
+      Facility(
+        name: "Plus",
+        background: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [const Color(0xFF083663), const Color(0xFF82B1FF)],
+        ),
+        subtitle: null,
+        image: "assets/image/manager/plus.svg",
+        lastindex: true,
+      )
+    ];
+    refreshFacilities();
     super.initState();
+  }
+
+  void refreshFacilities() async {
+    var userRef = await Firestore.instance.collection('user').document(RootPage.userDocID).get();
+    List<dynamic> idList = userRef.data["MyStadium"];
+    for(int idx=0; idx < idList.length; idx++){
+      var staRef = await Firestore.instance.collection('stadium').document(idList[idx]).get();
+      List<String> locArr = staRef.data["location"].split(" ");
+      String loc = "";
+      for(int cnt=3; cnt<locArr.length; cnt++){
+        loc += locArr[cnt];
+        if(cnt != locArr.length - 1)    loc += " ";
+      }
+      setState(() {
+        staRefList.insert(0, staRef);
+        facilities.insert(0, Facility(
+          name: staRef.data["stadiumName"],
+          background: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [const Color(0xFF083663), const Color(0xFF82B1FF)],
+          ),
+          subtitle: loc,
+          image: "assets/image/menu/soccerball.svg",
+          lastindex: false,
+        ));
+      });
+    }
   }
 
   @override
@@ -36,8 +83,8 @@ class _MainManagerPageScreenState extends State<MainManagerPageScreen> {
     return Scaffold(
       body: Container(
         child: MenuPager(
-          children: Facilities.facilities.map(
-                (facility) => Page(
+          children: mapIndexed(
+            facilities, (index, facility) => Page(
               title: "Facility Manager",
               background: facility.background,
               child: CardItem(
@@ -46,6 +93,8 @@ class _MainManagerPageScreenState extends State<MainManagerPageScreen> {
                   theme: facility.background,
                 ),
                 lastindex: facility.lastindex == true ? true : false,
+                staRef: facility.lastindex == true ? null : staRefList[index],
+                refreshData: refreshFacilities,
               ),
             ),
           ).toList(),
@@ -76,4 +125,15 @@ class _MainManagerPageScreenState extends State<MainManagerPageScreen> {
         )
     );
   }
+
+  Iterable<E> mapIndexed<E, T>(
+      Iterable<T> items, E Function(int index, T item) f) sync* {
+    var index = 0;
+
+    for (final item in items) {
+      yield f(index, item);
+      index = index + 1;
+    }
+  }
+
 }

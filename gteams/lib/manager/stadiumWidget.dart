@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:gteams/root_page.dart';
 
 typedef selectFunc = void Function(int);
 final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -84,7 +85,7 @@ class TextWidget extends StatelessWidget{
 
 class CheckButton extends StatelessWidget{
 
-  CheckButton({this.formKey,this.stadiumName,this.price,this.location,this.lat,this.lng,this.locId,this.telephone,this.isParking,this.isClothes,this.isShower,this.isBall,this.isShoes});
+  CheckButton({this.formKey,this.stadiumName,this.price,this.location,this.lat,this.lng,this.locId,this.telephone,this.isParking,this.isClothes,this.isShower,this.isBall,this.isShoes, @required this.refreshData});
 
   final GlobalKey<FormState> formKey;
   final String stadiumName;
@@ -99,14 +100,15 @@ class CheckButton extends StatelessWidget{
   final int isShower;
   final int isShoes;
   final int isBall;
+  final VoidCallback refreshData;
 
   @override
   Widget build(BuildContext context){
     return IconButton(
         icon: Icon(Icons.check),
-        onPressed: ((){
+        onPressed: (() async {
           if(formKey.currentState.validate()){
-            Firestore.instance.collection('stadium').add({
+            var data = await Firestore.instance.collection('stadium').add({
               'imagePath' : "https://firebasestorage.googleapis.com/v0/b/gteam-18931.appspot.com/o/%ED%92%8B%EC%82%B4%EC%9E%A52.jpg?alt=media&token=f224a5cd-0869-46de-bb0f-487b0576e6a8",
               'stadiumName' : stadiumName,
               'price' : int.parse(price),
@@ -120,9 +122,14 @@ class CheckButton extends StatelessWidget{
               'isShower' : isShower,
               'isShoes' : isShoes,
               'isBall' : isBall,
-            }).then((data){
-              Navigator.pop(context);
             });
+            var adminData = await Firestore.instance.collection('user').document(RootPage.userDocID).get();
+            List<String> myStadium = List.from(adminData.data["MyStadium"]);
+            myStadium.add(data.documentID);
+            await Firestore.instance.collection('user').document(RootPage.userDocID).updateData({"MyStadium": myStadium});
+            await Firestore.instance.collection('stadium').document(data.documentID).updateData({"stdId": data.documentID});
+            Navigator.pop(context);
+            refreshData();
           }
         })
     );

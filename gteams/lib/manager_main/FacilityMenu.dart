@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:gteams/manager/managerSetTime.dart';
 import 'package:gteams/manager/manageReserveList.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FacilityMenuPage extends StatefulWidget {
-  FacilityMenuPage({Key key}) : super(key: key);
+  FacilityMenuPage({Key key, this.staRef}) : super(key: key);
+  final DocumentSnapshot staRef;
 
   @override
   _FacilityMenuPageState createState() => _FacilityMenuPageState();
 }
 
 class _FacilityMenuPageState extends State<FacilityMenuPage> {
+  String title;
+  @override
+  void initState(){
+    title = widget.staRef.data["stadiumName"];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +27,7 @@ class _FacilityMenuPageState extends State<FacilityMenuPage> {
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
-            title: Text("HM풋살파크 서수원점", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white)),
+            title: Text(title, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white)),
             centerTitle: true,
             backgroundColor: Color(0xff20253d)),
         body: SafeArea(

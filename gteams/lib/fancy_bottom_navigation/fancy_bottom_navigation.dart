@@ -222,14 +222,18 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
     _circleIconAlpha = 0;
 
     Future.delayed(Duration(milliseconds: ANIM_DURATION ~/ 5), () {
-      setState(() {
-        activeIcon = nextIcon;
-      });
+      if(this.mounted) {
+        setState(() {
+          activeIcon = nextIcon;
+        });
+      }
     }).then((_) {
       Future.delayed(Duration(milliseconds: (ANIM_DURATION ~/ 5 * 3)), () {
-        setState(() {
-          _circleIconAlpha = 1;
-        });
+        if(this.mounted) {
+          setState(() {
+            _circleIconAlpha = 1;
+          });
+        }
       });
     });
   }

@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:gteams/util/timeUtil.dart';
 
 typedef TimeFunc = void Function(List<List<int>>);
 
 class SetTime extends StatefulWidget{
-  SetTime({this.timeFunc});
+  SetTime({this.timeFunc, this.timeList});
 
   final TimeFunc timeFunc;
+  final List<int> timeList;
   @override
   _SetTimeState createState() => _SetTimeState();
 }
 
 class _SetTimeState extends State<SetTime> with TickerProviderStateMixin {
-  List<String> week = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  List<int> newTimeList;
+
+  List<String> week = ["월", "화", "수", "목", "금", "토", "일"];
   List<Color> colorArr = List.generate(384, (index) {
     return Colors.white;
   });
@@ -26,6 +30,7 @@ class _SetTimeState extends State<SetTime> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    newTimeList = [0, 0, 0, 0, 0, 0, 0];
     _resizableController = AnimationController(
       vsync: this,
       duration: new Duration(
@@ -50,6 +55,23 @@ class _SetTimeState extends State<SetTime> with TickerProviderStateMixin {
     super.initState();
   }
 
+  onConfirmClicked(){
+    for(int idx = 0; idx < 384; idx++){
+      if(idx != 0 && idx % 8 == 0){
+        for(int cnt=0; cnt < 7; cnt++){
+          newTimeList[cnt] = newTimeList[cnt] << 1;
+        }
+        continue;
+      }
+      if(isClicked[idx]){
+        newTimeList[(idx%8) - 1] += 1;
+      }
+    }
+    for(int cnt=0; cnt<7; cnt++){
+      print(week[cnt] + "  " + listTimeConverter(intTimeToStr(newTimeList[cnt])));
+    }
+  }
+
   @override
   void dispose() {
     _resizableController.dispose();
@@ -59,7 +81,7 @@ class _SetTimeState extends State<SetTime> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context){
     return Scaffold(
-        appBar: AppBar(title: Text("경기장 예약 관리 ", style: TextStyle(
+        appBar: AppBar(title: Text("경기장 운영시간 관리", style: TextStyle(
             fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white)),
           centerTitle: true,
           backgroundColor: Color(0xff20253d),
@@ -276,7 +298,7 @@ class _SetTimeState extends State<SetTime> with TickerProviderStateMixin {
                           fontWeight: FontWeight.w600,
                           fontSize: 20,
                           color: Colors.white)))),
-              onPressed: () {},
+              onPressed: onConfirmClicked,
               color: Color(0xff20253d)
           )
         ])

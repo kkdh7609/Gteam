@@ -7,6 +7,7 @@ import 'package:gteams/login/login.dart';
 import 'package:gteams/manager/AdminData.dart';
 
 import 'package:gteams/manager_main/ManagerMainMenu.dart';
+import 'package:gteams/manager_main/UnPermitted.dart';
 
 class RootPage extends StatefulWidget {
   RootPage({this.auth});
@@ -27,6 +28,7 @@ enum AuthStatus {
   LOGGED_IN_CHECK,
   LOGGED_IN_USER,
   LOGGED_IN_ADMIN,
+  UN_PERMIT,
 }
 
 class _RootPageState extends State<RootPage> {
@@ -107,6 +109,11 @@ class _RootPageState extends State<RootPage> {
           onSignedOut: _onSignedOut,
         );
         break;
+      case AuthStatus.UN_PERMIT:
+        print('admin unpermitted');
+        return UnPermitPage(
+          onSignedOut: _onSignedOut,
+        );
 
       default:
         return _buildWaitingScreen();
@@ -164,16 +171,24 @@ class _RootPageState extends State<RootPage> {
                     },
                   );
                 } else {
-                  print('set authstatus manager');
-                  setState(
-                        () {
-                      authStatus = AuthStatus.LOGGED_IN_ADMIN;
-                      _adminData.name = data.documents[0].data['name'];
-                      _adminData.email = data.documents[0].data['email'];
-                      _adminData.myStadium = data.documents[0].data['myStadium'];
-                      RootPage.adminData = _adminData;
-                    },
-                  );
+                  if (data.documents[0].data['permission']) {
+                    print('set authstatus manager');
+                    setState(
+                          () {
+                        authStatus = AuthStatus.LOGGED_IN_ADMIN;
+                        _adminData.name = data.documents[0].data['name'];
+                        _adminData.email = data.documents[0].data['email'];
+                        _adminData.myStadium = data.documents[0].data['myStadium'];
+                        RootPage.adminData = _adminData;
+                      },
+                    );
+                  }
+                  else{
+                    print('set unpermitted manager');
+                    setState((){
+                      authStatus = AuthStatus.UN_PERMIT;
+                    });
+                  }
                 }
               }
               setState(

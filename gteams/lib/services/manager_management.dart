@@ -11,10 +11,18 @@ class ManagerManagement {
       'businessNum': businessNum,
       'isUser': isUser,
       'info_status': false,
+      'permission': false,
+      'MyStadium': [],
       // To check basic information about user[ True=> setting complete] ex) gender , age etc..
     }).then((value) {
-      Navigator.of(context).pop();
-      Navigator.of(context).pushReplacementNamed('/login');
+      Firestore.instance.collection('/managerReg').add({
+        'email': email,
+        'name': name,
+        'businessNum': businessNum,
+        'key': value.path.substring(6),
+      }).then((newVal){
+        Navigator.of(context).pop();
+      });
     }).catchError((e) {
       print(e);
     });
