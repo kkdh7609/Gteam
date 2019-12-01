@@ -35,13 +35,10 @@ class _ReserveListState extends State<ReserveList> {
   void initState() {
     super.initState();
     this.gameList = widget.staRef.data["gameList"];
-
     if(this.gameList != null) {
       for (var len = 0; len < this.gameList.length; len++) {
-
         Firestore.instance.collection("game3").document(this.gameList[len]).get().then((doc){
           setState(() {
-
             if(doc.data["reserve_status"] == 1){
               this.reserveList.add(this.gameList[len]);
             }
