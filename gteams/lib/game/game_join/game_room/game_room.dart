@@ -72,7 +72,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
     await Future.delayed(const Duration(milliseconds: 200));
   }
 
-  void _changeState(String tempStr,String tempStr2) {
+  void _changeState(String tempStr,String tempStr2, String temp) {
     print(tempStr);
   }
 

@@ -22,6 +22,7 @@ class StadiumListData {
   double lng;
   LatLng locationCoords;
   String id;
+  String stdId;
 
   StadiumListData({
     this.imagePath = '',
@@ -43,6 +44,7 @@ class StadiumListData {
     this.lat = 0.0,
     this.lng = 0.0,
     this.id ="",
+    this.stdId = "",
   });
 
   factory StadiumListData.fromJson(Map<dynamic, dynamic> json){
@@ -66,6 +68,7 @@ class StadiumListData {
       lat: json['lat'],
       lng : json['lng'],
       id: json['id'],
+      stdId: json['stdId'],
     );
   }
 

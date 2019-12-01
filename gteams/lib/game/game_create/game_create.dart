@@ -31,6 +31,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
   String _endTimeText = "종료 시간";
   String _loc_name = "장소 선택";
   String _stadium_id = "temp Id";
+  String _stdId = "temp Id";
   DocumentReference _stadiumRef;
 
   var userList = [];
@@ -172,9 +173,10 @@ class _GameCreatePageState extends State<GameCreatePage> {
     }
   }
 
-  void _change_loc_name(String new_name, String new_id) {
+  void _change_loc_name(String new_name, String new_id, String new_stdId) {
     _loc_name = new_name;
     _stadium_id = new_id;
+    _stdId = new_stdId;
   }
 
   @override
@@ -617,7 +619,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
                       int totalPrice;
                       int perPrice;
 
-                      crudObj.getDocumentByWhere('stadium', 'id', _stadium_id).then((document) {
+                      crudObj.getDocumentByWhere('stadium', 'stdId', _stdId).then((document) {
                         int stadiumPrice = document.documents[0].data['price'];
 
                         if (endMinute == 00 && startMinute == 30) {

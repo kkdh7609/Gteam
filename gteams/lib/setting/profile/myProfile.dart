@@ -39,7 +39,7 @@ class _UserProfileState extends State<UserProfile> {
   List<SettingListData> sportListData = SettingListData.sportList;
   var stadiumList =StadiumListData.stadiumList;
 
-  void _change_loc_name(String newName, String temp) {
+  void _change_loc_name(String newName, String temp, String temp2) {
     _userData.preferenceLoc = newName;
   }
 

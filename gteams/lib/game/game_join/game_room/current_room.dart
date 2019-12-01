@@ -411,7 +411,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
     );
   }
 
-  void _changeState(String tempStr, String tempStr2) {
+  void _changeState(String tempStr, String tempStr2, String temp) {
     print(tempStr);
   }
 

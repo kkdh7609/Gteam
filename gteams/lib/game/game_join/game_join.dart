@@ -177,7 +177,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
     );
   }
 
-  void _changeLoc(String newLocation,String newAddr) {
+  void _changeLoc(String newLocation,String newAddr, String temp) {
     _nowLocation = newLocation;
     _nowAddr     = newAddr;
   }

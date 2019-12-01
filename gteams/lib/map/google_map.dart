@@ -12,7 +12,7 @@ import 'package:gteams/map/StadiumListData.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 
-typedef selectFunc = void Function(String,String);                 // 경기장 이름, 경기장 id
+typedef selectFunc = void Function(String,String, String);                 // 경기장 이름, 경기장 id
 typedef createFunc = void Function(String, String, double, double);     // 주소, 경기장 id, 좌표값 2개
 
 String kGoogleApiKey = getSecureKey();
@@ -449,7 +449,7 @@ class _MapTestState extends State<MapTest> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    widget.stadiumList[index].isShower == 0? Icon(FontAwesomeIcons.shower,
+                    widget.stadiumList[index].isShower != 0? Icon(FontAwesomeIcons.shower,
                         color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
                     Icon(FontAwesomeIcons.shower,
                         color: Colors.grey, size: 25) ,
