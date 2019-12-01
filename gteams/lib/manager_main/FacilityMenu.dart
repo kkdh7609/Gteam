@@ -191,7 +191,7 @@ class _FacilityMenuPageState extends State<FacilityMenuPage> {
                                           trailing: Icon(Icons.keyboard_arrow_right, color: Colors.black, size: 30.0),
                                           onTap: (){
                                             Navigator.push(context,
-                                                MaterialPageRoute(builder: (context) => ReserveList()));
+                                                MaterialPageRoute(builder: (context) => ReserveList(staRef: widget.staRef)));
                                           }
                                       ),
                                       Divider(color: Colors.black, thickness: 0.5),
