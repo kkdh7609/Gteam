@@ -5,9 +5,12 @@ import 'package:gteams/game/game_create/GameCreateTheme.dart';
 import 'package:gteams/services/crud.dart';
 import 'package:gteams/root_page.dart';
 import 'package:gteams/pay/payMethod.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ReserveList extends StatefulWidget {
-  ReserveList({Key key}) : super(key: key);
+  ReserveList({Key key, this.staRef}) : super(key: key);
+
+  final DocumentSnapshot staRef;
 
   @override
   _ReserveListState createState() => _ReserveListState();
@@ -21,7 +24,6 @@ class _ReserveListState extends State<ReserveList> {
   bool flag = false;
   bool isAvailable = true;
   bool isDialogAvailable = true;
-  bool isFirst = true;
 
   List<dynamic> stadiumList;
   List<dynamic> gameList;
@@ -32,29 +34,26 @@ class _ReserveListState extends State<ReserveList> {
   @override
   void initState() {
     super.initState();
+    this.gameList = widget.staRef.data["gameList"];
 
-    crudObj.getDocumentByWhere('user', 'email', RootPage.user_email).then((document) {
-      setState(() {
-        isAvailable = true;
-        this.stadiumList = document.documents[0].data['myStadium'];
+    if(this.gameList != null) {
+      for (var len = 0; len < this.gameList.length; len++) {
 
-        for (var index = 0; index < this.stadiumList.length; index++) {
-          crudObj.getDocumentByWhere('stadium', 'id', stadiumList[index]).then((document) {
-            setState(() {
-              this.gameList = document.documents[index].data['gameList'];
+        Firestore.instance.collection("game3").document(this.gameList[len]).get().then((doc){
+          setState(() {
 
-              for (var len = 0; len < this.gameList.length; len++) {
-                this.reserveList.add(this.gameList[len]);
-              }
+            if(doc.data["reserve_status"] == 1){
+              this.reserveList.add(this.gameList[len]);
+            }
 
+            if(len == this.gameList.length - 1) {
               gameDataList = List<GameListData>(this.reserveList.length);
-            });
+            }
+
           });
-        }
-      });
-    });
-
-
+        });
+      }
+    }
   }
 
   @override
@@ -266,9 +265,12 @@ class _ReserveListState extends State<ReserveList> {
                       payObj.updateFund(newFund).then((tempVal) {
                         Navigator.pop(context);
                         isAvailable = true;
-                        crudObj.updateDataThen('game3', this.reserveList[0], {"reserve_status": 2}).then((tempVal){
+
+                        crudObj.updateDataThen('game3', this.reserveList[index], {"reserve_status": 2}).then((tempVal){
                           setState((){
-                            this.reserveList = [];      // 여기 고쳐야 함
+                            this.reserveList.removeAt(index);
+
+
                           });
                           _showAlertDialog("성공", "승인에 성공하였습니다.");
                         });
@@ -290,7 +292,6 @@ class _ReserveListState extends State<ReserveList> {
         itemCount: reserveList.length,
         itemBuilder: (BuildContext context, int index) {
 
-          if(isFirst) {
             crudObj.getDocumentById('game3', reserveList[index]).then((
                 document) {
               if (this.mounted) {
@@ -299,9 +300,6 @@ class _ReserveListState extends State<ReserveList> {
                 });
               }
             });
-          }
-
-          if(index == reserveList.length - 1)   isFirst = false;
 
           return (gameDataList[index] != null && gameDataList[index].groupSize == gameDataList[index].userList.length)
               ? makeCard(
