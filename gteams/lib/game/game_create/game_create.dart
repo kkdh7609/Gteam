@@ -658,8 +658,6 @@ class _GameCreatePageState extends State<GameCreatePage> {
                                 'stadiumRef': _stadiumRef,
                                 'userList': userList,
                                 'reserve_status': 0, // 예약상태를 관리하는 부분 [0 : 모집중 , 1 : 접수중 , 2 접수 완료]
-                                'gameList': [],
-                                'notPermitList': []
                               }).then((gameDoc) {
                                 crudObj.getDocumentById('user', RootPage.userDocID).then((userDoc) {
                                   userGameList = List.from(userDoc.data['gameList']);

@@ -122,6 +122,8 @@ class CheckButton extends StatelessWidget{
               'isShower' : isShower,
               'isShoes' : isShoes,
               'isBall' : isBall,
+              'gameList': [],
+              'notPermitList': []
             });
             var adminData = await Firestore.instance.collection('user').document(RootPage.userDocID).get();
             List<String> myStadium = List.from(adminData.data["MyStadium"]);
