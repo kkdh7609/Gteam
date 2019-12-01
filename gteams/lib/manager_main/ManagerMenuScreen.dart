@@ -51,6 +51,21 @@ class _MainManagerPageScreenState extends State<MainManagerPageScreen> {
   }
 
   void refreshFacilities() async {
+    List<Facility> tempfacilities = [
+        Facility(
+          name: "Plus",
+          background: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [const Color(0xFF083663), const Color(0xFF82B1FF)],
+          ),
+          subtitle: null,
+          image: "assets/image/manager/plus.svg",
+          lastindex: true,
+        )
+      ];
+    List<DocumentSnapshot> tempStaRefList = [];
+
     var userRef = await Firestore.instance.collection('user').document(RootPage.userDocID).get();
     List<dynamic> idList = userRef.data["MyStadium"];
     for(int idx=0; idx < idList.length; idx++){
@@ -61,7 +76,19 @@ class _MainManagerPageScreenState extends State<MainManagerPageScreen> {
         loc += locArr[cnt];
         if(cnt != locArr.length - 1)    loc += " ";
       }
-      setState(() {
+      tempfacilities.insert(0, Facility(
+        name: staRef.data["stadiumName"],
+        background: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [const Color(0xFF083663), const Color(0xFF82B1FF)],
+        ),
+        subtitle: loc,
+        image: "assets/image/menu/soccerball.svg",
+        lastindex: false,
+      ));
+      tempStaRefList.insert(0, staRef);
+      /*setState(() {
         staRefList.insert(0, staRef);
         facilities.insert(0, Facility(
           name: staRef.data["stadiumName"],
@@ -75,7 +102,13 @@ class _MainManagerPageScreenState extends State<MainManagerPageScreen> {
           lastindex: false,
         ));
       });
+       */
     }
+
+    setState((){
+      staRefList = List.of(tempStaRefList);
+      facilities = List.of(tempfacilities);
+    });
   }
 
   @override

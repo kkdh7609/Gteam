@@ -57,6 +57,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.2"
+  date_utils:
+    dependency: transitive
+    description:
+      name: date_utils
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0+2"
   fancy_bottom_navigation:
     dependency: "direct main"
     description:
@@ -97,6 +104,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_calendar:
+    dependency: "direct main"
+    description:
+      name: flutter_calendar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.8"
   flutter_google_places:
     dependency: "direct main"
     description:
@@ -213,7 +227,7 @@ packages:
       name: intl
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.16.0"
+    version: "0.15.8"
   matcher:
     dependency: transitive
     description:
