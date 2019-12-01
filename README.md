@@ -25,13 +25,15 @@
 ---------------------------------------
 ## To-Do List 
 # DUE DATE : 2019-12-XX 
-- 김도현: (로그인 창)       로그인 실패시에, Pop-up 창 </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-(상세 게임 방)    모임 신청시에 여부 묻는 Pop-up 창 </br>
+- 김도현: </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </br>
 - 김영운: (로그인 창)       GoogleLogin / Email 인증 </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           (현재 방 목록창)  chatting </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           (ALL PAGES)       풋살장 DB 구축  </br>
-- 김학준: (시설 관리자 예약 관리) 캘린더 및 일자별 관리  </br>
-- 안우일: (시설 관리자 메인) 시설 추가 </br>
+- 김학준:  </br>
+- 안우일:  </br>
+
+시간 지난 것 관리 / 예약 시간 관리 / 그룹 채팅 / 이메일 인증 
 ---------------------------------------
 ## Reference
 - flutter UI      <https://flutterawesome.com/> 
