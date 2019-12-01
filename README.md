@@ -24,7 +24,8 @@
   - IamPort API
 ---------------------------------------
 ## To-Do List 
-# DUE DATE : 2019-12-XX 
+# DUE DATE : 2019-12-10 
+- ALL : 시간 지난 것 관리 / 예약 시간 관리 / 그룹 채팅 / 이메일 인증
 - 김도현: </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     </br>
 - 김영운: (로그인 창)       GoogleLogin / Email 인증 </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -33,7 +34,7 @@
 - 김학준:  </br>
 - 안우일:  </br>
 
-시간 지난 것 관리 / 예약 시간 관리 / 그룹 채팅 / 이메일 인증 
+ 
 ---------------------------------------
 ## Reference
 - flutter UI      <https://flutterawesome.com/> 
