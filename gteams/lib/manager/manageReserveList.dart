@@ -279,9 +279,11 @@ class _ReserveListState extends State<ReserveList> {
             crudObj.getDocumentById('game3', reserveList[index]).then((
                 document) {
               if (this.mounted) {
-                setState(() {
+                if(gameDataList.length >= index + 1) {
+                  setState(() {
                     gameDataList[index] = GameListData.fromJson(document.data);
-                });
+                  });
+                }
               }
             });
 

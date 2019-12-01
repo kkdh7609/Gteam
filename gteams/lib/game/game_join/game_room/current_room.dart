@@ -66,7 +66,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
       gameDocId = document.documents[0].documentID;
       widget.gameData.stadiumRef.get().then((document) {
         //경기장의 document 접근
-        if (!flag && document.data['gameList'] == null) {
+        if (!flag && document.data['gameList'] == null && document.data['notPermitList'] == null) {
           //경기장에 데이터가 없을때
           flag = true;
           gameDocIdList.add(gameDocId);
@@ -74,21 +74,58 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
             'gameList': gameDocIdList,
             'notPermitList': gameDocIdList
           });
-        } else if(!flag){             // flag 왜 있는지 몰라서 일단 넣어둔거, 이상하면 이 부분 확인 필요
+        }
+        else if(!flag && document.data['gameList'] == null){
+          flag = true;
+          gameDocIdList.add(gameDocId);
+          notPermitList = List<dynamic>.from(document.data['notPermitList']);
+          if(notPermitList.contains(gameDocId)){
+            print("notPermitList에 이미 존재하는 데이터");
+          }
+          else{
+            notPermitList.add(gameDocId);
+          }
+          crudObj.updateDataThen('stadium', document.documentID, {
+            'gameList': gameDocIdList,
+            'notPermitList': notPermitList
+          });
+        }
+        else if(!flag && document.data['notPermitList'] == null){
+          flag = true;
+          notPermitList.add(gameDocId);
+          gameDocIdList2 = List<dynamic>.from(document.data['gameList']);
+          if (gameDocIdList2.contains(gameDocId)) {
+            print("gameList에 이미 존재하는 데이터");
+          }
+          else{
+            gameDocIdList2.add(gameDocId);
+          }
+          crudObj.updateDataThen('stadium', document.documentID, {
+            'gameList': gameDocIdList2,
+            'notPermitList': notPermitList
+          });
+        }
+        else if(!flag){             // flag 왜 있는지 몰라서 일단 넣어둔거, 이상하면 이 부분 확인 필요
           flag = true;
           // 경기장에 데이터 있을때
           gameDocIdList2 = new List<dynamic>.from(document.data['gameList']);
           notPermitList = new List<dynamic>.from(document.data['notPermitList']);
           if (gameDocIdList2.contains(gameDocId)) {
-            print("이미 있는 데이터임");
-          } else {
+            print("gameList에 이미 존재하는 데이터");
+          }
+          else {
             gameDocIdList2.add(gameDocId);
+          }
+          if(notPermitList.contains(gameDocId)) {
+            print("notPermitList에 이미 존재하는 데이터");
+          }
+          else{
             notPermitList.add(gameDocId);
+          }
             crudObj.updateDataThen('stadium', document.documentID, {
               'gameList': gameDocIdList2,
               'notPermitList': notPermitList
             });
-          }
         }
       });
     });
