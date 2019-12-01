@@ -24,12 +24,10 @@ class _ReserveListState extends State<ReserveList> {
   bool flag = false;
   bool isAvailable = true;
   bool isDialogAvailable = true;
-  bool listFlag = true;
 
   List<dynamic> stadiumList;
   List<dynamic> gameList;
   List<dynamic> reserveList;
-  int idx;
 
   String temp;
 
@@ -40,7 +38,6 @@ class _ReserveListState extends State<ReserveList> {
     this.gameList = widget.staRef.data["gameList"];
     this.reserveList = List<dynamic>.of(widget.staRef.data["notPermitList"]);
     this.gameDataList = List<GameListData>(this.reserveList.length);
-    this.idx = 0;
   }
 
   @override
@@ -229,8 +226,8 @@ class _ReserveListState extends State<ReserveList> {
             title: Text('확인'),
             content: SingleChildScrollView(
                 child: ListBody(
-              children: <Widget>[Text("예약 신청을 승인하시겠습니까?")],
-            )),
+                  children: <Widget>[Text("예약 신청을 승인하시겠습니까?")],
+                )),
             actions: <Widget>[
               FlatButton(
                   color: Color(0xff20253d),
@@ -254,7 +251,6 @@ class _ReserveListState extends State<ReserveList> {
                           setState((){
                             this.reserveList.removeAt(index);
                             this.gameDataList = List<GameListData>(this.reserveList.length);
-                            this.idx = 0;
                             widget.staRef.data["notPermitList"] = List<dynamic>.of(this.reserveList);
                           });
                           crudObj.updateDataThen('stadium', widget.staRef.documentID, {"notPermitList": this.reserveList}).then((tempval2){
