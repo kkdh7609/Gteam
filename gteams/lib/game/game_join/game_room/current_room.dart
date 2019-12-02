@@ -10,6 +10,7 @@ import 'package:gteams/services/crud.dart';
 import 'package:gteams/game/game_join/model/GameListData.dart';
 import 'package:gteams/root_page.dart';
 import 'package:intl/intl.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class currentRoomPage extends StatefulWidget {
   currentRoomPage({Key key, this.currentUserList, this.gameData, this.stadiumData, this.reserve_status, this.docId}) : super(key: key);
@@ -36,6 +37,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
   var _messageList;
   bool isAvailable = true;
   String myName;
+  String myImgPath;
   TextEditingController textEditingController;
   ScrollController listScrollController;
 
@@ -62,6 +64,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
             var address = data.documents[0].data['prferenceLoc'];
             var imagePath = data.documents[0].data['imagePath'];
             if(widget.currentUserList[i] == RootPage.user_email){
+              myImgPath = imagePath;
               myName = name;
             }
             this.memberlist.add(MemberListData(name: name, address: address, imagePath: imagePath));
@@ -245,6 +248,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
           {
             'id': RootPage.userDocID,
             'name': myName,
+            'image': myImgPath,
             'timeStamp': DateTime.now().millisecondsSinceEpoch.toString(),
             'content': content,
             'type': type
@@ -369,6 +373,24 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
             ),
             Row(
               children: <Widget>[
+                Material(
+                  child: snap['image'] == null? Image.asset(
+                    "assets/image/profile_pic.png",
+                  width: 35.0,
+                  height: 35.0) :
+                      CachedNetworkImage(
+                        placeholder: (context, url) => Container(
+                          child: CircularProgressIndicator(),
+                          width: 35.0,
+                          height: 35.0,
+                        ),
+                        imageUrl: snap['image'],
+                        width: 35.0,
+                        height: 35.0,
+                        fit: BoxFit.cover,
+                      ),
+                  borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                ),
                 // 유저 이미지 보여줄거면 이 부분에서 수정
                 // 이미지 부분은 이 부분 삼항연산자로 변화 필요
                 Container(
