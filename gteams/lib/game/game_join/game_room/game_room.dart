@@ -251,6 +251,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                                                   MaterialPageRoute(
                                                       builder: (context) =>
                                                           MapTest(onSelected: _changeState, nowReq: mapReq.mapCheck,stadiumData: widget.stadiumData,)));
+                                              isAvailable = true;
                                             }
                                           })
                                     ],

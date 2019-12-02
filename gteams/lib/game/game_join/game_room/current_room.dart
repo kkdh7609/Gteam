@@ -238,9 +238,6 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
 
   // 채팅 보내기
   void onSendMessage(String content, int type){ // type 0은 text, 1은 image(to_do)
-    print(22222);
-    print(widget.docId);
-    print(widget.reserve_status);
     if(content.trim() != ''){
       textEditingController.clear();
 
@@ -771,6 +768,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                                           nowReq: mapReq.mapCheck,
                                           stadiumData: widget.stadiumData,
                                         )));
+                            isAvailable = true;
                           }
                         })
                   ],
