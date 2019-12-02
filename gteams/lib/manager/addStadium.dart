@@ -17,7 +17,7 @@ class StadiumCreatePage extends StatefulWidget{
 class _StadiumCreatePageState extends State<StadiumCreatePage>{
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  ImageProvider _photo;
+  File _photo;
 
   String _stadiumName;
   String _selectedSports = null;
@@ -91,7 +91,7 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
 
   }
 
-  void changePhoto(ImageProvider image){
+  void changePhoto(File image){
     setState((){
       _photo = image;
     });
@@ -164,87 +164,87 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xff20253d),
-        title: Text('Add new stadium'),
-        actions: <Widget>[
-          CheckButton(formKey: _formKey, stadiumName: _nameController.text,
-              price : _priceController.text, location : _locName, lat : _lat,lng : _lng,
-              locId : _locId,telephone : _callController.text, isParking : _parking, isClothes :_clothes, isShower :_shower,isShoes : _shoes,isBall : _ball,
-              refreshData: widget.refreshData
-          )
-        ]
-      ),
-      body: Form(
-          key: _formKey,
-          child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xff20253d),
-              Colors.white
+        appBar: AppBar(
+            backgroundColor: Color(0xff20253d),
+            title: Text('Add new stadium'),
+            actions: <Widget>[
+              CheckButton(formKey: _formKey, photo: _photo, stadiumName: _nameController.text,
+                  price : _priceController.text, location : _locName, lat : _lat,lng : _lng,
+                  locId : _locId,telephone : _callController.text, isParking : _parking, isClothes :_clothes, isShower :_shower,isShoes : _shoes,isBall : _ball,
+                  refreshData: widget.refreshData
+              )
             ]
-          )
         ),
+        body: Form(
+            key: _formKey,
+            child: Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xff20253d),
+                          Colors.white
+                        ]
+                    )
+                ),
 
-        padding: const EdgeInsets.all(8.0),
-        child: Stack(
-            children: <Widget>[
-              Container(
-                // 배경색 변화 문제 해결을 위해 사용
-              ),
-              SingleChildScrollView(
-                  child: SafeArea(
-                      child: Column(children: <Widget>[
-                        Card(
-                            elevation: 4.0,
-                            child: Container(
-                                color: Colors.white,
-                                child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      SizedBox(height: 16.0),
-                                      PhotoWidget(photo: _photo, onPressed: onPhotoPressed,),
-                                      SizedBox(height: 4.0),
-                                      TextWidget(controller: _nameController, header: "경기장 이름", hint: "경기장 이름을 입력하시오", type: 0),
-                                      SizedBox(height: 4.0),
-                                      TextWidget(controller: _priceController, header: "요  금 (단위: 원)", hint: "30분당 사용 요금을 입력하시오", type: 1),
-                                      SizedBox(height: 4.0),
-                                      LocationWidget(location: _locName, onPressed: locationPress,),
-                                      SizedBox(height: 4.0),
-                                      TimeWidget(checkTimes: _checkTimes, onPressed: onTimePressed,),
-                                      SizedBox(height: 4.0),
-                                      PhoneWidget(controller: _callController),
-                                      SizedBox(height: 4.0),
-                                      SegmentedControl(header: "유니폼 제공 여부", value: _clothes, children: clothesSeg, onValueChanged: onClothesChanged),
-                                      SizedBox(height: 4.0),
-                                      SegmentedControl(header: "축구화 제공 여부", value: _shoes, children: shoesSeg, onValueChanged: onShoesChanged),
-                                      SizedBox(height: 4.0),
-                                      SegmentedControl(header: "주차장 제공 여부", value: _parking, children: parkSeg, onValueChanged: onParkChanged),
-                                      SizedBox(height: 4.0),
-                                      SegmentedControl(header: "축구공 제공 여부", value: _ball, children: ballSeg, onValueChanged: onBallChanged),
-                                      SizedBox(height: 4.0),
-                                      SegmentedControl(header: "샤워 시설 제공 여부", value: _shower, children: showerSeg, onValueChanged: onShowerChanged),
-                                      SizedBox(height: 16.0)
-                                    ]
-                                )
-                            )
-                        ),
-                        Card(
-                            elevation: 4.0,
-                            child: Container(
-                                color: Color(0xff20253d)
-                              // Todo add child
-                            )
-                        ),
-                      ])
-                  )
-              ),
-            ]
-        )
-      )
-    ));
+                padding: const EdgeInsets.all(8.0),
+                child: Stack(
+                    children: <Widget>[
+                      Container(
+                        // 배경색 변화 문제 해결을 위해 사용
+                      ),
+                      SingleChildScrollView(
+                          child: SafeArea(
+                              child: Column(children: <Widget>[
+                                Card(
+                                    elevation: 4.0,
+                                    child: Container(
+                                        color: Colors.white,
+                                        child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              SizedBox(height: 16.0),
+                                              PhotoWidget(photo: _photo, onPressed: onPhotoPressed,),
+                                              SizedBox(height: 4.0),
+                                              TextWidget(controller: _nameController, header: "경기장 이름", hint: "경기장 이름을 입력하시오", type: 0),
+                                              SizedBox(height: 4.0),
+                                              TextWidget(controller: _priceController, header: "요  금 (단위: 원)", hint: "30분당 사용 요금을 입력하시오", type: 1),
+                                              SizedBox(height: 4.0),
+                                              LocationWidget(location: _locName, onPressed: locationPress,),
+                                              SizedBox(height: 4.0),
+                                              TimeWidget(checkTimes: _checkTimes, onPressed: onTimePressed,),
+                                              SizedBox(height: 4.0),
+                                              PhoneWidget(controller: _callController),
+                                              SizedBox(height: 4.0),
+                                              SegmentedControl(header: "유니폼 제공 여부", value: _clothes, children: clothesSeg, onValueChanged: onClothesChanged),
+                                              SizedBox(height: 4.0),
+                                              SegmentedControl(header: "축구화 제공 여부", value: _shoes, children: shoesSeg, onValueChanged: onShoesChanged),
+                                              SizedBox(height: 4.0),
+                                              SegmentedControl(header: "주차장 제공 여부", value: _parking, children: parkSeg, onValueChanged: onParkChanged),
+                                              SizedBox(height: 4.0),
+                                              SegmentedControl(header: "축구공 제공 여부", value: _ball, children: ballSeg, onValueChanged: onBallChanged),
+                                              SizedBox(height: 4.0),
+                                              SegmentedControl(header: "샤워 시설 제공 여부", value: _shower, children: showerSeg, onValueChanged: onShowerChanged),
+                                              SizedBox(height: 16.0)
+                                            ]
+                                        )
+                                    )
+                                ),
+                                Card(
+                                    elevation: 4.0,
+                                    child: Container(
+                                        color: Color(0xff20253d)
+                                      // Todo add child
+                                    )
+                                ),
+                              ])
+                          )
+                      ),
+                    ]
+                )
+            )
+        ));
   }
 }

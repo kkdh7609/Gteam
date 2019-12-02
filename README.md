@@ -2,7 +2,6 @@
 ---------------------------------------
 ## About G-TEAM
 - 2040 직장인들이 쉽게 단체운동을 즐길 수 있도록 사람을 모아주는 앱 서비스
-
 ---------------------------------------
 ## Authors & Role (가나다 순)
 - 김도현:
@@ -24,14 +23,12 @@
   - IamPort API
 ---------------------------------------
 ## To-Do List 
-# DUE DATE : 2019-12-XX 
-- 김도현: (로그인 창)       로그인 실패시에, Pop-up 창 </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-(상세 게임 방)    모임 신청시에 여부 묻는 Pop-up 창 </br>
-- 김영운: (로그인 창)       GoogleLogin / Email 인증 </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          (현재 방 목록창)  chatting </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          (ALL PAGES)       풋살장 DB 구축  </br>
-- 김학준: (시설 관리자 예약 관리) 캘린더 및 일자별 관리  </br>
-- 안우일: (시설 관리자 메인) 시설 추가 </br>
+# DUE DATE : 2019-12-10 
+- ALL : 시간 지난 것 관리 / 예약 시간 관리 / 그룹 채팅 / 구글로그인&이메일 인증 / 풋살장 DB 구축
+- 김도현: </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+- 김영운: </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+- 김학준: </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+- 안우일: </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 ---------------------------------------
 ## Reference
 - flutter UI      <https://flutterawesome.com/> 

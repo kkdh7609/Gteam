@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:gteams/root_page.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 typedef selectFunc = void Function(int);
 final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -12,7 +13,7 @@ final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 class PhotoWidget extends StatelessWidget{
   PhotoWidget({this.photo, this.onPressed});
 
-  final ImageProvider photo;
+  final File photo;
   final VoidCallback onPressed;
 
   @override
@@ -28,7 +29,7 @@ class PhotoWidget extends StatelessWidget{
             shape: BoxShape.circle,
             image: DecorationImage(
               fit: BoxFit.fill,
-              image: photo != null? photo : AssetImage("assets/image/camera.png")
+              image: photo != null? FileImage(photo) : AssetImage("assets/image/camera.png")
             )
           )
         )
@@ -85,9 +86,10 @@ class TextWidget extends StatelessWidget{
 
 class CheckButton extends StatelessWidget{
 
-  CheckButton({this.formKey,this.stadiumName,this.price,this.location,this.lat,this.lng,this.locId,this.telephone,this.isParking,this.isClothes,this.isShower,this.isBall,this.isShoes, @required this.refreshData});
+  CheckButton({this.formKey,this.photo, this.stadiumName,this.price,this.location,this.lat,this.lng,this.locId,this.telephone,this.isParking,this.isClothes,this.isShower,this.isBall,this.isShoes, @required this.refreshData});
 
   final GlobalKey<FormState> formKey;
+  final File photo;
   final String stadiumName;
   final String price;
   final String location;
@@ -102,14 +104,25 @@ class CheckButton extends StatelessWidget{
   final int isBall;
   final VoidCallback refreshData;
 
+  String photoURL;
+
   @override
   Widget build(BuildContext context){
     return IconButton(
         icon: Icon(Icons.check),
         onPressed: (() async {
+          StorageReference storageReference = FirebaseStorage.instance.ref().child("stadium/${stadiumName}.jpg");
+          StorageUploadTask uploadTask = storageReference.putFile(photo);
+
+          await uploadTask.onComplete;
+          await storageReference.getDownloadURL().then((fileURL) {
+            photoURL = fileURL;
+            print("photoURL completed");
+          });
+
           if(formKey.currentState.validate()){
             var data = await Firestore.instance.collection('stadium').add({
-              'imagePath' : "https://firebasestorage.googleapis.com/v0/b/gteam-18931.appspot.com/o/%ED%92%8B%EC%82%B4%EC%9E%A52.jpg?alt=media&token=f224a5cd-0869-46de-bb0f-487b0576e6a8",
+              'imagePath' : photoURL,
               'stadiumName' : stadiumName,
               'price' : int.parse(price),
               'location' :location,
