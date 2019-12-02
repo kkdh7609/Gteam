@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gteams/menu/drawer/DrawerTheme.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -7,14 +8,17 @@ import 'package:gteams/map/StadiumListData.dart';
 import 'package:gteams/map/google_map.dart';
 import 'package:gteams/services/crud.dart';
 import 'package:gteams/game/game_join/model/GameListData.dart';
+import 'package:gteams/root_page.dart';
+import 'package:intl/intl.dart';
 
 class currentRoomPage extends StatefulWidget {
-  currentRoomPage({Key key, this.currentUserList, this.gameData, this.stadiumData, this.reserve_status}) : super(key: key);
+  currentRoomPage({Key key, this.currentUserList, this.gameData, this.stadiumData, this.reserve_status, this.docId}) : super(key: key);
 
   List<dynamic> currentUserList;
   final StadiumListData stadiumData;
   GameListData gameData;
   int reserve_status;
+  String docId;
 
   @override
   _currentRoomPageState createState() => _currentRoomPageState();
@@ -29,7 +33,11 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
   var opacity1 = 0.0;
   var opacity2 = 0.0;
   var opacity3 = 0.0;
+  var _messageList;
   bool isAvailable = true;
+  String myName;
+  TextEditingController textEditingController;
+  ScrollController listScrollController;
 
   var gameDocId;
   List<dynamic> gameDocIdList = [];
@@ -40,6 +48,8 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
   @override
   void initState() {
     super.initState();
+    this.textEditingController = TextEditingController();
+    this.listScrollController = ScrollController();
     this.flag = false;
     this.isAvailable = true;
     this.memberlist = MemberListData.memberList;
@@ -51,7 +61,9 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
             var name = data.documents[0].data['name'];
             var address = data.documents[0].data['prferenceLoc'];
             var imagePath = data.documents[0].data['imagePath'];
-
+            if(widget.currentUserList[i] == RootPage.user_email){
+              myName = name;
+            }
             this.memberlist.add(MemberListData(name: name, address: address, imagePath: imagePath));
           }
         });
@@ -198,7 +210,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                     },
                   ),
                   Container(
-                    child: Text("Chatting ui"),
+                    child: _chatUI(),
                   ),
                   _detail_tab()
                 ]),
@@ -208,6 +220,184 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
         ),
       ),
     );
+  }
+
+  Widget _chatUI(){
+    return WillPopScope(
+      child: Column(
+        children: <Widget>[
+          MessageList(),
+          MessageInput(),
+        ],
+      )
+    );
+  }
+
+  // 채팅 보내기
+  void onSendMessage(String content, int type){ // type 0은 text, 1은 image(to_do)
+    if(content.trim() != ''){
+      textEditingController.clear();
+
+      DocumentReference docRef = Firestore.instance.collection('Chat').document(widget.docId).collection(widget.docId).document(DateTime.now().millisecondsSinceEpoch.toString());
+      Firestore.instance.runTransaction((transaction) async{
+        await transaction.set(
+          docRef,
+          {
+            'id': RootPage.userDocID,
+            'name': myName,
+            'timeStamp': DateTime.now().millisecondsSinceEpoch.toString(),
+            'content': content,
+            'type': type
+          },
+        );
+      });
+    }
+  }
+
+  Widget MessageInput(){
+    return Container(
+      child: Row(
+        children: <Widget>[
+          /* 채팅에 이미지 기능 넣으려면 이부분 조정 필요
+          Material(
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 1.0),
+              child: IconButton(
+                icon: Icon(Icons.image),
+                onPressed: getImage,
+                color: Color(0xff20253d)
+              )
+            ),
+            color: Colors.white,
+          )
+          */
+
+          // 텍스트 넣는 곳
+          Flexible(
+            child: Container(
+              child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: TextField(
+                    style: TextStyle(color: Color(0xff20253d), fontSize: 13.0),
+                    controller: textEditingController,
+                    decoration: InputDecoration.collapsed(
+                        hintText: "메시지를 작성해주세요.",
+                        hintStyle: TextStyle(color: Colors.grey)
+                    ),
+                  )
+              )
+            )
+          ),
+
+          // 보내기 버튼
+          Material(
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 10.0),
+              child: IconButton(
+                icon: Icon(Icons.send),
+                onPressed: () => onSendMessage(textEditingController.text, 0),
+                color: Color(0xff20253d)
+              )
+            ),
+            color: Colors.white
+          )
+        ]
+      ),
+      width: double.infinity,
+      height:  50.0,
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: Colors.grey, width: 0.5)),
+        color: Colors.white
+      ),
+    );
+  }
+
+  Widget MessageList(){
+    return Flexible(
+      child: StreamBuilder(
+        stream: Firestore.instance.collection('Chat').document(widget.docId).collection(widget.docId).orderBy('timeStamp', descending: true).limit(30).snapshots(),
+        builder: (context, snapshot){
+          if(!snapshot.hasData) {
+            return Center(
+                child: CircularProgressIndicator()
+            );
+          }
+          else{
+              _messageList = snapshot.data.documents;
+              return ListView.builder(
+                padding: EdgeInsets.all(10.0),
+                itemBuilder: (context, index) => buildItem(index, snapshot.data.documents[index]),
+                itemCount: snapshot.data.documents.length,
+                reverse: true,
+                controller: listScrollController,
+              );
+          }
+        }
+      )
+    );
+  }
+
+  Widget buildItem(int indext, DocumentSnapshot snap){
+    if(snap["id"] == RootPage.userDocID){       // 내가 보낸 메시지
+      return Row(
+        children: <Widget>[
+          // 이미지 넣을거면 이 부분 삼항연산자로 변화 필요
+          Container(
+            child: Text(
+              snap['content'],
+            ),
+            padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+            width: 200.0,
+            decoration: BoxDecoration(
+              color: Colors.yellow,
+              borderRadius: BorderRadius.circular(8.0)
+            ),
+            margin: EdgeInsets.only(bottom: 20.0, right: 10.0)
+          )
+        ],
+        mainAxisAlignment: MainAxisAlignment.end,
+      );
+    }
+    else { // 받은 메시지
+      return Container(          // 메시지 시간 보여주기 위함
+        child: Column(
+          children: <Widget>[
+            Container(
+              child: Text(snap['name'], style: TextStyle(
+                fontWeight: FontWeight.bold
+              ))
+            ),
+            Row(
+              children: <Widget>[
+                // 유저 이미지 보여줄거면 이 부분에서 수정
+                // 이미지 부분은 이 부분 삼항연산자로 변화 필요
+                Container(
+                  child: Text(
+                    snap['content'],
+                  ),
+                    padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                    width: 200.0,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.0)
+                    ),
+                    margin: EdgeInsets.only(left: 10.0),
+                )
+              ]
+            ),
+            Container(
+              child: Text(
+                DateFormat('MM/dd kk:mm').format(DateTime.fromMillisecondsSinceEpoch(int.parse(snap['timeStamp']))),
+                style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic, fontSize: 8.0)
+              ),
+              margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0)
+            )
+          ],
+          crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+        margin: EdgeInsets.only(bottom: 10.0),
+      );
+    }
   }
 
   Widget _member_info(String name, String address, String imagePath, int idx) {

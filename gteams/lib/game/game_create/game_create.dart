@@ -668,11 +668,10 @@ class _GameCreatePageState extends State<GameCreatePage> {
                                   crudObj.updateDataThen('user', RootPage.userDocID, {
                                     'gameList': userGameList,
                                   }).then((data) {
-                                    print(3333333);
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
                                   });
                                 });
-                                Navigator.pop(context);
-                                Navigator.pop(context);
                               });
                             });
                           } else {

@@ -75,7 +75,7 @@ class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
                     stadiumData = StadiumListData.fromJson(document.data);
                     crudObj.getDocumentById('game3', gameList[index]).then((gameDocument1) {
                       reserve_status = gameDocument1.data['reserve_status'];
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: gameData.userList, gameData: gameData, stadiumData: stadiumData, reserve_status: reserve_status,), fullscreenDialog: true)).then((data) {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: gameData.userList, gameData: gameData, stadiumData: stadiumData, reserve_status: reserve_status, docId: gameList[index]), fullscreenDialog: true)).then((data) {
                       });
                       isAvailable = true;
                     });
