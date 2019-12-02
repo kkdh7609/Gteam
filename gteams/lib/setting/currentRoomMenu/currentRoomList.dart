@@ -59,6 +59,7 @@ class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
               ),
               title: Text(
                 gameData.gameName,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontFamily: 'Dosis'),
               ),
               subtitle: Row(

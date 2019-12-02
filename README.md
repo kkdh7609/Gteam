@@ -24,7 +24,7 @@
 ---------------------------------------
 ## To-Do List 
 # DUE DATE : 2019-12-10 
-- ALL : 시간 지난 것 관리 / 예약 시간 관리 / 그룹 채팅 / 구글로그인&이메일 인증 / 풋살장 DB 구축
+- ALL : 시간 지난 방 처리 / 예약 시간 관리 / 푸시 알람 / 필터링 / 구글로그인&이메일 인증 / 풋살장 DB 구축 
 - 김도현: </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 - 김영운: </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 - 김학준: </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
