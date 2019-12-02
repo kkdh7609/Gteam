@@ -13,6 +13,7 @@ class ManagerManagement {
       'info_status': false,
       'permission': false,
       'MyStadium': [],
+      'fund': 0
       // To check basic information about user[ True=> setting complete] ex) gender , age etc..
     }).then((value) {
       Firestore.instance.collection('/managerReg').add({

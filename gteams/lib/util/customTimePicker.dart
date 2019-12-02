@@ -45,7 +45,7 @@ enum _TimePickerHeaderId {
 }
 
 bool isChanged;
-
+bool flag = false;
 /// Provides properties for rendering time picker header fragments.
 @immutable
 class _TimePickerFragmentContext {
@@ -1080,7 +1080,8 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
   void didUpdateWidget(_Dial oldWidget) {
     super.didUpdateWidget(oldWidget);
     _updateDialRingFromWidget();
-    if (widget.mode != oldWidget.mode || widget.selectedTime != oldWidget.selectedTime) {
+    if (widget.mode != oldWidget.mode || widget.selectedTime != oldWidget.selectedTime || flag) {
+      flag = false;
       if (!_dragging)
         _animateTo(_getThetaForTime(widget.selectedTime));
     }
@@ -1570,6 +1571,7 @@ class _CustomTimePickerDialogState extends State<_CustomTimePickerDialog> {
 
   void _handleTimeChanged(TimeOfDay value) {
     _vibrate();
+    flag = true;
     setState(() {
       int minute;
       int hour;
