@@ -482,7 +482,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
             height: MediaQuery.of(context).size.height * 0.3,
             decoration: new BoxDecoration(
               image: new DecorationImage(
-                image: new AssetImage("assets/image/game/room/footsal_club.jpg"),
+                image: NetworkImage(widget.stadiumData.imagePath),
                 fit: BoxFit.fill,
               ),
             )),
@@ -490,7 +490,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
           height: MediaQuery.of(context).size.height * 0.3,
           padding: EdgeInsets.all(40.0),
           width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(color: Color.fromRGBO(58, 66, 86, .9)),
+          decoration: BoxDecoration(color: Color.fromRGBO(58, 66, 86, .7)),
           child: Center(
             child: _main_info_text(),
           ),
@@ -515,88 +515,96 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SizedBox(height: 8.0),
-            Text(
-              widget.gameData.gameName,
-              style: TextStyle(color: Colors.white, fontSize: 25.0, fontWeight: FontWeight.w600),
+            Expanded(
+              flex: 1,
+              child: Text(
+                widget.gameData.gameName,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: Colors.white, fontSize: 25.0, fontWeight: FontWeight.w600),
+              ),
             ),
-            SizedBox(height: 8.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                    padding: EdgeInsets.only(left: 10.0),
-                    child: Text(
-                      "시작: " + widget.gameData.startTime,
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    )),
-                Padding(
-                    padding: EdgeInsets.only(left: 10.0),
-                    child: Text(
-                      "/",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    )),
-                Padding(
-                    padding: EdgeInsets.only(left: 10.0),
-                    child: Text(
-                      "종료: " + widget.gameData.endTime,
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    )),
-              ],
+            Expanded(
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                      padding: EdgeInsets.only(left: 10.0),
+                      child: Text(
+                        "시작: " + widget.gameData.startTime,
+                        style: TextStyle(color: Colors.white, fontSize: 15),
+                      )),
+                  Padding(
+                      padding: EdgeInsets.only(left: 10.0),
+                      child: Text(
+                        "/",
+                        style: TextStyle(color: Colors.white, fontSize: 15),
+                      )),
+                  Padding(
+                      padding: EdgeInsets.only(left: 10.0),
+                      child: Text(
+                        "종료: " + widget.gameData.endTime,
+                        style: TextStyle(color: Colors.white, fontSize: 15),
+                      )),
+                ],
+              ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Expanded(
-                    flex: 7,
-                    child: Padding(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          "희망 수준: " + widget.gameData.gameLevel.toString(),
-                          style: TextStyle(color: Colors.white),
-                        ))),
-                Expanded(
-                  flex: 3,
-                  child: widget.reserve_status >= 1
-                      ? Container(
-                          padding: const EdgeInsets.all(7.0),
-                          decoration: new BoxDecoration(border: new Border.all(color: Colors.white), borderRadius: BorderRadius.circular(5.0)),
-                          child: widget.reserve_status == 2 ?
-                          Text("예약 완료", style: TextStyle(color: Colors.amberAccent, fontSize: 15.0, fontWeight: FontWeight.w600)) :
-                          Text("예약 접수중", style: TextStyle(color: Colors.amberAccent, fontSize: 15.0, fontWeight: FontWeight.w600)),
-                  )
-                      : Container(
-                          padding: const EdgeInsets.all(4.0),
-                          decoration: new BoxDecoration(border: new Border.all(color: Colors.white), borderRadius: BorderRadius.circular(5.0)),
-                          child: Center(
-                            child: Row(
-                              children: <Widget>[
-                                InkWell(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(32.0),
-                                  ),
-                                  onTap: () {},
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(1.0),
-                                    child: Icon(
-                                      Icons.people,
-                                      color: Colors.white,
-                                    ),
-                                  ),
+            Expanded(
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                      flex: 7,
+                      child: Padding(
+                          padding: EdgeInsets.only(left: 10.0),
+                          child: Text(
+                            "희망 수준: " + widget.gameData.gameLevel.toString(),
+                            style: TextStyle(color: Colors.white),
+                          ))),
+                  Expanded(
+                    flex: 3,
+                    child: widget.reserve_status >= 1
+                        ? Container(
+                      padding: const EdgeInsets.all(7.0),
+                      decoration: new BoxDecoration(border: new Border.all(color: Colors.white), borderRadius: BorderRadius.circular(5.0)),
+                      child: widget.reserve_status == 2 ?
+                      Text("예약 완료", style: TextStyle(color: Colors.amberAccent, fontSize: 15.0, fontWeight: FontWeight.w600)) :
+                      Text("예약 접수중", style: TextStyle(color: Colors.amberAccent, fontSize: 15.0, fontWeight: FontWeight.w600)),
+                    )
+                        : Container(
+                        padding: const EdgeInsets.all(4.0),
+                        decoration: new BoxDecoration(border: new Border.all(color: Colors.white), borderRadius: BorderRadius.circular(5.0)),
+                        child: Center(
+                          child: Row(
+                            children: <Widget>[
+                              InkWell(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(32.0),
                                 ),
-                                SizedBox(width: 3),
-                                Text(
-                                  widget.currentUserList.length.toString() + " / " + widget.gameData.groupSize.toString(),
-                                  style: TextStyle(
+                                onTap: () {},
+                                child: Padding(
+                                  padding: const EdgeInsets.all(1.0),
+                                  child: Icon(
+                                    Icons.people,
                                     color: Colors.white,
-                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                              ],
-                            ),
-                          )),
-                )
-              ],
+                              ),
+                              SizedBox(width: 3),
+                              Text(
+                                widget.currentUserList.length.toString() + " / " + widget.gameData.groupSize.toString(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )),
+                  )
+                ],
+              ),
             ),
           ],
         ));
@@ -699,17 +707,21 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  "총 비용 :" + widget.gameData.totalPrice.toString() + " 원 / 인당 :" + widget.gameData.perPrice.toString() + " 원",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w200,
-                    fontSize: 22,
-                    letterSpacing: 0.27,
-                    color: GameRoomTheme.nearlyBlue,
+                Expanded(
+                  flex:8,
+                  child: Text(
+                    "총 비용:" + widget.gameData.totalPrice.toString() + "원 / 인당:" + widget.gameData.perPrice.toString() + "원",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w200,
+                      fontSize: 20,
+                      letterSpacing: 0.27,
+                      color: GameRoomTheme.nearlyBlue,
+                    ),
                   ),
                 ),
-                Container(
+                Expanded(
+                  flex: 2,
                   child: Row(
                     children: <Widget>[
                       Text(
@@ -717,7 +729,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           fontWeight: FontWeight.w200,
-                          fontSize: 22,
+                          fontSize: 20,
                           letterSpacing: 0.27,
                           color: GameRoomTheme.grey,
                         ),
