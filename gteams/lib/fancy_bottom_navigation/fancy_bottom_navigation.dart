@@ -101,9 +101,16 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
 
     if (mounted) {
       setState(() {
-        currentSelected = selected;
-        _circleAlignX = -1 + (2 / (widget.tabs.length - 1) * selected);
-        nextIcon = widget.tabs[selected].iconData;
+        if(selected == 1){
+          currentSelected = 0;
+          _circleAlignX = -1 + (2 / (widget.tabs.length - 1) * 0);
+          nextIcon = widget.tabs[0].iconData;
+        }
+        else {
+          currentSelected = selected;
+          _circleAlignX = -1 + (2 / (widget.tabs.length - 1) * selected);
+          nextIcon = widget.tabs[selected].iconData;
+        }
       });
     }
   }

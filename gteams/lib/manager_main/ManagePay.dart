@@ -22,9 +22,6 @@ class _ManagePayState extends State<ManagePay> {
   }
 
   @override
-
-
-  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,

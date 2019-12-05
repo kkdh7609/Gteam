@@ -144,18 +144,17 @@ class _MainManagerPageScreenState extends State<MainManagerPageScreen> {
           tabs: [
             TabData(iconData: Icons.home, title: "Home"),
             TabData(iconData: FontAwesomeIcons.coins, title: "Point"),
-            TabData(iconData: Icons.person, title: "Profile"),
+            // TabData(iconData: Icons.person, title: "Profile"),
             TabData(iconData: Icons.power_settings_new, title: "Logout")
           ],
           onTabChangedListener: (position) {
             setState(() {
-              if(position == 1)
+              if(position == 1){
                 Navigator.push(context, MaterialPageRoute(builder: (context) => ManagePay()));
-              if(position == 3)
+              }
+              if(position == 2)
                 widget.onSignedOut();
             });
-
-            position = 0;
           },
         )
     );
