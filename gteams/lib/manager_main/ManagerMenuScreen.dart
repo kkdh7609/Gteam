@@ -114,7 +114,7 @@ class _MainManagerPageScreenState extends State<MainManagerPageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return staRefList.length == 0 ? Center(child: CircularProgressIndicator()) : Scaffold(
       body: Container(
         child: MenuPager(
           children: mapIndexed(
@@ -135,6 +135,7 @@ class _MainManagerPageScreenState extends State<MainManagerPageScreen> {
           ).toList(),
         ),
       ),
+
         bottomNavigationBar: FancyBottomNavigation(
           activeIconColor: Colors.white,
           barBackgroundColor: Color(0xff20253d),

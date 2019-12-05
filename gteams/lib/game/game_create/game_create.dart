@@ -663,9 +663,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
                                 crudObj.getDocumentById('user', RootPage.userDocID).then((userDoc) {
                                   userGameList = List.from(userDoc.data['gameList']);
                                   userGameList.add(gameDoc.documentID);
-                                  //print(111111);
                                   print(userGameList.length);
-                                  //print(222222);
                                   crudObj.updateDataThen('user', RootPage.userDocID, {
                                     'gameList': userGameList,
                                   }).then((data) {
