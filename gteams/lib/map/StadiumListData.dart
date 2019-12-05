@@ -64,7 +64,7 @@ class StadiumListData {
       etc: json['etc'],
       parkingHours: json['parkingHours'],
       price: json['price'],
-      operationTime: json['operationTime'], // operationTime의 각요소접근 방법 => operationTime['openTime'] .operationTime['endTime'] .
+      operationTime: json['strTimes'], // operationTime의 각요소접근 방법 => operationTime['openTime'] .operationTime['endTime'] .
       lat: json['lat'],
       lng : json['lng'],
       id: json['id'],
