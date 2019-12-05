@@ -192,6 +192,7 @@ class _StadiumEditPageState extends State<StadiumEditPage>{
         _call = _callController.text;
       });
     });
+
     _times = List.from(widget.stdRef["intTimes"]);
     _strTimes = List.from(widget.stdRef["strTimes"]);
     _viewTimes = listTimeToStr(_strTimes);

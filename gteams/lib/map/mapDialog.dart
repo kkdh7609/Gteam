@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gteams/map/mapWidget.dart';
 import 'package:gteams/map/StadiumListData.dart';
+import 'package:gteams/util/timeUtil.dart';
 
 typedef selectFunc = void Function(String,String, String);
 
@@ -83,7 +84,7 @@ class CustomDialog extends StatelessWidget{
                           SizedBox(height: 7.0),
                           LocationWidget(location: stadiumData.location),
                           SizedBox(height: 7.0),
-                          TimeWidget(checkTimes: times,),
+                          TimeWidget(strTimes: listTimeToStr(stadiumData.operationTime),),
                           SizedBox(height: 7.0),
                           PhoneWidget(text: stadiumData.telephone),
                           SizedBox(height: 4.0),

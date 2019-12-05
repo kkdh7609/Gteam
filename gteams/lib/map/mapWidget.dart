@@ -156,9 +156,10 @@ class LocationWidget extends StatelessWidget{
 }
 
 class TimeWidget extends StatelessWidget{
-  TimeWidget({this.checkTimes});
+  TimeWidget({this.checkTimes, this.strTimes});
 
   final String checkTimes;
+  final String strTimes;
 
   @override
   Widget build(BuildContext context){
@@ -184,10 +185,10 @@ class TimeWidget extends StatelessWidget{
                             ),
                             SizedBox(height: 4.0),
                             AutoSizeText(
-                                checkTimes,
+                                strTimes,
                                 style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
                                 minFontSize: 13.0,
-                                maxLines: 2,
+                                maxLines: 100,
                                 overflow: TextOverflow.ellipsis
                             ),
                             Divider(height: 1.0, color: Colors.black)
