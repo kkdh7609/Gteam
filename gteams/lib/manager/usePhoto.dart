@@ -6,20 +6,26 @@ import 'dart:io';
 typedef FileCallBack = void Function(File);
 
 class ImageCapture extends StatefulWidget{
-  ImageCapture({this.photo, this.onPressed});
+  ImageCapture({this.photo, this.image, this.onPressed});
 
   final File photo;
+  final ImageProvider image;
   final FileCallBack onPressed;
   createState() => _ImageCaptureState();
 }
 
 class _ImageCaptureState extends State<ImageCapture>{
   File _imageFile;
-//  ImageProvider _image;
+  ImageProvider _image;
+  bool isFirst;
 
   @override
   void initState(){
     super.initState();
+    isFirst = true;
+    if(widget.image != null){
+      _image = widget.image;
+    }
 //    _image = widget.photo;
   }
 
@@ -27,16 +33,18 @@ class _ImageCaptureState extends State<ImageCapture>{
     File selected = await ImagePicker.pickImage(source: source);
     if(selected != null) {
       setState(() {
+        isFirst = false;
         _imageFile = selected;
-//        _image = FileImage(_imageFile);
+        _image = FileImage(_imageFile);
       });
     }
   }
 
   void _clear(){
     setState((){
+      isFirst = false;
       _imageFile = null;
-//      _image = null;
+      _image = null;
     });
   }
 
@@ -48,8 +56,9 @@ class _ImageCaptureState extends State<ImageCapture>{
     );
 
     setState((){
+      isFirst = false;
       _imageFile = cropped ?? _imageFile;
-//      _image = cropped ?? FileImage(_imageFile);
+      _image = cropped ?? FileImage(_imageFile);
     });
   }
 
@@ -82,18 +91,20 @@ class _ImageCaptureState extends State<ImageCapture>{
                         shape: BoxShape.circle,
                         image: DecorationImage(
                             fit: BoxFit.fill,
-                            image: _imageFile != null ? FileImage(_imageFile) : AssetImage("assets/image/camera.png")
+                            image: _image != null ? _image : AssetImage("assets/image/camera.png")
                         )
                     )
                 )),
-              if(_imageFile != null) ...[
+              if(_image != null) ...[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
+                      if(!isFirst) ...[
                       FlatButton(
                         child: Icon(Icons.crop),
                         onPressed: _cropImage,
-                      ),
+                      )]
+                      ,
                       FlatButton(
                         child: Icon(IconData(58829, fontFamily: "MaterialIcons")),
                         onPressed: _clear,
@@ -131,10 +142,15 @@ class _ImageCaptureState extends State<ImageCapture>{
                               color: Colors.white)))),
                   onPressed: () {
                     if(_imageFile != null){
-                      widget.onPressed(_imageFile);
+                        widget.onPressed(_imageFile);
                     }
                     else{
-                      widget.onPressed(null);
+                      if(_image != null){
+
+                      }
+                      else {
+                        widget.onPressed(null);
+                      }
                     }
                     Navigator.pop(context);
                   },

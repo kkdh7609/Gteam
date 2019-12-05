@@ -4,13 +4,16 @@ import 'package:gteams/manager/usePhoto.dart';
 import 'package:gteams/manager/addStadium.dart';
 import 'package:gteams/manager_main/FacilityMenu.dart';
 
+typedef newFunc = Future<void> Function();
+
 class CardItem extends StatelessWidget {
   final Widget child;
   final bool lastindex;
   final DocumentSnapshot staRef;
-  final VoidCallback refreshData;
+  final newFunc refreshData;
+  final int index;
 
-  CardItem({@required this.child, @required this.lastindex, this.staRef, @required this.refreshData});
+  CardItem({@required this.child, @required this.lastindex, this.staRef, this.index, @required this.refreshData});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +21,7 @@ class CardItem extends StatelessWidget {
       onTap: () {
         lastindex == true ?
         Navigator.push(context, MaterialPageRoute(builder: (context) => StadiumCreatePage(refreshData: refreshData,))) :
-        Navigator.push(context, MaterialPageRoute(builder: (context) => FacilityMenuPage(staRef: this.staRef)));},
+        Navigator.push(context, MaterialPageRoute(builder: (context) => FacilityMenuPage(staRef: this.staRef, refreshData: this.refreshData, index: this.index)));},
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(13.0),

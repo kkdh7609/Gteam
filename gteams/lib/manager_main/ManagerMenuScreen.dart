@@ -12,6 +12,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gteams/manager_main/ManagePay.dart';
 import 'package:gteams/root_page.dart';
 
+typedef newFunc = Future<void> Function();
 
 class MainManagerPageScreen extends StatefulWidget {
 /*
@@ -50,7 +51,7 @@ class _MainManagerPageScreenState extends State<MainManagerPageScreen> {
     super.initState();
   }
 
-  void refreshFacilities() async {
+  Future<void> refreshFacilities() async {
     List<Facility> tempfacilities = [
         Facility(
           name: "Plus",
@@ -104,7 +105,7 @@ class _MainManagerPageScreenState extends State<MainManagerPageScreen> {
       });
        */
     }
-
+    RootPage.facilityData = List.of(tempStaRefList);
     setState((){
       staRefList = List.of(tempStaRefList);
       facilities = List.of(tempfacilities);
@@ -128,6 +129,7 @@ class _MainManagerPageScreenState extends State<MainManagerPageScreen> {
                 lastindex: facility.lastindex == true ? true : false,
                 staRef: facility.lastindex == true ? null : staRefList[index],
                 refreshData: refreshFacilities,
+                index: index
               ),
             ),
           ).toList(),

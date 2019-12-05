@@ -1,21 +1,25 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gteams/map/google_map.dart';
 import 'package:gteams/manager/usePhoto.dart';
 import 'package:gteams/manager/stadiumWidget.dart';
 import 'package:gteams/manager/managerSetTime.dart';
 import 'package:gteams/util/timeUtil.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
-class StadiumCreatePage extends StatefulWidget{
-  StadiumCreatePage({@required this.refreshData});
+class StadiumEditPage extends StatefulWidget{
+  StadiumEditPage({@required this.refreshData, @required this.stdRef});
 
   final VoidCallback refreshData;
+  final DocumentSnapshot stdRef;
   @override
-  _StadiumCreatePageState createState() => _StadiumCreatePageState();
+  _StadiumEditPageState createState() => _StadiumEditPageState();
 }
 
-class _StadiumCreatePageState extends State<StadiumCreatePage>{
+class _StadiumEditPageState extends State<StadiumEditPage>{
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   File _photo;
@@ -47,6 +51,8 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
   TextEditingController _callController;
 
   bool _isAvailable;
+  bool _pictureChanged;
+
   String _address;
   String _locId;
   double _lat;
@@ -84,11 +90,11 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
 
 
   void onPhotoPressed(){
-    Navigator.push(context, MaterialPageRoute(builder: (context) => ImageCapture(photo: _photo, onPressed: changePhoto, image: _image)));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ImageCapture(photo: _photo, onPressed: changePhoto, image: _image,)));
   }
 
   void onTimePressed(){
-    Navigator.push(context, MaterialPageRoute(builder: (context) => SetTime(timeFunc: timeFunc, timeList: _times,)));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => SetTime(timeFunc: timeFunc, timeList: _times)));
   }
 
   void timeFunc(List<int> times, List<String> strTimes){
@@ -109,6 +115,7 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
       else{
         _image = null;
       }
+      _pictureChanged = true;
     });
   }
 
@@ -154,18 +161,20 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
   @override
   void initState(){
     super.initState();
-    _clothes = 0;
-    _shoes = 0;
-    _parking = 0;
-    _shower = 0;
-    _ball = 0;
+    _clothes = widget.stdRef["isClothes"];
+    _shoes = widget.stdRef["isShoes"];
+    _parking = widget.stdRef["isParking"];
+    _shower = widget.stdRef["isShower"];
+    _ball = widget.stdRef["isBall"];
     _nameController = TextEditingController();
+    _stadiumName = widget.stdRef["stadiumName"];
     _priceController = TextEditingController();
+    _price = widget.stdRef["price"];
     _callController = TextEditingController();
+    _call = widget.stdRef["telephone"];
     _nameController.text = _stadiumName;
     _priceController.text = _price != null ? _price.toString() : null;
     _callController.text = _call;
-
     _nameController.addListener((){
       setState(() {
         _stadiumName = _nameController.text;
@@ -183,9 +192,19 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
         _call = _callController.text;
       });
     });
-
-    _checkTimes = false;
+    _times = List.from(widget.stdRef["intTimes"]);
+    _strTimes = List.from(widget.stdRef["strTimes"]);
+    _viewTimes = listTimeToStr(_strTimes);
+    _locId = widget.stdRef["locId"];
+    _lat = widget.stdRef["lat"];
+    _lng = widget.stdRef["lng"];
+    _checkTimes = true;
+    _locName = widget.stdRef["location"];
     _isAvailable = true;
+    _pictureChanged = false;
+    _image = CachedNetworkImageProvider(widget.stdRef["imagePath"]);
+
+    // Todo   수정 때는 위치는 수정 안되게, 그리고 보낼때 update로 보내게, 사진 바뀐거 확인, 그리고 문자 있는지 확인
   }
 
   void _getLocateData(address, locId, lat, lng){
@@ -196,13 +215,7 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
   }
 
   void locationPress(){
-    if(_isAvailable){
-      _isAvailable = false;
-      Navigator.push(context, MaterialPageRoute(
-          builder: (context) =>
-              MapTest(needData: _getLocateData, nowReq: mapReq.newLocation)));
-      _isAvailable = true;
-    }
+    // 수정시에는 위치 변경 불가
   }
 
   void setAvailable(bool state){
@@ -217,10 +230,10 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
 
   List<Widget> actWidget(){
     if(_isAvailable){
-      return [CheckButton(formKey: _formKey, photo: _photo, stadiumName: _stadiumName,
-          price : _price.toString(), location : _locName, lat : _lat,lng : _lng,
-          locId : _locId,telephone : _call, isParking : _parking, isClothes :_clothes, isShower :_shower,isShoes : _shoes,isBall : _ball,
-          refreshData: widget.refreshData, intTimes: _times, strTimes: _strTimes, setAvailable: setAvailable, popFunc: _popThisContext
+      print(_nameController.text);
+      return [EditButton(formKey: _formKey, photo: _photo, stadiumName: _stadiumName,
+          price : _price.toString(), telephone : _call, isParking : _parking, isClothes :_clothes, isShower :_shower,isShoes : _shoes,isBall : _ball,
+          refreshData: widget.refreshData, intTimes: _times, strTimes: _strTimes, setAvailable: setAvailable, popFunc: _popThisContext, isPhotoChanged: _pictureChanged, docId: widget.stdRef["stdId"],
       )];
     }
     else{
@@ -233,7 +246,7 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
     return Scaffold(
         appBar: AppBar(
             backgroundColor: Color(0xff20253d),
-            title: Center(child: Text('Add new stadium')),
+            title: Center(child: Text('경기장 정보 수정')),
             actions: actWidget()
         ),
         body: Form(

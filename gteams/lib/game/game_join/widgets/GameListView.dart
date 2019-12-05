@@ -159,14 +159,14 @@ class GameListView extends StatelessWidget {
                                                           mainAxisAlignment: MainAxisAlignment.start,
                                                           crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: <Widget>[
-                                                            stadiumData.isClothes == 0 ?
+                                                            stadiumData.isClothes != 0 ?
                                                                 Stack(
                                                                   children: <Widget>[
                                                                     Icon(FontAwesomeIcons.tshirt, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35),
 //                                                                    child: Icon( Icons.clear, size: 70, color: Color(0xFF880E4F))
                                                                   ]
                                                                 ) :
-                                                            Icon(FontAwesomeIcons.tshirt, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35),
+                                                            Icon(FontAwesomeIcons.tshirt, color: Colors.grey, size: 35),
 //                                                            Icon(FontAwesomeIcons.tshirt, color: Colors.grey, size: 28),
                                                             SizedBox(height: 5),
                                                             Text(
