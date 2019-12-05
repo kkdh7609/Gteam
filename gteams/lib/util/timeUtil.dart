@@ -59,3 +59,15 @@ String listTimeConverter(times){
   }
   return strTime;
 }
+
+String listTimeToStr(strTimes){
+  List<String> days = ["월", "화", "수", "목", "금", "토", "일"];
+  String result = "";
+  for(int i = 0; i < days.length; i++){
+    result += (days[i] + ": " + strTimes[i]);
+    if(i != days.length - 1){
+      result += "\n";
+    }
+  }
+  return result;
+}

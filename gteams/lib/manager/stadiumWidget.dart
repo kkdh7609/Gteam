@@ -11,9 +11,9 @@ typedef selectFunc = void Function(int);
 final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
 class PhotoWidget extends StatelessWidget{
-  PhotoWidget({this.photo, this.onPressed});
+  PhotoWidget({this.image, this.onPressed});
 
-  final File photo;
+  final ImageProvider image;
   final VoidCallback onPressed;
 
   @override
@@ -29,7 +29,7 @@ class PhotoWidget extends StatelessWidget{
             shape: BoxShape.circle,
             image: DecorationImage(
               fit: BoxFit.fill,
-              image: photo != null? FileImage(photo) : AssetImage("assets/image/camera.png")
+              image: image != null? image : AssetImage("assets/image/camera.png")
             )
           )
         )
@@ -84,25 +84,26 @@ class TextWidget extends StatelessWidget{
 }
 
 
-class CheckButton extends StatelessWidget{
-
-  CheckButton({this.formKey,this.photo, this.stadiumName,this.price,this.location,this.lat,this.lng,this.locId,this.telephone,this.isParking,this.isClothes,this.isShower,this.isBall,this.isShoes, @required this.refreshData});
+class EditButton extends StatelessWidget{
+  EditButton({this.formKey,this.photo, this.stadiumName,this.price, this.telephone,this.isParking,this.isClothes,this.isShower,this.isBall,this.isShoes, this.intTimes, this.strTimes, this.setAvailable, this.isPhotoChanged, this.docId, @required this.refreshData, @required this.popFunc});
 
   final GlobalKey<FormState> formKey;
+  final List<int> intTimes;
   final File photo;
   final String stadiumName;
   final String price;
-  final String location;
-  final double lat;
-  final double lng;
-  final String locId;
   final String telephone;
+  final String docId;
+  final List<String> strTimes;
   final int isParking;
   final int isClothes;
   final int isShower;
   final int isShoes;
   final int isBall;
+  final bool isPhotoChanged;
   final VoidCallback refreshData;
+  final VoidCallback popFunc;
+  final void Function(bool) setAvailable;
 
   String photoURL;
 
@@ -111,16 +112,109 @@ class CheckButton extends StatelessWidget{
     return IconButton(
         icon: Icon(Icons.check),
         onPressed: (() async {
-          StorageReference storageReference = FirebaseStorage.instance.ref().child("stadium/${stadiumName}.jpg");
-          StorageUploadTask uploadTask = storageReference.putFile(photo);
-
-          await uploadTask.onComplete;
-          await storageReference.getDownloadURL().then((fileURL) {
-            photoURL = fileURL;
-            print("photoURL completed");
-          });
+          setAvailable(false);
 
           if(formKey.currentState.validate()){
+            StorageReference storageReference;
+            if(isPhotoChanged) {
+              if (photo != null) {
+                storageReference = FirebaseStorage.instance.ref().child("stadium/${DateTime
+                    .now()
+                    .millisecondsSinceEpoch
+                    .toString()}.jpg");
+                StorageUploadTask uploadTask = storageReference.putFile(photo);
+                await uploadTask.onComplete;
+              }
+              else {
+                storageReference = FirebaseStorage.instance.ref().child("stadium/camera.png");
+              }
+              // StorageUploadTask uploadTask = storageReference.putFile(photo);
+              await storageReference.getDownloadURL().then((fileURL) {
+                photoURL = fileURL;
+                print("photoURL completed");
+              });
+
+              await Firestore.instance.collection('stadium').document(docId).updateData({
+                'imagePath' : photoURL
+              });
+            }
+            print(stadiumName);
+            await Firestore.instance.collection('stadium').document(docId).updateData({
+              'stadiumName' : stadiumName,
+              'price' : int.parse(price),
+              'telephone' : telephone,
+              'isParking' : isParking,
+              'isClothes' : isClothes,
+              'isShower' : isShower,
+              'isShoes' : isShoes,
+              'isBall' : isBall,
+              'intTimes' : intTimes,
+              'strTimes' : strTimes,
+              'gameList': [],
+              'notPermitList': []
+            });
+            refreshData();
+            popFunc();
+          }
+          else{
+            setAvailable(true);
+          }
+        })
+    );
+  }
+}
+
+
+class CheckButton extends StatelessWidget{
+
+  CheckButton({this.formKey,this.photo, this.stadiumName,this.price,this.location,this.lat,this.lng,this.locId,this.telephone,this.isParking,this.isClothes,this.isShower,this.isBall,this.isShoes, this.intTimes, this.strTimes, this.setAvailable, @required this.refreshData, @required this.popFunc});
+
+  final GlobalKey<FormState> formKey;
+  final List<int> intTimes;
+  final File photo;
+  final String stadiumName;
+  final String price;
+  final String location;
+  final double lat;
+  final double lng;
+  final String locId;
+  final String telephone;
+  final List<String> strTimes;
+  final int isParking;
+  final int isClothes;
+  final int isShower;
+  final int isShoes;
+  final int isBall;
+  final VoidCallback refreshData;
+  final VoidCallback popFunc;
+  final void Function(bool) setAvailable;
+
+
+  String photoURL;
+
+  @override
+  Widget build(BuildContext context){
+    return IconButton(
+        icon: Icon(Icons.check),
+        onPressed: (() async {
+          setAvailable(false);
+
+          if(formKey.currentState.validate()){
+            StorageReference storageReference;
+            if(photo != null){
+              storageReference = FirebaseStorage.instance.ref().child("stadium/${DateTime.now().millisecondsSinceEpoch.toString()}.jpg");
+              StorageUploadTask uploadTask = storageReference.putFile(photo);
+              await uploadTask.onComplete;
+            }
+            else{
+              storageReference = FirebaseStorage.instance.ref().child("stadium/camera.png");
+            }
+            // StorageUploadTask uploadTask = storageReference.putFile(photo);
+            await storageReference.getDownloadURL().then((fileURL) {
+              photoURL = fileURL;
+              print("photoURL completed");
+            });
+
             var data = await Firestore.instance.collection('stadium').add({
               'imagePath' : photoURL,
               'stadiumName' : stadiumName,
@@ -135,6 +229,8 @@ class CheckButton extends StatelessWidget{
               'isShower' : isShower,
               'isShoes' : isShoes,
               'isBall' : isBall,
+              'intTimes' : intTimes,
+              'strTimes' : strTimes,
               'gameList': [],
               'notPermitList': []
             });
@@ -143,8 +239,11 @@ class CheckButton extends StatelessWidget{
             myStadium.add(data.documentID);
             await Firestore.instance.collection('user').document(RootPage.userDocID).updateData({"MyStadium": myStadium});
             await Firestore.instance.collection('stadium').document(data.documentID).updateData({"stdId": data.documentID});
-            Navigator.pop(context);
             refreshData();
+            popFunc();
+          }
+          else{
+            setAvailable(true);
           }
         })
     );
@@ -250,10 +349,11 @@ class LocationWidget extends StatelessWidget{
 }
 
 class TimeWidget extends StatelessWidget{
-  TimeWidget({this.checkTimes, this.onPressed});
+  TimeWidget({this.checkTimes, this.strTimes, this.onPressed});
 
   final bool checkTimes;
   final VoidCallback onPressed;
+  final String strTimes;
 
   @override
   Widget build(BuildContext context){
@@ -276,10 +376,10 @@ class TimeWidget extends StatelessWidget{
                   )),
                   SizedBox(height: 4.0),
                   AutoSizeText(
-                    checkTimes ? "Edit times" : "Select times",
+                    checkTimes ? strTimes : "Select times",
                     style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
                     minFontSize: 13.0,
-                    maxLines: 2,
+                    maxLines: 100,
                     overflow: TextOverflow.ellipsis
                   ),
                   Divider(height: 1.0, color: Colors.black)
