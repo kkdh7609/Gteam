@@ -4,10 +4,15 @@ import 'package:gteams/manager/managerSetTime.dart';
 import 'package:gteams/manager/manageReserveList.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gteams/manager/calendar/managerCalendar.dart';
+import 'package:gteams/manager/editStadium.dart';
+import 'package:gteams/root_page.dart';
 
+typedef newFunc = Future<void> Function();
 class FacilityMenuPage extends StatefulWidget {
-  FacilityMenuPage({Key key, this.staRef}) : super(key: key);
+  FacilityMenuPage({Key key, this.staRef, this.refreshData, this.index}) : super(key: key);
   final DocumentSnapshot staRef;
+  final newFunc refreshData;
+  final int index;
 
   @override
   _FacilityMenuPageState createState() => _FacilityMenuPageState();
@@ -15,10 +20,23 @@ class FacilityMenuPage extends StatefulWidget {
 
 class _FacilityMenuPageState extends State<FacilityMenuPage> {
   String title;
+  DocumentSnapshot nowStaRef;
+  bool isAvailable = true;
   @override
   void initState(){
     title = widget.staRef.data["stadiumName"];
+    nowStaRef = widget.staRef;
     super.initState();
+  }
+
+  void newRefreshData() async {
+    isAvailable = false;
+    await widget.refreshData();
+    setState(() {
+      this.nowStaRef = RootPage.facilityData[widget.index];
+      title = nowStaRef.data["stadiumName"];
+    });
+    isAvailable = true;
   }
 
   @override
@@ -84,8 +102,10 @@ class _FacilityMenuPageState extends State<FacilityMenuPage> {
                                           ),
                                           trailing: Icon(Icons.keyboard_arrow_right, color: Colors.black, size: 30.0),
                                           onTap: (){
-                                            Navigator.push(context,
-                                                MaterialPageRoute(builder: (context) => SetTime()));
+                                            if(isAvailable) {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(builder: (context) => StadiumEditPage(refreshData: newRefreshData, stdRef: this.nowStaRef,)));
+                                            }
                                           }
                                       ),
                                       Divider(color: Colors.black, thickness: 0.5),
@@ -137,8 +157,10 @@ class _FacilityMenuPageState extends State<FacilityMenuPage> {
                                           ),
                                           trailing: Icon(Icons.keyboard_arrow_right, color: Colors.black, size: 30.0),
                                           onTap: (){
-                                            Navigator.push(context,
-                                                MaterialPageRoute(builder: (context) => CalendarViewApp()));
+                                            if(isAvailable) {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(builder: (context) => CalendarViewApp()));
+                                            }
                                           }
                                       ),
                                       Divider(color: Colors.black, thickness: 0.5),
@@ -190,8 +212,10 @@ class _FacilityMenuPageState extends State<FacilityMenuPage> {
                                           ),
                                           trailing: Icon(Icons.keyboard_arrow_right, color: Colors.black, size: 30.0),
                                           onTap: (){
-                                            Navigator.push(context,
-                                                MaterialPageRoute(builder: (context) => ReserveList(staRef: widget.staRef)));
+                                            if(isAvailable) {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(builder: (context) => ReserveList(staRef: this.nowStaRef)));
+                                            }
                                           }
                                       ),
                                       Divider(color: Colors.black, thickness: 0.5),

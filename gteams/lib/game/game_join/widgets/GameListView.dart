@@ -84,27 +84,14 @@ class GameListView extends StatelessWidget {
                                                   Expanded(
                                                     child: Text(
                                                       gameData.gameName,
+                                                      overflow: TextOverflow.ellipsis,
+                                                      maxLines: 1,
                                                       textAlign: TextAlign.left,
                                                       style: TextStyle(
                                                         fontFamily: 'Dosis',
                                                         fontWeight: FontWeight.w500,
                                                         fontSize: 20,
                                                       ),
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: 10),
-                                                  Icon(
-                                                    FontAwesomeIcons.calendar,
-                                                    size: 15,
-                                                    color: GameJoinTheme.buildLightTheme().primaryColor,
-                                                  ),
-                                                  Text(
-                                                    gameData.dateText + " : " + gameData.startTime + "~" + gameData.endTime,
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      fontFamily: 'Dosis',
-                                                      fontWeight: FontWeight.w600,
-                                                      fontSize: 13,
                                                     ),
                                                   ),
                                                   SizedBox(width: 65),
@@ -124,22 +111,38 @@ class GameListView extends StatelessWidget {
                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                 children: <Widget>[
                                                   Icon(
+                                                    FontAwesomeIcons.calendar,
+                                                    size: 15,
+                                                    color: GameJoinTheme.buildLightTheme().primaryColor,
+                                                  ),
+                                                  Text(
+                                                    gameData.dateText + " : " + gameData.startTime + "~" + gameData.endTime,
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      fontFamily: 'Dosis',
+                                                      fontWeight: FontWeight.w600,
+                                                      fontSize: 13,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 175,
+                                                  )
+                                                ],
+                                              ),
+                                              Row(
+                                                children: <Widget>[
+                                                  Icon(
                                                     FontAwesomeIcons.mapMarkerAlt,
                                                     size: 10,
                                                     color: GameJoinTheme.buildLightTheme().primaryColor,
                                                   ),
                                                   Text(
                                                     stadiumData.location.substring(0,stadiumData.location.lastIndexOf("구")+1),
-                                                    style: TextStyle(fontSize: 14, color: Colors.grey.withOpacity(0.8)),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 175,
-                                                  ),
-                                                  Text(
-                                                    (gameData.groupSize / 2).toInt().toString() +
-                                                        " VS " +
-                                                        (gameData.groupSize / 2).toInt().toString(),
-                                                    style: TextStyle(fontSize: 14, color: Colors.black, fontFamily: 'Dosis'),
+                                                      style: TextStyle(
+                                                        fontFamily: 'Dosis',
+                                                        fontWeight: FontWeight.w600,
+                                                        fontSize: 13,
+                                                      ),
                                                   ),
                                                 ],
                                               ),
@@ -156,14 +159,14 @@ class GameListView extends StatelessWidget {
                                                           mainAxisAlignment: MainAxisAlignment.start,
                                                           crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: <Widget>[
-                                                            stadiumData.isClothes == 0 ?
+                                                            stadiumData.isClothes != 0 ?
                                                                 Stack(
                                                                   children: <Widget>[
                                                                     Icon(FontAwesomeIcons.tshirt, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35),
 //                                                                    child: Icon( Icons.clear, size: 70, color: Color(0xFF880E4F))
                                                                   ]
                                                                 ) :
-                                                            Icon(FontAwesomeIcons.tshirt, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35),
+                                                            Icon(FontAwesomeIcons.tshirt, color: Colors.grey, size: 35),
 //                                                            Icon(FontAwesomeIcons.tshirt, color: Colors.grey, size: 28),
                                                             SizedBox(height: 5),
                                                             Text(

@@ -112,7 +112,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
         userGameList.add(widget.docId);
         await crudObj.updateDataThen('user', RootPage.userDocID, {'gameList': userGameList});
         Navigator.push(context, MaterialPageRoute(builder: (context) =>
-            currentRoomPage(currentUserList: currentUserList, gameData: widget.gameData, stadiumData: widget.stadiumData, reserve_status: reserve_status,),
+            currentRoomPage(currentUserList: currentUserList, gameData: widget.gameData, stadiumData: widget.stadiumData, reserve_status: reserve_status, docId: widget.docId),
             fullscreenDialog: true)).then((data) {});
         //Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList,gameData: widget.gameData,stadiumData: widget.stadiumData,reserve_status: reserve_status,), fullscreenDialog: true)).then((data){
         if (this.mounted) {
@@ -142,8 +142,11 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
             Column(
               children: <Widget>[
                 AspectRatio(
-                  aspectRatio: 1.2,
-                  child: Image.asset('assets/image/game/room/footsal_club.jpg'),
+                  aspectRatio: 1,
+                  child: Image(
+                    fit: BoxFit.fill,
+                    image: NetworkImage(widget.stadiumData.imagePath),
+                  )
                 ),
               ],
             ),
@@ -248,6 +251,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                                                   MaterialPageRoute(
                                                       builder: (context) =>
                                                           MapTest(onSelected: _changeState, nowReq: mapReq.mapCheck,stadiumData: widget.stadiumData,)));
+                                              isAvailable = true;
                                             }
                                           })
                                     ],
@@ -275,6 +279,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                             ),
                           ),
                           Expanded(
+                            flex: 1,
                             child: AnimatedOpacity(
                               duration: Duration(milliseconds: 500),
                               opacity: opacity2,
@@ -296,9 +301,6 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                               ),
                             ),
                           ),
-                          SizedBox(
-                            height: MediaQuery.of(context).padding.bottom,
-                          )
                         ],
                       ),
                     ),
@@ -380,62 +382,6 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                             showAlertDialog("참가 실패", "포인트가 부족합니다.", context);
                           }
                         },
-              /*onTap:(){
-                if (isAvailable) {
-                  isAvailable = false;
-                  currentUserList = widget.initialUserList.toList();
-                  currentUserList.add(RootPage.user_email);
-                  //crudObj.getDocumentById('game3', widget.docId).then((data){
-                  int price = widget.gameData.perPrice;
-                  payObj.getFund().then((fundData) {
-                    if (fundData >= price) {
-                      if(widget.gameData.groupSize >= currentUserList.length) {
-                        int newFund = fundData - price;
-                        //reserve_status = widget.gameData.groupSize == currentUserList.length ? 1 : 0; // 1 => 방이 가득찼을때 0 방 가득 안찼을때
-                        payObj.updateFund(newFund).then((waitData1) {
-                          crudObj.updateDataThen('game3', widget.docId, {
-                            'userList': currentUserList,
-                            'reserve_status': widget.gameData.groupSize == currentUserList.length ? 1 : 0,
-                          }).then((waitData2) {
-                            crudObj.getDocumentById('game3', widget.docId).then((gameDocument1) {
-                              reserve_status = gameDocument1.data['reserve_status'];
-                              crudObj.getDocumentById('user', RootPage.userDocID).then((userDoc) {
-                                userGameList = List.from(userDoc.data['gameList']);
-                                userGameList.add(widget.docId);
-                                crudObj.updateDataThen('user', RootPage.userDocID, {'gameList': userGameList}).then((data) {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                                      currentRoomPage(currentUserList: currentUserList, gameData: widget.gameData, stadiumData: widget.stadiumData, reserve_status: reserve_status,),
-                                      fullscreenDialog: true)).then((data) {});
-                                  //Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList,gameData: widget.gameData,stadiumData: widget.stadiumData,reserve_status: reserve_status,), fullscreenDialog: true)).then((data){
-                                  if (this.mounted) {
-                                    setState(() {
-                                      isEnter = false;
-                                      isAvailable = true;
-                                    });
-                                  }
-                                });
-                              });
-                            });
-                          });
-                        });
-                      }
-                      else{
-                        showAlertDialog("참가 실패", "방이 이미 가득찼습니다.", context);
-                      }
-                    }
-                    else {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return _alertDialog("참가 실패", "포인트가 부족합니다");
-                          }
-                      );
-                      isAvailable = true;
-                    }
-                  });
-                }
-                //});
-              },*/
                     child: Container(
                       height: 48,
                       width: 350,
@@ -466,7 +412,9 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                       //int reserve_status = widget.gameData.groupSize == currentUserList.length ? 1 : 0; // 1 => 방이 가득찼을때 0 방 가득 안찼을때
                       crudObj.getDocumentById('game3', widget.docId).then((gameDocument1) {
                         reserve_status = gameDocument1.data['reserve_status'];
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList, gameData: widget.gameData, stadiumData: widget.stadiumData, reserve_status: reserve_status, docId: widget.docId), fullscreenDialog: true)).then((data) {
+                        print(11111111);
+                        print(gameDocument1.documentID);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList, gameData: widget.gameData, stadiumData: widget.stadiumData, reserve_status: reserve_status, docId: gameDocument1.documentID), fullscreenDialog: true)).then((data) {
                         });
                         // Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList,gameData: widget.gameData,stadiumData: widget.stadiumData,reserve_status: reserve_status,), fullscreenDialog: true)).then((data){
                         if(this.mounted){

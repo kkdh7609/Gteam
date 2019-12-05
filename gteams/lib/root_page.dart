@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gteams/services/crud.dart';
 import 'package:gteams/menu/main_menu.dart';
@@ -15,6 +16,7 @@ class RootPage extends StatefulWidget {
   static String user_email ="";
   static String userDocID = "";
   static AdminData adminData;
+  static List<DocumentSnapshot> facilityData;
 
   final BaseAuth auth;
 

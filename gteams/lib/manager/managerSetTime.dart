@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gteams/util/timeUtil.dart';
 
-typedef TimeFunc = void Function(List<List<int>>);
+typedef TimeFunc = void Function(List<int>, List<String>);
 
 class SetTime extends StatefulWidget{
   SetTime({this.timeFunc, this.timeList});
@@ -15,21 +15,42 @@ class SetTime extends StatefulWidget{
 class _SetTimeState extends State<SetTime> with TickerProviderStateMixin {
   List<int> newTimeList;
 
-  List<String> week = ["월", "화", "수", "목", "금", "토", "일"];
-  List<Color> colorArr = List.generate(384, (index) {
-    return Colors.white;
-  });
-  List<bool> borderArr = List.generate(384, (index) {
-    return false;
-  });
-  List<bool> isClicked = List.generate(384, (index) {
-    return false;
-  });
+  List<String> week;
+  List<Color> colorArr;
+  List<bool> borderArr;
+  List<bool> isClicked;
   AnimationController _resizableController;
-  int preNum = -1;
+  int preNum;
 
   @override
   void initState() {
+    week = ["월", "화", "수", "목", "금", "토", "일"];
+    colorArr = List.generate(384, (index) {
+      return Colors.white;
+    });
+    borderArr = List.generate(384, (index) {
+      return false;
+    });
+    isClicked = List.generate(384, (index) {
+      return false;
+    });
+
+    if(widget.timeList != null) {
+      List<int> tempTimes = List.from(widget.timeList);
+      for (int cnt = 0; cnt < 7; cnt++) {
+        for (int idx = 0; idx < 48; idx++) {
+          if(tempTimes[cnt] & 1 == 1){
+            int newIndex = 8 * (47 - idx) + cnt + 1;
+            colorArr[newIndex] = Colors.teal;
+            isClicked[newIndex] = true;
+          }
+          tempTimes[cnt] = tempTimes[cnt] >> 1;
+        }
+      }
+    }
+
+    preNum = -1;
+
     newTimeList = [0, 0, 0, 0, 0, 0, 0];
     _resizableController = AnimationController(
       vsync: this,
@@ -56,6 +77,7 @@ class _SetTimeState extends State<SetTime> with TickerProviderStateMixin {
   }
 
   onConfirmClicked(){
+    List<String> strTimes = [];
     for(int idx = 0; idx < 384; idx++){
       if(idx != 0 && idx % 8 == 0){
         for(int cnt=0; cnt < 7; cnt++){
@@ -68,8 +90,10 @@ class _SetTimeState extends State<SetTime> with TickerProviderStateMixin {
       }
     }
     for(int cnt=0; cnt<7; cnt++){
-      print(week[cnt] + "  " + listTimeConverter(intTimeToStr(newTimeList[cnt])));
+      strTimes.add(listTimeConverter(intTimeToStr(newTimeList[cnt])));
     }
+    widget.timeFunc(newTimeList, strTimes);
+    Navigator.pop(context);
   }
 
   @override

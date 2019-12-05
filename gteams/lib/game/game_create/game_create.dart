@@ -318,6 +318,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
                 Expanded(
                   child: TextFormField(
                     controller: _textEditingController,
+                    inputFormatters: [LengthLimitingTextInputFormatter(15)],
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       hintText: '게임 이름 입력',
