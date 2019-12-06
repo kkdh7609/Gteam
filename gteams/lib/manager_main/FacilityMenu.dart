@@ -159,7 +159,7 @@ class _FacilityMenuPageState extends State<FacilityMenuPage> {
                                           onTap: (){
                                             if(isAvailable) {
                                               Navigator.push(context,
-                                                  MaterialPageRoute(builder: (context) => CalendarViewApp()));
+                                                  MaterialPageRoute(builder: (context) => CalendarViewApp(stdRef: this.nowStaRef)));
                                             }
                                           }
                                       ),

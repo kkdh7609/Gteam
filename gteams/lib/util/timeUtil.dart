@@ -83,7 +83,19 @@ int partTimeToTotalTime(int startHour, int startMin, int endHour, int endMin){
     totalTime = totalTime + 1;
   }
 
-  totalTime = totalTime << startTime;
+  totalTime = totalTime << (48 - endTime);
 
   return totalTime;
+}
+
+List<int> totalTimeToOrder(int totalTime){
+  List<int> resultIndex = [];
+  int tempTotalTime = totalTime;
+  for(int i = 47; i >= 0; i--){
+    if(tempTotalTime & 1 == 1){
+      resultIndex.add(i);
+    }
+    tempTotalTime = tempTotalTime >> 1;
+  }
+  return resultIndex;
 }
