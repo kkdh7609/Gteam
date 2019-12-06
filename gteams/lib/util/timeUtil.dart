@@ -71,3 +71,19 @@ String listTimeToStr(strTimes){
   }
   return result;
 }
+
+int partTimeToTotalTime(int startHour, int startMin, int endHour, int endMin){
+  int startTime = (startHour * 2) + (startMin ~/ 30);
+  int endTime = (endHour * 2) + (endMin ~/ 30);
+
+  int totalTime = 0;
+
+  for(int cnt = startTime; cnt < endTime; cnt++){
+    totalTime = totalTime << 1;
+    totalTime = totalTime + 1;
+  }
+
+  totalTime = totalTime << startTime;
+
+  return totalTime;
+}

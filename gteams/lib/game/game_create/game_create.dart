@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:gteams/root_page.dart';
 import 'package:gteams/services/crud.dart';
 import 'package:gteams/map/google_map.dart';
@@ -8,6 +9,7 @@ import 'package:gteams/game/game_create/GameCreateTheme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gteams/map/StadiumListData.dart';
 import 'package:gteams/util/customTimePicker.dart';
+import 'package:gteams/util/timeUtil.dart';
 import 'package:gteams/pay/payMethod.dart';
 
 class GameCreatePage extends StatefulWidget {
@@ -20,48 +22,83 @@ enum Gender { MALE, FEMALE, ALL }
 class _GameCreatePageState extends State<GameCreatePage> {
   List<dynamic> userGameList = [];
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  crudMedthods crudObj = new crudMedthods();
-  PayMethods payObj = new PayMethods();
-  var stadiumList = StadiumListData.stadiumList;
+  crudMedthods crudObj;
+  PayMethods payObj;
+  List<StadiumListData> stadiumList;
 
   String _gameName;
-  String _selectedSports = null;
-  String _dateText = "날짜 선택";
-  String _startTimeText = "시작 시간";
-  String _endTimeText = "종료 시간";
-  String _loc_name = "장소 선택";
-  String _stadium_id = "temp Id";
-  String _stdId = "temp Id";
+  String _selectedSports;
+  String _dateText;
+  String _startTimeText;
+  String _endTimeText;
+  String _loc_name;
+  String _stadium_id;
+  String _stdId;
   DocumentReference _stadiumRef;
 
-  var userList = [];
+  var userList;
 
   int _groupSize;
   int _gameLevel;
-  int _curStep = 0;
+  int _curStep;
   int _dateNumber;
 
-  Gender _selectedGender = null;
+  Gender _selectedGender;
 
-  List<DropdownMenuItem<String>> _sportsList = [];
-  List<String> _sports = ["풋살", "탁구", "볼링", "농구", "야구"];
+  List<DropdownMenuItem<String>> _sportsList;
+  List<String> _sports;
 
-  DateTime _date = DateTime.now();
-  TimeOfDay _startTime = TimeOfDay.now();
-  TimeOfDay _endTime = TimeOfDay.now();
+  DateTime _date;
+  TimeOfDay _startTime;
+  TimeOfDay _endTime;
 
-  TextEditingController _textEditingController = TextEditingController();
-  TextEditingController _textEditingController_size = TextEditingController();
-  TextEditingController _textEditingController_level = TextEditingController();
+  TextEditingController _textEditingController;
+  TextEditingController _textEditingController_size;
+  TextEditingController _textEditingController_level;
 
-  bool _completeDate = false;
-  bool _completeStartTime = false;
-  bool _completeEndTime = false;
+  bool _completeDate;
+  bool _completeStartTime;
+  bool _completeEndTime;
 
-  bool isAvailable = true;
+  bool isAvailable;
 
   @override
   void initState() {
+    userGameList = [];
+    crudObj = crudMedthods();
+    payObj = PayMethods();
+    stadiumList = StadiumListData.stadiumList;
+
+    _gameName = null;
+    _selectedSports = null;
+    _groupSize = null;
+    _gameLevel = null;
+    _dateNumber = null;
+    _dateText = "날짜 선택";
+    _startTimeText = "시작 시간";
+    _endTimeText = "종료 시간";
+    _loc_name = "장소 선택";
+    _stadium_id = "temp Id";
+    _stdId = "temp Id";
+    userList = [];
+    _curStep = 0;
+    _selectedGender = null;
+    _sportsList = [];
+    _sports = ["풋살", "탁구", "볼링", "농구", "야구"];
+    _date = DateTime.now();
+    _startTime = TimeOfDay.now();
+    _endTime = TimeOfDay.now();
+
+    _textEditingController = TextEditingController();
+    _textEditingController_size = TextEditingController();
+    _textEditingController_level = TextEditingController();
+
+    _completeDate = false;
+    _completeStartTime = false;
+    _completeEndTime = false;
+
+    isAvailable = true;
+
     super.initState();
   }
 
@@ -120,6 +157,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
         _startTimeText = "Start Time";
         _endTimeText = "End Time";
       });
+
     }
   }
 
@@ -149,10 +187,13 @@ class _GameCreatePageState extends State<GameCreatePage> {
   }
 
   Future<Null> _selectEnd(BuildContext context) async {
-    final TimeOfDay _pickedEnd = await showCustomTimePicker(context: context, initialTime: _endTime);
+    TimeOfDay _pickedEnd = await showCustomTimePicker(context: context, initialTime: _endTime);
 
     if (_pickedEnd != null && (_pickedEnd != _endTime || !_completeEndTime)) {
       setState(() {
+        if(_pickedEnd.hour == 0 && _pickedEnd.minute == 0){
+          _pickedEnd = TimeOfDay(hour: 24, minute: 0);
+        }
         if (_completeStartTime) {
           int intPickedStart = _pickedEnd.hour * 100 + _pickedEnd.minute;
           int intStartTime = _startTime.hour * 100 + _startTime.minute;
@@ -173,7 +214,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
     }
   }
 
-  void _change_loc_name(String new_name, String new_id, String new_stdId) {
+  void _change_loc_name(String new_name, String new_id, String new_stdId) async {
     _loc_name = new_name;
     _stadium_id = new_id;
     _stdId = new_stdId;
@@ -462,17 +503,45 @@ class _GameCreatePageState extends State<GameCreatePage> {
                 Expanded(
                   child: FlatButton(
                     child: Text(_loc_name),
-                    onPressed: () {
-                      this.stadiumList = snapshot.data.documents.map((data) => StadiumListData.fromJson(data.data)).toList();
-                      //snapshot.data.documents[0].documentID
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MapTest(
-                                    onSelected: _change_loc_name,
-                                    nowReq: mapReq.findLocation,
-                                    stadiumList: stadiumList,
-                                  )));
+                    onPressed: () async {
+                      if(!this._completeEndTime || !this._completeStartTime){
+                        _showAlertDialog("에러", "경기 시간을 먼저 선택해주세요.");
+                      }
+                      else {
+                        if (isAvailable) {
+                          isAvailable = false;
+                          this.stadiumList = snapshot.data.documents.map((data) => StadiumListData.fromJson(data.data)).toList();
+                          List<StadiumListData> usingList = [];
+                          DateFormat dateFormat = DateFormat("yy-MM-dd");
+                          String pickDate = dateFormat.format(_date);
+                          int usingTime = partTimeToTotalTime(_startTime.hour, _startTime.minute, _endTime.hour, _endTime.minute);
+                          for (int index = 0; index < this.stadiumList.length; index++) {
+                            var dateRef = await snapshot.data.documents[index].reference.collection("date").document(pickDate).get();
+                            if (dateRef.data == null) {
+                              int totalTime = 281474976710655 - this.stadiumList[index].intTimes[_date.weekday - 1];
+                              if (totalTime & usingTime == 0) {
+                                usingList.add(this.stadiumList[index]);
+                              }
+                            }
+                            else {
+                              if (dateRef.data['totalTime'] & usingTime == 0) {
+                                usingList.add(this.stadiumList[index]);
+                              }
+                            }
+                          }
+                          //snapshot.data.documents[0].documentID
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      MapTest(
+                                          onSelected: _change_loc_name,
+                                          nowReq: mapReq.findLocation,
+                                          stadiumList: usingList //stadiumList,
+                                      )));
+                          isAvailable = true;
+                        }
+                      }
                     },
                   ),
                 ),
@@ -586,6 +655,27 @@ class _GameCreatePageState extends State<GameCreatePage> {
     );
   }
 
+  Future<DocumentReference> updateGame(int perPrice, int totalPrice) async{
+    DocumentReference docRef = await Firestore.instance.collection('game3').add({
+      'gameName': _gameName,
+      'selectedSport': _selectedSports,
+      'dateText': _dateText,
+      'startTime': _startTimeText,
+      'endTime': _endTimeText,
+      'groupSize': _groupSize,
+      'gameLevel': _gameLevel,
+      'Gender': _selectedGender.toString(),
+      'loc_name': _loc_name,
+      'perPrice': perPrice,
+      'totalPrice': totalPrice,
+      'dateNumber': _dateNumber,
+      'sort': FieldValue.serverTimestamp(),
+      'stadiumRef': _stadiumRef,
+      'userList': userList,
+      'reserve_status': 0, // 예약상태를 관리하는 부분 [0 : 모집중 , 1 : 접수중 , 2 접수 완료]
+    });
+    return docRef;
+  }
   void _showMaterialDialog() {
     showDialog(
         context: context,
@@ -604,7 +694,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
                   color: Color(0xff20253d),
                   child: Text('취소', style: TextStyle(color: Colors.white))),
               FlatButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (isAvailable) {
                       isAvailable = false;
                       _formKey.currentState.save();
@@ -620,7 +710,89 @@ class _GameCreatePageState extends State<GameCreatePage> {
                       int totalPrice;
                       int perPrice;
 
-                      crudObj.getDocumentByWhere('stadium', 'stdId', _stdId).then((document) {
+                      QuerySnapshot document = await crudObj.getDocumentByWhere('stadium', 'stdId', _stdId);
+                      int stadiumPrice = document.documents[0].data['price'];
+
+                      if (endMinute == 00 && startMinute == 30) {
+                        endHour -= 1;
+                        usingMinute = 30;
+                      } else {
+                        usingMinute = endMinute - startMinute;
+                      }
+
+                      usingHour = endHour - startHour;
+                      timeBlock = usingHour * 2 + (usingMinute == 30 ? 1 : 0);
+
+                      totalPrice = stadiumPrice * timeBlock;
+                      perPrice = totalPrice ~/ _groupSize;
+
+                      int fundData = await payObj.getFund();
+                      if(fundData >= perPrice){
+                        _stadiumRef = document.documents[0].reference;
+                        this.userList.add(RootPage.user_email);
+                        int newFund = fundData - perPrice;
+                        int usingTime = partTimeToTotalTime(_startTime.hour, _startTime.minute, _endTime.hour, _endTime.minute);
+                        DateFormat dateFormat = DateFormat("yy-MM-dd");
+                        String pickDate = dateFormat.format(_date);
+                        int weekDay = _date.weekday - 1;        // weekday는 월요일 1 ~ 일요일 7의 값이 나옴
+                        var stdRef = Firestore.instance.collection("stadium").document(_stdId);
+                        var stdDate = await stdRef.collection("date").document(pickDate).get();
+                        DocumentReference gameDoc;
+                        if(stdDate.data == null) {
+                          var stdData = await stdRef.get();
+                          gameDoc = await updateGame(perPrice, totalPrice);
+                          String docId = gameDoc.documentID;
+                          await payObj.updateFund(newFund);
+                          int availTime = stdData["intTimes"][weekDay];
+                          int blockTime = 281474976710655 - availTime;
+                          int totalTime = blockTime + usingTime;
+                          await stdRef.collection("date").document(pickDate).setData({
+                            "totalTime": totalTime,
+                            "blockTime": blockTime,
+                            "reserveFin": [],
+                            "resreveFinId": [],
+                            "reserveYet": [usingTime],
+                            "reserveYetId": [docId],
+                            "setTimes": []
+                          });
+                        }
+
+                        else{
+                          if(stdDate["totalTime"] & usingTime > 0){
+                            _showAlertDialog("참가 실패", "예약 불가능한 경기장 입니다.");
+                            return;
+                          }
+                          gameDoc = await updateGame(perPrice, totalPrice);
+                          String docId = gameDoc.documentID;
+                          await payObj.updateFund(newFund);
+                          int totalTime = stdDate["totalTime"] + usingTime;
+                          List<int> reserveYet = List.from(stdDate["reserveYet"]);
+                          List<String> reserveYetId = List.from(stdDate["reserveYetId"]);
+                          reserveYet.add(usingTime);
+                          reserveYetId.add(docId);
+                          await stdRef.collection("date").document(pickDate).updateData({
+                            "totalTime": totalTime,
+                            "reserveYet": reserveYet,
+                            "reserveYetId": reserveYetId
+                          });
+                        }
+
+                        DocumentSnapshot userDoc = await crudObj.getDocumentById('user', RootPage.userDocID);
+                        userGameList = List.from(userDoc.data["gameList"]);
+                        userGameList.add(gameDoc.documentID);
+                        await crudObj.updateData('user', RootPage.userDocID, {
+                          'gameList': userGameList
+                        });
+                        isAvailable = true;
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      }
+
+                      else {
+                        _showAlertDialog("참가 실패", "포인트가 부족합니다");
+                        isAvailable = true;
+                      }
+                      /*crudObj.getDocumentByWhere('stadium', 'stdId', _stdId).then((document) {
                         int stadiumPrice = document.documents[0].data['price'];
 
                         if (endMinute == 00 && startMinute == 30) {
@@ -677,7 +849,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
                             _showAlertDialog("참가 실패", "포인트가 부족합니다");
                           }
                         });
-                      }); // 경기장 정보 들어오면 그거 쓰기
+                      });*/ // 경기장 정보 들어오면 그거 쓰기
                     }
                   },
                   color: Color(0xff20253d),
@@ -727,7 +899,10 @@ class _GameCreatePageState extends State<GameCreatePage> {
                 _showAlertDialog("생성 실패", "희망 수준을 선택해주세요.");
               } else if (int.parse(_textEditingController_level.text) < 1 || int.parse(_textEditingController_level.text) > 10) {
                 _showAlertDialog("생성 실패", "희망 수준: 1 ~ 10 사이의 값을 입력하세요");
-              } else {
+              } else if(_loc_name == "장소 선택"){
+                _showAlertDialog("생성 실패", "장소를 선택해주세요.");
+              }
+              else {
                 _showMaterialDialog();
               }
             },
