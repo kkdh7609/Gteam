@@ -545,6 +545,7 @@ class _MapTestState extends State<MapTest> {
               onCameraMove: _onCameraMove),
 
           if(widget.nowReq != mapReq.newLocation) ... [
+            if(widget.stadiumList.length != 0) ... [
             Positioned(
                 bottom: 20.0,
                 child: Container(
@@ -567,7 +568,27 @@ class _MapTestState extends State<MapTest> {
                         } : {}
                     )
                 )
-            ),
+            )]
+            else ...[
+              Positioned(
+                  bottom: 10.0,
+                  child: Container(
+                      height: 20.0,
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width,
+                      decoration: BoxDecoration(
+                        color: Color(0xff20253d)
+                      ),
+                      child: Center(child: Text("해당 시간에 이용 가능한 경기장이 없습니다.", style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      )))
+                  )
+              )
+            ]
+            ,
           ],
           Padding(padding: EdgeInsets.all(16.0), child: Align(alignment: Alignment.topRight, child: mapButtons()))
         ],

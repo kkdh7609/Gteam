@@ -61,6 +61,7 @@ class TextWidget extends StatelessWidget{
         TextFormField(
           //key: _formKey,
           controller: controller,
+          maxLength: 15,
           enableInteractiveSelection: false,
           keyboardType: type == 1 ? TextInputType.number : null,
           style: TextStyle(

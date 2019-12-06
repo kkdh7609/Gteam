@@ -174,7 +174,9 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
 
     _priceController.addListener((){
       setState(() {
-        _price = int.parse(_priceController.text);
+        if(_priceController.text.length != 0) {
+          _price = int.parse(_priceController.text);
+        }
       });
     });
 

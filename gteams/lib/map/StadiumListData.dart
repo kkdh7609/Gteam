@@ -8,6 +8,7 @@ class StadiumListData {
   int fieldNumber;
   String telephone;
   String webSite;
+  List<dynamic> intTimes;
   List<dynamic> operationTime;
   int isShower;
   int isParking;
@@ -40,6 +41,7 @@ class StadiumListData {
     this.etc="",
     this.parkingHours=0,
     this.price=0,
+    this.intTimes,
     this.operationTime,
     this.lat = 0.0,
     this.lng = 0.0,
@@ -64,7 +66,8 @@ class StadiumListData {
       etc: json['etc'],
       parkingHours: json['parkingHours'],
       price: json['price'],
-      operationTime: json['strTimes'], // operationTime의 각요소접근 방법 => operationTime['openTime'] .operationTime['endTime'] .
+      intTimes: json['intTimes'],
+      operationTime: json['strTimes'],
       lat: json['lat'],
       lng : json['lng'],
       id: json['id'],
