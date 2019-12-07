@@ -6,11 +6,12 @@ import 'package:gteams/services/crud.dart';
 import 'package:gteams/root_page.dart';
 import 'package:gteams/pay/payMethod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import "package:intl/intl.dart";
 
 class ReserveList extends StatefulWidget {
-  ReserveList({Key key, this.staRef}) : super(key: key);
+  ReserveList({Key key, this.stdRef}) : super(key: key);
 
-  final DocumentSnapshot staRef;
+  final DocumentSnapshot stdRef;
 
   @override
   _ReserveListState createState() => _ReserveListState();
@@ -35,8 +36,8 @@ class _ReserveListState extends State<ReserveList> {
   void initState() {
     super.initState();
     this.gameDataList = [];
-    this.gameList = widget.staRef.data["gameList"];
-    this.reserveList = List<dynamic>.of(widget.staRef.data["notPermitList"]);
+    this.gameList = widget.stdRef.data["gameList"];
+    this.reserveList = List<dynamic>.of(widget.stdRef.data["notPermitList"]);
     this.gameDataList = List<GameListData>(this.reserveList.length);
   }
 
@@ -59,7 +60,7 @@ class _ReserveListState extends State<ReserveList> {
   }
 
   Widget makeCard(String title, String startTime, String endTime, int groupSize,
-      int totalPrice, int index) {
+                  int totalPrice, int index) {
     return Card(
         elevation: 8.0,
         margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
@@ -218,6 +219,16 @@ class _ReserveListState extends State<ReserveList> {
     );
   }
 
+  void changeGameInfo(String gameDoc) async{
+    DocumentSnapshot gameDocumentary = await crudObj.getDocumentById('game3', gameDoc);
+    var pickDate = gameDocumentary.data['dateText'];
+    var dateVal = await widget.stdRef.reference.collection("date").document(pickDate).get();
+    var update_id = await widget.stdRef.reference.collection("date").document(pickDate).updateData({"reserveFinId": dateVal["reserveYetId"], "reserveFin" : dateVal["reserveYet"]});
+    var remove_id = await widget.stdRef.reference.collection("date").document(pickDate).updateData({'reserveYetId': FieldValue.delete()}).whenComplete((){
+      print('Field Deleted');
+    });
+  }
+
   void _showMaterialDialog(int index) {
     showDialog(
         context: context,
@@ -242,18 +253,20 @@ class _ReserveListState extends State<ReserveList> {
               FlatButton(
                 color: Color(0xff20253d),
                 onPressed: () {
-                  if (isAvailable) {
+                  changeGameInfo(this.reserveList[index]);
+                  /*if (isAvailable) {
                     isAvailable = false;
                     payObj.getFund().then((fund) {
                       int newFund = this.gameDataList[index].totalPrice + fund;
                       payObj.updateFund(newFund).then((tempVal) {
                         crudObj.updateDataThen('game3', this.reserveList[index], {"reserve_status": 2}).then((tempVal){
                           setState((){
+                            changeGameInfo(this.reserveList[index]);
                             this.reserveList.removeAt(index);
                             this.gameDataList = List<GameListData>(this.reserveList.length);
-                            widget.staRef.data["notPermitList"] = List<dynamic>.of(this.reserveList);
+                            widget.stdRef.data["notPermitList"] = List<dynamic>.of(this.reserveList);
                           });
-                          crudObj.updateDataThen('stadium', widget.staRef.documentID, {"notPermitList": this.reserveList}).then((tempval2){
+                          crudObj.updateDataThen('stadium', widget.stdRef.documentID, {"notPermitList": this.reserveList}).then((tempval2){
                             Navigator.pop(context);
                             isAvailable = true;
                             _showAlertDialog("성공", "승인에 성공하였습니다.");
@@ -261,7 +274,7 @@ class _ReserveListState extends State<ReserveList> {
                         });
                       });
                     });
-                  }
+                  }*/
                 },
                 child: Text('승인', style:TextStyle(color: Colors.white)),
               )
@@ -276,19 +289,19 @@ class _ReserveListState extends State<ReserveList> {
         shrinkWrap: true,
         itemCount: reserveList.length,
         itemBuilder: (BuildContext context, int index) {
-            crudObj.getDocumentById('game3', reserveList[index]).then((
-                document) {
-              if (this.mounted) {
-                if(gameDataList.length >= index + 1) {
-                  setState(() {
-                    gameDataList[index] = GameListData.fromJson(document.data);
-                  });
-                }
+          crudObj.getDocumentById('game3', reserveList[index]).then((
+              document) {
+            if (this.mounted) {
+              if(gameDataList.length >= index + 1) {
+                setState(() {
+                  gameDataList[index] = GameListData.fromJson(document.data);
+                });
               }
-            });
+            }
+          });
 
           return gameDataList.length > index ? ((gameDataList[index] != null && gameDataList[index].groupSize == gameDataList[index].userList.length)
-              ? makeCard(
+                                                ? makeCard(
               gameDataList[index].gameName,
               gameDataList[index].startTime,
               gameDataList[index].endTime,
@@ -296,7 +309,7 @@ class _ReserveListState extends State<ReserveList> {
               gameDataList[index].totalPrice,
               index
           )
-              : LinearProgressIndicator()
+                                                : LinearProgressIndicator()
           ) : LinearProgressIndicator();
         });
   }

@@ -416,6 +416,7 @@ class SegmentedControl extends StatelessWidget{
         SizedBox(
           width: double.infinity,
           child: CupertinoSegmentedControl<int>(
+            borderColor: Color(0xff20253d),
             children: children,
             groupValue: value,
             selectedColor: Color(0xff20253d),

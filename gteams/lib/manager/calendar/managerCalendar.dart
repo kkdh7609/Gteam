@@ -42,7 +42,9 @@ class _CalendarViewAppState extends State<CalendarViewApp> {
     List<String> newName = List<String>(48);
     DateFormat dateFormat = DateFormat("yy-MM-dd");
     String pickDate = dateFormat.format(_selectedDay);
+
     var dateVal = await widget.stdRef.reference.collection("date").document(pickDate).get();
+
     if(dateVal.data == null){
       int blockTime = 281474976710655 - widget.stdRef["intTimes"][_selectedDay.weekday - 1];
       changeState(newState, blockTime, 1, newName, "Block");
@@ -50,6 +52,7 @@ class _CalendarViewAppState extends State<CalendarViewApp> {
     else{
       int blockTime = dateVal.data["blockTime"];
       changeState(newState, blockTime, 1, newName, "Block");
+
       List<dynamic> reserveFin = dateVal.data["reserveFin"];
       for(int idx = 0; idx < reserveFin.length; idx++){
         int oneTime = reserveFin[idx];
@@ -57,6 +60,7 @@ class _CalendarViewAppState extends State<CalendarViewApp> {
         String gameName = gameRef["gameName"];
         changeState(newState, oneTime, 2, newName, gameName);
       }
+
       List<dynamic> reserveYet = dateVal.data["reserveYet"];
       for(int idx = 0; idx < reserveYet.length; idx++){
         int oneTime = reserveYet[idx];
@@ -64,6 +68,7 @@ class _CalendarViewAppState extends State<CalendarViewApp> {
         String gameName = gameRef["gameName"];
         changeState(newState, oneTime, 3, newName, gameName);
       }
+
       List<dynamic> setTimes = dateVal.data["setTimes"];           // 매니저가 직접 블럭하는 시간대
       for(int idx = 0; idx < setTimes.length; idx++){
         int oneTime = setTimes[idx];
@@ -102,7 +107,17 @@ class _CalendarViewAppState extends State<CalendarViewApp> {
       int state = _stateArr[index];
       if(state == 1) {
         return Container(
-          color: Colors.grey
+          color: Colors.black.withOpacity(0.8),
+          child: Center(
+                child: Text(
+                    _stateName[index],
+                    style: TextStyle(
+                      fontFamily: 'Dosis',
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white
+                    )
+                )
+            )
         );
       }
       else if(state == 2){
@@ -121,7 +136,7 @@ class _CalendarViewAppState extends State<CalendarViewApp> {
       else if(state == 3){
         return Container(
           color: Colors.green,
-            child: Center(
+          child: Center(
                 child: Text(
                     _stateName[index],
                     style: TextStyle(
@@ -181,7 +196,6 @@ class _CalendarViewAppState extends State<CalendarViewApp> {
                                   style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: FontWeight.w500)))),
-
                       Expanded(
                           flex: 7,
                           child: Container(
