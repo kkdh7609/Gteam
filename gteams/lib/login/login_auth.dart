@@ -7,7 +7,7 @@ abstract class BaseAuth {
 
   Future<String> signUp(String email, String password);
 
-  Future<String> signInWithGoogle();
+  Future<FirebaseUser> signInWithGoogle();
 
   Future<FirebaseUser> getCurrentUser();
 
@@ -16,7 +16,13 @@ abstract class BaseAuth {
 
 class Auth implements BaseAuth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = new GoogleSignIn(
+    scopes: <String>[
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ],
+  );
+
 
   Future<String> signIn(String email, String password) async {
     FirebaseUser user = (await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password)).user;
@@ -37,7 +43,7 @@ class Auth implements BaseAuth {
     return _firebaseAuth.signOut();
   }
 
-  Future<String> signInWithGoogle() async {
+  Future<FirebaseUser> signInWithGoogle() async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
     final AuthCredential credential = GoogleAuthProvider.getCredential(
@@ -54,6 +60,7 @@ class Auth implements BaseAuth {
     assert(user.uid == currentUser.uid);
 
     //user 정보를 넘기게 되면 이름 및 사진 같은것도 받을 수 있음
-    return user.uid;
+    return user;
   }
+
 }
