@@ -214,7 +214,7 @@ class _FacilityMenuPageState extends State<FacilityMenuPage> {
                                           onTap: (){
                                             if(isAvailable) {
                                               Navigator.push(context,
-                                                  MaterialPageRoute(builder: (context) => ReserveList(staRef: this.nowStaRef)));
+                                                  MaterialPageRoute(builder: (context) => ReserveList(stdRef: this.nowStaRef)));
                                             }
                                           }
                                       ),
