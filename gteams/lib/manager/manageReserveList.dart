@@ -6,11 +6,12 @@ import 'package:gteams/services/crud.dart';
 import 'package:gteams/root_page.dart';
 import 'package:gteams/pay/payMethod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import "package:intl/intl.dart";
 
 class ReserveList extends StatefulWidget {
-  ReserveList({Key key, this.staRef}) : super(key: key);
+  ReserveList({Key key, this.stdRef}) : super(key: key);
 
-  final DocumentSnapshot staRef;
+  final DocumentSnapshot stdRef;
 
   @override
   _ReserveListState createState() => _ReserveListState();
@@ -35,8 +36,8 @@ class _ReserveListState extends State<ReserveList> {
   void initState() {
     super.initState();
     this.gameDataList = [];
-    this.gameList = widget.staRef.data["gameList"];
-    this.reserveList = List<dynamic>.of(widget.staRef.data["notPermitList"]);
+    this.gameList = widget.stdRef.data["gameList"];
+    this.reserveList = List<dynamic>.of(widget.stdRef.data["notPermitList"]);
     this.gameDataList = List<GameListData>(this.reserveList.length);
   }
 
@@ -93,7 +94,8 @@ class _ReserveListState extends State<ReserveList> {
                   elevation: 500,
                   child: Column(
                     children: <Widget>[
-                      _showGameInfo(startTime, endTime, groupSize, totalPrice, index),
+                      _showGameInfo(
+                          startTime, endTime, groupSize, totalPrice, index),
                     ],
                   ),
                 )
@@ -103,8 +105,8 @@ class _ReserveListState extends State<ReserveList> {
         ));
   }
 
-  Widget _showGameInfo(
-      String startTime, String endTime, int groupSize, int totalPrice, int index) {
+  Widget _showGameInfo(String startTime, String endTime, int groupSize,
+      int totalPrice, int index) {
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -185,7 +187,8 @@ class _ReserveListState extends State<ReserveList> {
           borderRadius: BorderRadius.all(Radius.circular(24.0)),
           boxShadow: <BoxShadow>[
             BoxShadow(
-              color: GameCreateTheme.buildLightTheme().primaryColor
+              color: GameCreateTheme.buildLightTheme()
+                  .primaryColor
                   .withOpacity(0.2),
               offset: Offset(4, 4),
             ),
@@ -218,6 +221,47 @@ class _ReserveListState extends State<ReserveList> {
     );
   }
 
+  void changeGameInfo(String gameDoc) async {
+    DocumentSnapshot gameDocumentary =
+        await crudObj.getDocumentById('game3', gameDoc);
+    var pickDate = gameDocumentary.data['dateText'];
+    var dateVal = await widget.stdRef.reference
+        .collection("date")
+        .document(pickDate)
+        .get();
+
+    var reserveYetId = List<dynamic>.of(dateVal.data["reserveYetId"]);
+    var reserveYet = List<dynamic>.of(dateVal.data["reserveYet"]);
+
+    var reserveFinId = List<dynamic>.of(dateVal.data["reserveFinId"]);
+    var reserveFin = List<dynamic>.of(dateVal.data["reserveFin"]);
+
+    for (var idx = 0; idx < reserveYetId.length; idx++) {
+      if (reserveYetId[idx] == gameDoc) {
+        reserveFin.add(reserveYet[idx]);
+        reserveFinId.add(reserveYetId[idx]);
+
+        reserveYet.removeAt(idx);
+        reserveYetId.removeAt(idx);
+
+        await Firestore.instance
+            .collection("stadium")
+            .document(widget.stdRef.documentID)
+            .collection("date")
+            .document(pickDate)
+            .updateData(
+            { "reserveYetId": reserveYetId,
+              "reserveFinId": reserveFinId,
+              "reserveYet": reserveYet,
+              "reserveFin": reserveFin
+            }).then((onValue) {
+
+        });
+      }
+    }
+
+  }
+
   void _showMaterialDialog(int index) {
     showDialog(
         context: context,
@@ -226,8 +270,8 @@ class _ReserveListState extends State<ReserveList> {
             title: Text('확인'),
             content: SingleChildScrollView(
                 child: ListBody(
-                  children: <Widget>[Text("예약 신청을 승인하시겠습니까?")],
-                )),
+              children: <Widget>[Text("예약 신청을 승인하시겠습니까?")],
+            )),
             actions: <Widget>[
               FlatButton(
                   color: Color(0xff20253d),
@@ -242,6 +286,7 @@ class _ReserveListState extends State<ReserveList> {
               FlatButton(
                 color: Color(0xff20253d),
                 onPressed: () {
+                  changeGameInfo(this.reserveList[index]);
                   if (isAvailable) {
                     isAvailable = false;
                     payObj.getFund().then((fund) {
@@ -251,9 +296,9 @@ class _ReserveListState extends State<ReserveList> {
                           setState((){
                             this.reserveList.removeAt(index);
                             this.gameDataList = List<GameListData>(this.reserveList.length);
-                            widget.staRef.data["notPermitList"] = List<dynamic>.of(this.reserveList);
+                            widget.stdRef.data["notPermitList"] = List<dynamic>.of(this.reserveList);
                           });
-                          crudObj.updateDataThen('stadium', widget.staRef.documentID, {"notPermitList": this.reserveList}).then((tempval2){
+                          crudObj.updateDataThen('stadium', widget.stdRef.documentID, {"notPermitList": this.reserveList}).then((tempval2){
                             Navigator.pop(context);
                             isAvailable = true;
                             _showAlertDialog("성공", "승인에 성공하였습니다.");
@@ -263,41 +308,42 @@ class _ReserveListState extends State<ReserveList> {
                     });
                   }
                 },
-                child: Text('승인', style:TextStyle(color: Colors.white)),
+                child: Text('승인', style: TextStyle(color: Colors.white)),
               )
             ],
           );
         });
   }
 
-  Widget _buildbody(){
+  Widget _buildbody() {
     return ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         itemCount: reserveList.length,
         itemBuilder: (BuildContext context, int index) {
-            crudObj.getDocumentById('game3', reserveList[index]).then((
-                document) {
-              if (this.mounted) {
-                if(gameDataList.length >= index + 1) {
-                  setState(() {
-                    gameDataList[index] = GameListData.fromJson(document.data);
-                  });
-                }
+          crudObj.getDocumentById('game3', reserveList[index]).then((document) {
+            if (this.mounted) {
+              if (gameDataList.length >= index + 1) {
+                setState(() {
+                  gameDataList[index] = GameListData.fromJson(document.data);
+                });
               }
-            });
+            }
+          });
 
-          return gameDataList.length > index ? ((gameDataList[index] != null && gameDataList[index].groupSize == gameDataList[index].userList.length)
-              ? makeCard(
-              gameDataList[index].gameName,
-              gameDataList[index].startTime,
-              gameDataList[index].endTime,
-              gameDataList[index].groupSize,
-              gameDataList[index].totalPrice,
-              index
-          )
-              : LinearProgressIndicator()
-          ) : LinearProgressIndicator();
+          return gameDataList.length > index
+              ? ((gameDataList[index] != null &&
+                      gameDataList[index].groupSize ==
+                          gameDataList[index].userList.length)
+                  ? makeCard(
+                      gameDataList[index].gameName,
+                      gameDataList[index].startTime,
+                      gameDataList[index].endTime,
+                      gameDataList[index].groupSize,
+                      gameDataList[index].totalPrice,
+                      index)
+                  : LinearProgressIndicator())
+              : LinearProgressIndicator();
         });
   }
 
@@ -305,10 +351,14 @@ class _ReserveListState extends State<ReserveList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          centerTitle: true, elevation: 0.1, title: Text("경기장 예약 승인", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white))),
-      body: Container(
-          child: _buildbody()
-      ),
+          centerTitle: true,
+          elevation: 0.1,
+          title: Text("경기장 예약 승인",
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 22,
+                  color: Colors.white))),
+      body: Container(child: _buildbody()),
     );
   }
 }
