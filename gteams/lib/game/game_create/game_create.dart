@@ -34,6 +34,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
   String _loc_name;
   String _stadium_id;
   String _stdId;
+  String _gameDescription;
   DocumentReference _stadiumRef;
 
   var userList;
@@ -55,6 +56,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
   TextEditingController _textEditingController;
   TextEditingController _textEditingController_size;
   TextEditingController _textEditingController_level;
+  TextEditingController _textEditingController_Description;
 
   bool _completeDate;
   bool _completeStartTime;
@@ -272,7 +274,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
           isActive: true,
           state: StepState.indexed,
           content: Column(
-            children: <Widget>[_showGameGender(), _showGameMember(), _showGameLevel()],
+            children: <Widget>[_showGameGender(), _showGameMember(), _showGameLevel(), _showDescription()],
           ))
     ];
 
@@ -589,6 +591,19 @@ class _GameCreatePageState extends State<GameCreatePage> {
             },
           ),
           Text("여성", style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w700, fontSize: 16)),
+          Radio(
+            value: Gender.ALL,
+            groupValue: _selectedGender,
+            activeColor: GameCreateTheme.buildLightTheme().primaryColor,
+            onChanged: (Gender value) {
+              setState(
+                    () {
+                  _selectedGender = value;
+                },
+              );
+            },
+          ),
+          Text("모두", style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w700, fontSize: 16)),
         ],
       ),
     );
@@ -656,6 +671,36 @@ class _GameCreatePageState extends State<GameCreatePage> {
     );
   }
 
+  Widget _showDescription() {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          Padding(padding: EdgeInsets.symmetric(horizontal: 15.0), child: Icon(Icons.description, color: Colors.black)),
+          Container(
+            height: 30.0,
+            width: 1.0,
+            color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+            margin: const EdgeInsets.only(right: 10.0),
+          ),
+          Flexible(
+            child: TextFormField(
+              controller: _textEditingController_Description,
+              enableInteractiveSelection: false,
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                hintText: '모임에 대한 설명 입력',
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+              onSaved: (value) {
+                _gameDescription = value.toString();
+              },
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   Future<DocumentReference> updateGame(int perPrice, int totalPrice) async{
     DocumentReference docRef = await Firestore.instance.collection('game3').add({
       'gameName': _gameName,
@@ -674,9 +719,11 @@ class _GameCreatePageState extends State<GameCreatePage> {
       'stadiumRef': _stadiumRef,
       'userList': userList,
       'reserve_status': 0, // 예약상태를 관리하는 부분 [0 : 모집중 , 1 : 접수중 , 2 접수 완료]
+      'Description' : _gameDescription,
     });
     return docRef;
   }
+
   void _showMaterialDialog() {
     showDialog(
         context: context,
@@ -700,6 +747,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
                     if (isAvailable) {
                       isAvailable = false;
                       _formKey.currentState.save();
+
                       int startMinute = _startTime.minute;
                       int endMinute = _endTime.minute;
                       int startHour = _startTime.hour;
@@ -729,11 +777,14 @@ class _GameCreatePageState extends State<GameCreatePage> {
                       perPrice = totalPrice ~/ _groupSize;
 
                       int fundData = await payObj.getFund();
+
                       if(fundData >= perPrice){
                         _stadiumRef = document.documents[0].reference;
                         this.userList.add(RootPage.user_email);
+
                         int newFund = fundData - perPrice;
                         int usingTime = partTimeToTotalTime(_startTime.hour, _startTime.minute, _endTime.hour, _endTime.minute);
+
                         DateFormat dateFormat = DateFormat("yy-MM-dd");
                         String pickDate = dateFormat.format(_date);
                         int weekDay = _date.weekday - 1;        // weekday는 월요일 1 ~ 일요일 7의 값이 나옴
