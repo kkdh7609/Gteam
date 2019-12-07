@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class GameListData {
 //  String imagePath;
   String gameName;
+  String creator;
   String selectedSport;
   int gameLevel;
   int groupSize;
@@ -21,6 +22,7 @@ class GameListData {
   GameListData({
 //    this.imagePath = '',
     this.gameName = '',
+    this.creator = '',
     this.selectedSport = "",
     this.startTime = "",
     this.dateText = "",
@@ -41,6 +43,7 @@ class GameListData {
     return GameListData(
 //      imagePath: json['imagePath'],
       gameName: json['gameName'],
+      creator: json['creator'],
       selectedSport: json['selectedSport'],
       dateText: json['dateText'],
       startTime: json['startTime'],
