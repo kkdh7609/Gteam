@@ -123,10 +123,10 @@ class _MapTestState extends State<MapTest> {
   }
 
   _doPop(){
-    print(111111);
-    print(context);
+    //print(111111);
+    //print(context);
     Navigator.pop(context);
-    print(context);
+    //print(context);
     Navigator.pop(context);
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gteams/manager/calendar/calendarView.dart';
 import "package:intl/intl.dart";
 import 'package:gteams/util/timeUtil.dart';
@@ -107,7 +108,16 @@ class _CalendarViewAppState extends State<CalendarViewApp> {
       int state = _stateArr[index];
       if(state == 1) {
         return Container(
-          color: Colors.black.withOpacity(0.8),
+            decoration: BoxDecoration(
+              color: Colors.black,
+              boxShadow: [
+                new BoxShadow(
+                  offset: Offset(3.0, -1.0),
+                  color: Color(0xffEDEDED),
+                  blurRadius: 3.0,
+                ),
+              ],
+            ),
           child: Center(
                 child: Text(
                     _stateName[index],
@@ -122,12 +132,25 @@ class _CalendarViewAppState extends State<CalendarViewApp> {
       }
       else if(state == 2){
         return Container(
-          color: Colors.blue,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+               colors: [Color(0xff20253d), Colors.blue],
+              ),
+              boxShadow: [
+                new BoxShadow(
+                  offset: Offset(3.0, -1.0),
+                  color: Color(0xffEDEDED),
+                  blurRadius: 3.0,
+                ),
+              ],
+            ),
           child: Center(
             child: Text(
               _stateName[index],
               style: TextStyle(
-                color: Colors.white
+                  fontFamily: 'Dosis',
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white
               )
             )
           )
@@ -135,11 +158,24 @@ class _CalendarViewAppState extends State<CalendarViewApp> {
       }
       else if(state == 3){
         return Container(
-          color: Colors.green,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xff004D40), Color(0xFF1B5E20)],
+              ),
+              boxShadow: [
+                new BoxShadow(
+                  offset: Offset(3.0, -1.0),
+                  color: Color(0xffEDEDED),
+                  blurRadius: 3.0,
+                ),
+              ],
+            ),
           child: Center(
                 child: Text(
                     _stateName[index],
                     style: TextStyle(
+                        fontFamily: 'Dosis',
+                        fontWeight: FontWeight.w900,
                         color: Colors.white
                     )
                 )
@@ -148,7 +184,28 @@ class _CalendarViewAppState extends State<CalendarViewApp> {
       }
       else{
         return Container(
-          color: Colors.red
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.redAccent[700], Colors.red[300]],
+            ),
+            boxShadow: [
+              new BoxShadow(
+                offset: Offset(3.0, -1.0),
+                color: Color(0xffEDEDED),
+                blurRadius: 3.0,
+              ),
+            ],
+          ),
+          child: Center(
+              child: Text(
+                  _stateName[index],
+                  style: TextStyle(
+                      fontFamily: 'Dosis',
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white
+                  )
+              )
+          )
         );
       }
     }

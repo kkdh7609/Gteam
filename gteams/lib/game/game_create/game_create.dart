@@ -138,13 +138,14 @@ class _GameCreatePageState extends State<GameCreatePage> {
 
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime _pickedDate = await showDatePicker(context: context, initialDate: _date, firstDate: DateTime.now().subtract(Duration(days: 1)), lastDate: _date.add(Duration(days: 100)));
+    DateFormat dateFormat = DateFormat("yy-MM-dd");
 
     if (_pickedDate != null && (_pickedDate != _date || !_completeDate)) {
       setState(() {
         _date = _pickedDate;
         _completeDate = true;
         _dateNumber = _date.millisecondsSinceEpoch;
-        _dateText = _date.toString().split(" ")[0];
+        _dateText = dateFormat.format(_date);
         _completeStartTime = false;
         _completeEndTime = false;
         if (_date.isAfter(DateTime.now())) {
@@ -694,6 +695,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
                   color: Color(0xff20253d),
                   child: Text('취소', style: TextStyle(color: Colors.white))),
               FlatButton(
+                  color: Color(0xff20253d),
                   onPressed: () async {
                     if (isAvailable) {
                       isAvailable = false;
@@ -750,7 +752,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
                             "totalTime": totalTime,
                             "blockTime": blockTime,
                             "reserveFin": [],
-                            "resreveFinId": [],
+                            "reserveFinId": [],
                             "reserveYet": [usingTime],
                             "reserveYetId": [docId],
                             "setTimes": []
@@ -852,7 +854,6 @@ class _GameCreatePageState extends State<GameCreatePage> {
                       });*/ // 경기장 정보 들어오면 그거 쓰기
                     }
                   },
-                  color: Color(0xff20253d),
                   child: Text('생성', style: TextStyle(color: Colors.white)))
             ],
           );

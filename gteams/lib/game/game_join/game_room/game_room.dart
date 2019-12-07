@@ -73,7 +73,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
   }
 
   void _changeState(String tempStr,String tempStr2, String temp) {
-    print(tempStr);
+    //print(tempStr);
   }
 
   Widget _alertButton(){
@@ -412,8 +412,6 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                       //int reserve_status = widget.gameData.groupSize == currentUserList.length ? 1 : 0; // 1 => 방이 가득찼을때 0 방 가득 안찼을때
                       crudObj.getDocumentById('game3', widget.docId).then((gameDocument1) {
                         reserve_status = gameDocument1.data['reserve_status'];
-                        print(11111111);
-                        print(gameDocument1.documentID);
                         Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList, gameData: widget.gameData, stadiumData: widget.stadiumData, reserve_status: reserve_status, docId: gameDocument1.documentID), fullscreenDialog: true)).then((data) {
                         });
                         // Navigator.push(context, MaterialPageRoute(builder: (context) => currentRoomPage(currentUserList: currentUserList,gameData: widget.gameData,stadiumData: widget.stadiumData,reserve_status: reserve_status,), fullscreenDialog: true)).then((data){

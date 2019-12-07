@@ -501,7 +501,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                             return value.isEmpty ? "Email can\'t be empty" : null;
                           },
                           onSaved: (value) {
-                            print(value);
+                            //print(value);
                             _signUpEmail = value;
                           },
                         ),
@@ -541,7 +541,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                             return value.isEmpty ? "Password can\'t be empty" : null;
                           },
                           onSaved: (value) {
-                            print(value);
+                            //print(value);
                             _signUpPassword = value;
                           },
                         ),
@@ -598,7 +598,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                       if (_formKey.currentState.validate()) _formKey.currentState.save();
                       widget.auth.signUp(_signUpEmail, _signUpPassword).then((user) {
                         userId = user.toString();
-                        print("Signed Up: $userId");
+                        //print("Signed Up: $userId");
                         UserManagement().storeNewUser(_signUpEmail, context, _signUpName, true);
 
                         Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpWaitingPage()));
@@ -683,13 +683,13 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       try {
         if (_formMode == FormMode.LOGIN) {
           userId = await widget.auth.signIn(_loginEmail, _loginPassword);
-          print("Signed in: $userId");
+          //print("Signed in: $userId");
         } else if (_formMode == FormMode.GOOGLE) {
           userId = await widget.auth.signInWithGoogle();
-          print("Signed in: $userId");
+          //print("Signed in: $userId");
         } else {
           userId = await widget.auth.signUp(_loginEmail, _loginPassword);
-          print("Signed up user: $userId");
+          //print("Signed up user: $userId");
         }
         setState(
           () {
@@ -699,7 +699,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
         );
 
         if (userId.length > 0 && userId != null && (_formMode == FormMode.LOGIN || _formMode == FormMode.GOOGLE)) {
-          print("check on signed in");
+          //print("check on signed in");
           widget.onSignedIn();
         }
       } catch (e) {
