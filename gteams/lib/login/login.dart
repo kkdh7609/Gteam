@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,6 +20,7 @@ import 'package:gteams/manager/managerSetTime.dart';
 import 'package:gteams/manager_main/ManagerMainMenu.dart';
 import 'package:gteams/setting/settings_user.dart';
 import 'package:gteams/util/alertUtil.dart';
+
 
 class LoginPage extends StatefulWidget {
   LoginPage({this.auth, this.onSignedIn});
@@ -501,7 +505,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                             return value.isEmpty ? "Email can\'t be empty" : null;
                           },
                           onSaved: (value) {
-                            //print(value);
+                            print(value);
                             _signUpEmail = value;
                           },
                         ),
@@ -541,7 +545,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                             return value.isEmpty ? "Password can\'t be empty" : null;
                           },
                           onSaved: (value) {
-                            //print(value);
+                            print(value);
                             _signUpPassword = value;
                           },
                         ),
@@ -598,10 +602,9 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                       if (_formKey.currentState.validate()) _formKey.currentState.save();
                       widget.auth.signUp(_signUpEmail, _signUpPassword).then((user) {
                         userId = user.toString();
-                        //print("Signed Up: $userId");
-                        UserManagement().storeNewUser(_signUpEmail, context, _signUpName, true);
-
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpWaitingPage()));
+                        print("Signed Up: $userId");
+                        UserManagement().storeNewUser(_signUpEmail, context, _signUpName, true,false);
+                        //Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpWaitingPage()));
                         signUpEmailController.clear();
                         signUpNameController.clear();
                         signUpPasswordController.clear();
@@ -683,13 +686,22 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       try {
         if (_formMode == FormMode.LOGIN) {
           userId = await widget.auth.signIn(_loginEmail, _loginPassword);
-          //print("Signed in: $userId");
+          print("Signed in: $userId");
         } else if (_formMode == FormMode.GOOGLE) {
-          userId = await widget.auth.signInWithGoogle();
-          //print("Signed in: $userId");
+          FirebaseUser userInfo = await widget.auth.signInWithGoogle();
+          //구글 로그인시 유저 정보 받아서 유저 collection에 추가..
+          Firestore.instance.collection('user').where('email',isEqualTo: userInfo.email).getDocuments().then((document){
+            if(document.documents.length == 0){
+              UserManagement().storeNewUser(userInfo.email, context, userInfo.displayName, true,true);
+            }else{
+              print("signed wiht $userInfo");
+              print("check on signed in");
+              widget.onSignedIn();
+            }
+          });
         } else {
           userId = await widget.auth.signUp(_loginEmail, _loginPassword);
-          //print("Signed up user: $userId");
+          print("Signed up user: $userId");
         }
         setState(
           () {
@@ -697,11 +709,13 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             _isLoading = false;
           },
         );
-
-        if (userId.length > 0 && userId != null && (_formMode == FormMode.LOGIN || _formMode == FormMode.GOOGLE)) {
-          //print("check on signed in");
+        print("userid lenght : "+ userId.length.toString());
+        if (userId.length > 0 && userId != null && _formMode == FormMode.LOGIN) {
+          print("check on signed in");
           widget.onSignedIn();
         }
+
+
       } catch (e) {
         print('Error: $e');
         String errorMsg;

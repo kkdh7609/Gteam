@@ -12,6 +12,7 @@ import 'package:gteams/map/StadiumListData.dart';
 import 'package:gteams/root_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/services.dart';
 import 'dart:io';
 
 
@@ -163,9 +164,9 @@ class _UserProfileState extends State<UserProfile> {
                           fontSize: 16.0),
                     ),
                     onPressed: () {
-                        this.stadiumList = snapshot.data.documents.map((data) => StadiumListData.fromJson(data.data)).toList();
-                        //snapshot.data.documents[0].documentID
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => MapTest(onSelected: _change_loc_name, nowReq: mapReq.findLocation, stadiumList: stadiumList,)));
+                      this.stadiumList = snapshot.data.documents.map((data) => StadiumListData.fromJson(data.data)).toList();
+                      //snapshot.data.documents[0].documentID
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MapTest(onSelected: _change_loc_name, nowReq: mapReq.findLocation, stadiumList: stadiumList,)));
                     }),
               ],
             ),
@@ -292,7 +293,7 @@ class _UserProfileState extends State<UserProfile> {
         storageReference.getDownloadURL().then((fileURL) {
           _userData.imagePath = fileURL;
           _applyEdit();
-      });
+        });
       }
     }
 
@@ -382,6 +383,7 @@ class _UserProfileState extends State<UserProfile> {
                                             alignment: Alignment.center,
                                             child: TextFormField(
                                               initialValue: _userData.name,
+                                              inputFormatters: [LengthLimitingTextInputFormatter(15)],
                                               textAlign: TextAlign.center,
                                               keyboardType: TextInputType.text,
                                               decoration: InputDecoration(

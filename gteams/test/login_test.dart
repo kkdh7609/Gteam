@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -34,9 +35,9 @@ class AuthMock implements Auth {
     return _firebaseAuth.signOut();
   }
 
-  Future<String> signInWithGoogle() async {
+  Future<FirebaseUser> signInWithGoogle() async {
     didRequestSignIn = true;
-    return _userIdOrError();
+    return _googleUserIdOrError();
   }
 
   Future<String> _userIdOrError() {
@@ -94,3 +95,4 @@ void main() {
     expect(mock.didRequestSignIn, true);
   });
 }
+*/
