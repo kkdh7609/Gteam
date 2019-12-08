@@ -63,7 +63,7 @@ class GameListData {
       sort:json['sort'],
       reserve_status: json['reserve_status'],
       Description: json['Description'],
-      chamyeyul: json['chamyeyul'],
+      chamyeyul: json['chamyeyul'] is int ? json['chamyeyul'].toDouble() : json['chamyeyul'],
     );
   }
 
