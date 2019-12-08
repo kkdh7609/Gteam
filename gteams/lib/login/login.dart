@@ -604,7 +604,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                         userId = user.toString();
                         print("Signed Up: $userId");
                         UserManagement().storeNewUser(_signUpEmail, context, _signUpName, true,false);
-                        //Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpWaitingPage()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpWaitingPage()));
                         signUpEmailController.clear();
                         signUpNameController.clear();
                         signUpPasswordController.clear();
