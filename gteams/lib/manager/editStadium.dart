@@ -183,7 +183,30 @@ class _StadiumEditPageState extends State<StadiumEditPage>{
 
     _priceController.addListener((){
       setState(() {
-        _price = int.parse(_priceController.text);
+        if(_priceController.text.length != 0) {
+          try {
+            _price = int.parse(_priceController.text);
+          }
+          catch(e){
+            if(_price != null) {
+              _priceController.text = _price.toString();
+              TextSelection cursorPos = TextSelection.fromPosition(
+                  TextPosition(offset: _priceController.text.length)
+              );
+              _priceController.selection = cursorPos;
+            }
+            else{
+              TextSelection cursorPos = TextSelection.fromPosition(
+                  TextPosition(offset: 0)
+              );
+              _priceController.selection = cursorPos;
+              _priceController.text = "";
+            }
+          }
+        }
+        else{
+          _price = null;
+        }
       });
     });
 
