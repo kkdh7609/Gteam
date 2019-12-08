@@ -166,6 +166,11 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
     _priceController.text = _price != null ? _price.toString() : null;
     _callController.text = _call;
 
+    _selectedSports = null;
+
+    _locName = null;
+
+
     _nameController.addListener((){
       setState(() {
         _stadiumName = _nameController.text;
@@ -175,7 +180,28 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
     _priceController.addListener((){
       setState(() {
         if(_priceController.text.length != 0) {
-          _price = int.parse(_priceController.text);
+          try {
+            _price = int.parse(_priceController.text);
+          }
+          catch(e){
+            if(_price != null) {
+              _priceController.text = _price.toString();
+              TextSelection cursorPos = TextSelection.fromPosition(
+                  TextPosition(offset: _priceController.text.length)
+              );
+              _priceController.selection = cursorPos;
+            }
+            else{
+              TextSelection cursorPos = TextSelection.fromPosition(
+                TextPosition(offset: 0)
+              );
+              _priceController.selection = cursorPos;
+              _priceController.text = "";
+            }
+          }
+        }
+        else{
+          _price = null;
         }
       });
     });
@@ -235,7 +261,7 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
     return Scaffold(
         appBar: AppBar(
             backgroundColor: Color(0xff20253d),
-            title: Center(child: Text('Add new stadium')),
+            title: Center(child: Text('신규 시설 추가')),
             actions: actWidget()
         ),
         body: Form(

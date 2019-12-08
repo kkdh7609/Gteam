@@ -325,7 +325,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                     borderRadius: new BorderRadius.circular(AppBar().preferredSize.height),
                     child: Icon(
                       Icons.arrow_back,
-                      color: GameRoomTheme.nearlyBlack,
+                      color: Colors.white,
                     ),
                     onTap: () {
                       Navigator.pop(context);

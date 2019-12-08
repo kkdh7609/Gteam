@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 import 'package:gteams/map/google_map.dart';
 import 'package:gteams/setting/popularFilterList.dart';
@@ -40,6 +39,15 @@ class _UserProfileState extends State<UserProfile> {
   List<SettingListData> sportListData = SettingListData.sportList;
   var stadiumList =StadiumListData.stadiumList;
 
+  String _phoneValidator(String value){
+    Pattern pattern = r'^[0-9]{2,4}-{1}[0-9]{3,4}-{1}[0-9]{4}$';
+    RegExp regex = new RegExp(pattern);
+    if(!regex.hasMatch(value))
+      return '123-456-7890 형태로 입력해 주십시오';
+    else
+      return null;
+  }
+
   void _change_loc_name(String newName, String temp, String temp2) {
     _userData.preferenceLoc = newName;
   }
@@ -61,7 +69,7 @@ class _UserProfileState extends State<UserProfile> {
         'gender': _selectedGender.toString(),
         'prferenceLoc': _userData.preferenceLoc,
         'sportList': updateList,
-        'imagePath' : _userData.imagePath.toString(),
+        'phoneNumber': _userData.phoneNumber,
       },
     );
     Navigator.pop(context);
@@ -292,6 +300,13 @@ class _UserProfileState extends State<UserProfile> {
         await uploadTask.onComplete;
         storageReference.getDownloadURL().then((fileURL) {
           _userData.imagePath = fileURL;
+          crudObj.updateData(
+            'user',
+            _userDocID,
+            {
+              'imagePath' : _userData.imagePath.toString(),
+            },
+          );
           _applyEdit();
         });
       }
@@ -322,7 +337,6 @@ class _UserProfileState extends State<UserProfile> {
             stream: Firestore.instance.collection('user').where('email', isEqualTo: RootPage.user_email).snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) return LinearProgressIndicator();
-
               // 최초 정보 체크
               if(!_checkedGender) {
                 this._userData = snapshot.data.documents.map((data) => UserData.fromJson(data.data)).elementAt(0);
@@ -388,18 +402,14 @@ class _UserProfileState extends State<UserProfile> {
                                               keyboardType: TextInputType.text,
                                               decoration: InputDecoration(
                                                 hintText: _userData.name,
-                                                hintStyle:
-                                                TextStyle(color: Colors.black),
+                                                hintStyle: TextStyle(color: Colors.black),
                                               ),
                                               style: TextStyle(fontSize: 18),
-                                              validator: (value) {
-                                                return value.isEmpty
-                                                    ? "Your name can\'t be empty"
-                                                    : null;
-                                              },
                                               onSaved: (value) {
-                                                // value -> user name
-                                                _userData.name = value;
+                                                if(value.isEmpty) {
+                                                  _userData.name = _userData.name;
+                                                }else
+                                                  _userData.name = value;
                                               },
                                             ),
                                           ),
@@ -417,8 +427,42 @@ class _UserProfileState extends State<UserProfile> {
                                     child: SingleChildScrollView(
                                         child: Column(
                                           children: <Widget>[
+                                            _title("연락처"),
+                                            Container(
+                                              child: Row(
+                                                children: <Widget>[
+                                                  Padding(
+                                                      padding: EdgeInsets.symmetric(horizontal: 20.0),
+                                                      child: Icon(Icons.phone, color: Color(0xFF364A54))),
+                                                  Container(
+                                                    height: 30.0,
+                                                    width: 1.0,
+                                                    color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+                                                    margin: const EdgeInsets.only(right: 10.0),
+                                                  ),
+                                                  Flexible(
+                                                    child: TextFormField(
+                                                      initialValue: _userData.phoneNumber,
+                                                      validator: _phoneValidator,
+                                                      inputFormatters: [LengthLimitingTextInputFormatter(20)],
+                                                      enableInteractiveSelection: false,
+                                                      keyboardType: TextInputType.number,
+                                                      decoration: InputDecoration(
+                                                        hintText: _userData.phoneNumber,
+                                                        hintStyle: TextStyle(color: Colors.black),
+                                                      ),
+                                                      onSaved: (value) {
+                                                        _userData.phoneNumber = value;
+                                                      },
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                      padding: EdgeInsets.symmetric(horizontal: 20.0)
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                             _title("선호 종목"),
-                                            SizedBox(height: 10),
                                             _preferenceSport(),
                                             _title("선호 시간"),
                                             _preferenceTime(),
