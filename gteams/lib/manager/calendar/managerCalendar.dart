@@ -68,7 +68,7 @@ class _CalendarViewAppState extends State<CalendarViewApp> {
                   Divider(thickness: 1, color: Colors.black),
                   Text("대표자 성명: " + userName),
                   Text("연락처: " + phoneNumber),
-                  Text("참가 인원 수: " + eachGame.groupSize.toString()),
+                  Text("참가 인원 수: " + eachGame.userList.length.toString()),
                   Text("시작 시간: " + eachGame.startTime),
                   Text("종료 시간: " + eachGame.endTime),
                   Divider(thickness: 1, color: Colors.black),
