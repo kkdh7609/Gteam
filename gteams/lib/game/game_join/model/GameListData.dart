@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GameListData {
 //  String imagePath;
+  String Description;
   String gameName;
+  String creator;
   String selectedSport;
   int gameLevel;
   int groupSize;
@@ -17,10 +19,12 @@ class GameListData {
   DocumentReference stadiumRef;
   Timestamp sort;
   int reserve_status;
+  double chamyeyul;
 
   GameListData({
 //    this.imagePath = '',
     this.gameName = '',
+    this.creator = '',
     this.selectedSport = "",
     this.startTime = "",
     this.dateText = "",
@@ -35,12 +39,15 @@ class GameListData {
     this.stadiumRef,
     this.sort,
     this.reserve_status,
+    this.Description = "",
+    this.chamyeyul = 0.0
   });
 
   factory GameListData.fromJson(Map<String, dynamic> json) {
     return GameListData(
 //      imagePath: json['imagePath'],
       gameName: json['gameName'],
+      creator: json['creator'],
       selectedSport: json['selectedSport'],
       dateText: json['dateText'],
       startTime: json['startTime'],
@@ -54,7 +61,9 @@ class GameListData {
       totalPrice: json['totalPrice'],
       perPrice: json['perPrice'],
       sort:json['sort'],
-      reserve_status : json['reserve_status'],
+      reserve_status: json['reserve_status'],
+      Description: json['Description'],
+      chamyeyul: json['chamyeyul'] is int ? json['chamyeyul'].toDouble() : json['chamyeyul'],
     );
   }
 

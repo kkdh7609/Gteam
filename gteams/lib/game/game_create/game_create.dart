@@ -34,6 +34,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
   String _loc_name;
   String _stadium_id;
   String _stdId;
+  String _gameDescription;
   DocumentReference _stadiumRef;
 
   var userList;
@@ -55,6 +56,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
   TextEditingController _textEditingController;
   TextEditingController _textEditingController_size;
   TextEditingController _textEditingController_level;
+  TextEditingController _textEditingController_description;
 
   bool _completeDate;
   bool _completeStartTime;
@@ -92,6 +94,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
     _textEditingController = TextEditingController();
     _textEditingController_size = TextEditingController();
     _textEditingController_level = TextEditingController();
+    _textEditingController_description = TextEditingController();
 
     _completeDate = false;
     _completeStartTime = false;
@@ -123,9 +126,12 @@ class _GameCreatePageState extends State<GameCreatePage> {
   }
 
   AlertDialog _alertDialog(title, text) {
-    return AlertDialog(title: Text(title), content: Text(text), actions: <Widget>[
-      _alertButton(),
-    ]);
+    return AlertDialog(
+        title: Text(title),
+        content: Text(text),
+        actions: <Widget>[
+          _alertButton(),
+        ]);
   }
 
   _showAlertDialog(title, text) {
@@ -137,7 +143,11 @@ class _GameCreatePageState extends State<GameCreatePage> {
   }
 
   Future<Null> _selectDate(BuildContext context) async {
-    final DateTime _pickedDate = await showDatePicker(context: context, initialDate: _date, firstDate: DateTime.now().subtract(Duration(days: 1)), lastDate: _date.add(Duration(days: 100)));
+    final DateTime _pickedDate = await showDatePicker(
+        context: context,
+        initialDate: _date,
+        firstDate: DateTime.now().subtract(Duration(days: 1)),
+        lastDate: _date.add(Duration(days: 100)));
     DateFormat dateFormat = DateFormat("yy-MM-dd");
 
     if (_pickedDate != null && (_pickedDate != _date || !_completeDate)) {
@@ -158,14 +168,15 @@ class _GameCreatePageState extends State<GameCreatePage> {
         _startTimeText = "Start Time";
         _endTimeText = "End Time";
       });
-
     }
   }
 
   Future<Null> _selectStart(BuildContext context) async {
-    final TimeOfDay _pickedStart = await showCustomTimePicker(context: context, initialTime: _startTime);
+    final TimeOfDay _pickedStart =
+        await showCustomTimePicker(context: context, initialTime: _startTime);
 
-    if (_pickedStart != null && (_pickedStart != _startTime || !_completeStartTime)) {
+    if (_pickedStart != null &&
+        (_pickedStart != _startTime || !_completeStartTime)) {
       setState(() {
         if (_completeEndTime) {
           int intPickedStart = _pickedStart.hour * 100 + _pickedStart.minute;
@@ -188,11 +199,12 @@ class _GameCreatePageState extends State<GameCreatePage> {
   }
 
   Future<Null> _selectEnd(BuildContext context) async {
-    TimeOfDay _pickedEnd = await showCustomTimePicker(context: context, initialTime: _endTime);
+    TimeOfDay _pickedEnd =
+        await showCustomTimePicker(context: context, initialTime: _endTime);
 
     if (_pickedEnd != null && (_pickedEnd != _endTime || !_completeEndTime)) {
       setState(() {
-        if(_pickedEnd.hour == 0 && _pickedEnd.minute == 0){
+        if (_pickedEnd.hour == 0 && _pickedEnd.minute == 0) {
           _pickedEnd = TimeOfDay(hour: 24, minute: 0);
         }
         if (_completeStartTime) {
@@ -215,7 +227,8 @@ class _GameCreatePageState extends State<GameCreatePage> {
     }
   }
 
-  void _change_loc_name(String new_name, String new_id, String new_stdId) async {
+  void _change_loc_name(
+      String new_name, String new_id, String new_stdId) async {
     _loc_name = new_name;
     _stadium_id = new_id;
     _stdId = new_stdId;
@@ -272,13 +285,17 @@ class _GameCreatePageState extends State<GameCreatePage> {
           isActive: true,
           state: StepState.indexed,
           content: Column(
-            children: <Widget>[_showGameGender(), _showGameMember(), _showGameLevel()],
+            children: <Widget>[_showGameGender(), _showGameMember(), _showGameLevel(), _showDescription()],
           ))
     ];
 
     return Scaffold(
       appBar: AppBar(
-          title: Text("게임 생성", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white)),
+          title: Text("게임 생성",
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 22,
+                  color: Colors.white)),
           centerTitle: true,
           backgroundColor: GameCreateTheme.buildLightTheme().primaryColor),
       body: Container(
@@ -291,7 +308,10 @@ class _GameCreatePageState extends State<GameCreatePage> {
                 _showGameTitle("게임 이름"),
                 _showGameName(),
                 Theme(
-                  data: ThemeData(fontFamily: 'Dosis', primaryColor: GameCreateTheme.buildLightTheme().primaryColor),
+                  data: ThemeData(
+                      fontFamily: 'Dosis',
+                      primaryColor:
+                          GameCreateTheme.buildLightTheme().primaryColor),
                   child: Stepper(
                     steps: steps,
                     type: StepperType.vertical,
@@ -335,7 +355,11 @@ class _GameCreatePageState extends State<GameCreatePage> {
       padding: const EdgeInsets.only(top: 20.0, left: 20.0),
       child: Text(
         title,
-        style: TextStyle(color: Colors.black, fontFamily: 'Dosis', fontWeight: FontWeight.w900, fontSize: 16.0),
+        style: TextStyle(
+            color: Colors.black,
+            fontFamily: 'Dosis',
+            fontWeight: FontWeight.w900,
+            fontSize: 16.0),
       ),
     );
   }
@@ -364,7 +388,10 @@ class _GameCreatePageState extends State<GameCreatePage> {
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       hintText: '게임 이름 입력',
-                      hintStyle: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w400, color: Colors.grey),
+                      hintStyle: TextStyle(
+                          fontFamily: 'Dosis',
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey),
                     ),
                     validator: (value) {
                       return value.isEmpty ? "Game name can\'t be empty" : null;
@@ -386,11 +413,14 @@ class _GameCreatePageState extends State<GameCreatePage> {
     return Container(
       child: Row(
         children: <Widget>[
-          new Padding(padding: EdgeInsets.symmetric(horizontal: 15.0), child: Icon(Icons.check, color: Colors.black)),
+          new Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Icon(Icons.check, color: Colors.black)),
           Container(
             height: 30.0,
             width: 1.0,
-            color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+            color:
+                GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           DropdownButtonHideUnderline(
@@ -414,19 +444,28 @@ class _GameCreatePageState extends State<GameCreatePage> {
     return Container(
       child: Row(
         children: <Widget>[
-          new Padding(padding: EdgeInsets.symmetric(horizontal: 15.0), child: Icon(Icons.date_range, color: Colors.black)),
+          new Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Icon(Icons.date_range, color: Colors.black)),
           Container(
             height: 30.0,
             width: 1.0,
-            color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+            color:
+                GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           SizedBox(
             width: (MediaQuery.of(context).size.width / 4) + 12,
             height: 40,
             child: FlatButton(
-              color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.2),
-              child: Text(_dateText, style: TextStyle(fontSize: 16, fontFamily: 'Dosis', fontWeight: FontWeight.w700)),
+              color: GameCreateTheme.buildLightTheme()
+                  .primaryColor
+                  .withOpacity(0.2),
+              child: Text(_dateText,
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Dosis',
+                      fontWeight: FontWeight.w700)),
               onPressed: () {
                 _selectDate(context);
               },
@@ -442,19 +481,28 @@ class _GameCreatePageState extends State<GameCreatePage> {
     return Container(
       child: Row(
         children: <Widget>[
-          new Padding(padding: EdgeInsets.symmetric(horizontal: 15.0), child: Icon(Icons.access_time, color: Colors.black)),
+          new Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Icon(Icons.access_time, color: Colors.black)),
           Container(
             height: 30.0,
             width: 1.0,
-            color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.2),
+            color:
+                GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.2),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           SizedBox(
             width: (MediaQuery.of(context).size.width / 4) + 12,
             height: 40,
             child: FlatButton(
-              color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.2),
-              child: Text(_startTimeText, style: TextStyle(fontSize: 16, fontFamily: 'Dosis', fontWeight: FontWeight.w700)),
+              color: GameCreateTheme.buildLightTheme()
+                  .primaryColor
+                  .withOpacity(0.2),
+              child: Text(_startTimeText,
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Dosis',
+                      fontWeight: FontWeight.w700)),
               onPressed: !_completeDate
                   ? () {}
                   : () {
@@ -463,14 +511,24 @@ class _GameCreatePageState extends State<GameCreatePage> {
             ),
           ),
           SizedBox(width: 5),
-          Text("~", style: TextStyle(fontSize: 16, fontFamily: 'Dosis', fontWeight: FontWeight.w400)),
+          Text("~",
+              style: TextStyle(
+                  fontSize: 16,
+                  fontFamily: 'Dosis',
+                  fontWeight: FontWeight.w400)),
           SizedBox(width: 5),
           SizedBox(
             width: (MediaQuery.of(context).size.width / 4) + 12,
             height: 40,
             child: FlatButton(
-              color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.2),
-              child: Text(_endTimeText, style: TextStyle(fontSize: 16, fontFamily: 'Dosis', fontWeight: FontWeight.w700)),
+              color: GameCreateTheme.buildLightTheme()
+                  .primaryColor
+                  .withOpacity(0.2),
+              child: Text(_endTimeText,
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Dosis',
+                      fontWeight: FontWeight.w700)),
               onPressed: !_completeDate
                   ? () {}
                   : () {
@@ -494,37 +552,55 @@ class _GameCreatePageState extends State<GameCreatePage> {
           return Container(
             child: Row(
               children: <Widget>[
-                Padding(padding: EdgeInsets.symmetric(horizontal: 15.0), child: Icon(Icons.location_on, color: Colors.black)),
+                Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Icon(Icons.location_on, color: Colors.black)),
                 Container(
                   height: 30.0,
                   width: 1.0,
-                  color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+                  color: GameCreateTheme.buildLightTheme()
+                      .primaryColor
+                      .withOpacity(0.5),
                   margin: const EdgeInsets.only(right: 10.0),
                 ),
                 Expanded(
                   child: FlatButton(
                     child: Text(_loc_name),
                     onPressed: () async {
-                      if(!this._completeEndTime || !this._completeStartTime){
+                      if (!this._completeEndTime || !this._completeStartTime) {
                         _showAlertDialog("에러", "경기 시간을 먼저 선택해주세요.");
-                      }
-                      else {
+                      } else {
                         if (isAvailable) {
                           isAvailable = false;
-                          this.stadiumList = snapshot.data.documents.map((data) => StadiumListData.fromJson(data.data)).toList();
+                          this.stadiumList = snapshot.data.documents
+                              .map(
+                                  (data) => StadiumListData.fromJson(data.data))
+                              .toList();
                           List<StadiumListData> usingList = [];
                           DateFormat dateFormat = DateFormat("yy-MM-dd");
                           String pickDate = dateFormat.format(_date);
-                          int usingTime = partTimeToTotalTime(_startTime.hour, _startTime.minute, _endTime.hour, _endTime.minute);
-                          for (int index = 0; index < this.stadiumList.length; index++) {
-                            var dateRef = await snapshot.data.documents[index].reference.collection("date").document(pickDate).get();
+                          int usingTime = partTimeToTotalTime(
+                              _startTime.hour,
+                              _startTime.minute,
+                              _endTime.hour,
+                              _endTime.minute);
+                          for (int index = 0;
+                              index < this.stadiumList.length;
+                              index++) {
+                            var dateRef = await snapshot
+                                .data.documents[index].reference
+                                .collection("date")
+                                .document(pickDate)
+                                .get();
                             if (dateRef.data == null) {
-                              int totalTime = 281474976710655 - this.stadiumList[index].intTimes[_date.weekday - 1];
+                              int totalTime = 281474976710655 -
+                                  this
+                                      .stadiumList[index]
+                                      .intTimes[_date.weekday - 1];
                               if (totalTime & usingTime == 0) {
                                 usingList.add(this.stadiumList[index]);
                               }
-                            }
-                            else {
+                            } else {
                               if (dateRef.data['totalTime'] & usingTime == 0) {
                                 usingList.add(this.stadiumList[index]);
                               }
@@ -534,11 +610,10 @@ class _GameCreatePageState extends State<GameCreatePage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      MapTest(
-                                          onSelected: _change_loc_name,
-                                          nowReq: mapReq.findLocation,
-                                          stadiumList: usingList //stadiumList,
+                                  builder: (context) => MapTest(
+                                      onSelected: _change_loc_name,
+                                      nowReq: mapReq.findLocation,
+                                      stadiumList: usingList //stadiumList,
                                       )));
                           isAvailable = true;
                         }
@@ -556,11 +631,14 @@ class _GameCreatePageState extends State<GameCreatePage> {
     return Container(
       child: Row(
         children: <Widget>[
-          new Padding(padding: EdgeInsets.symmetric(horizontal: 15.0), child: Icon(Icons.wc, color: Colors.black)),
+          new Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Icon(Icons.wc, color: Colors.black)),
           Container(
             height: 30.0,
             width: 1.0,
-            color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+            color:
+                GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           Radio(
@@ -575,7 +653,11 @@ class _GameCreatePageState extends State<GameCreatePage> {
               );
             },
           ),
-          Text("남성", style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w700, fontSize: 16)),
+          Text("남성",
+              style: TextStyle(
+                  fontFamily: 'Dosis',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16)),
           Radio(
             value: Gender.FEMALE,
             groupValue: _selectedGender,
@@ -589,6 +671,19 @@ class _GameCreatePageState extends State<GameCreatePage> {
             },
           ),
           Text("여성", style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w700, fontSize: 16)),
+          Radio(
+            value: Gender.ALL,
+            groupValue: _selectedGender,
+            activeColor: GameCreateTheme.buildLightTheme().primaryColor,
+            onChanged: (Gender value) {
+              setState(
+                    () {
+                  _selectedGender = value;
+                },
+              );
+            },
+          ),
+          Text("모두", style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w700, fontSize: 16)),
         ],
       ),
     );
@@ -598,11 +693,14 @@ class _GameCreatePageState extends State<GameCreatePage> {
     return Container(
       child: Row(
         children: <Widget>[
-          new Padding(padding: EdgeInsets.symmetric(horizontal: 15.0), child: Icon(Icons.group, color: Colors.black)),
+          new Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Icon(Icons.group, color: Colors.black)),
           Container(
             height: 30.0,
             width: 1.0,
-            color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+            color:
+                GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           Flexible(
@@ -629,11 +727,14 @@ class _GameCreatePageState extends State<GameCreatePage> {
     return Container(
       child: Row(
         children: <Widget>[
-          Padding(padding: EdgeInsets.symmetric(horizontal: 15.0), child: Icon(Icons.thumb_up, color: Colors.black)),
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Icon(Icons.thumb_up, color: Colors.black)),
           Container(
             height: 30.0,
             width: 1.0,
-            color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+            color:
+            GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           Flexible(
@@ -656,8 +757,44 @@ class _GameCreatePageState extends State<GameCreatePage> {
     );
   }
 
-  Future<DocumentReference> updateGame(int perPrice, int totalPrice) async{
-    DocumentReference docRef = await Firestore.instance.collection('game3').add({
+  Widget _showDescription() {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Icon(Icons.description, color: Colors.black)),
+          Container(
+            height: 30.0,
+            width: 1.0,
+            color:
+            GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+            margin: const EdgeInsets.only(right: 10.0),
+          ),
+          Flexible(
+            child: TextFormField(
+              controller: _textEditingController_description,
+              inputFormatters: [LengthLimitingTextInputFormatter(150)],
+              enableInteractiveSelection: false,
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                hintText: '게임에 대한 간단한 소개(150자 이내)',
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+              onSaved: (value) {
+                _gameDescription = value.toString();
+              },
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<DocumentReference> updateGame(int perPrice, int totalPrice) async {
+    DocumentReference docRef =
+        await Firestore.instance.collection('game3').add({
+      'creator': RootPage.user_email,
       'gameName': _gameName,
       'selectedSport': _selectedSports,
       'dateText': _dateText,
@@ -674,9 +811,12 @@ class _GameCreatePageState extends State<GameCreatePage> {
       'stadiumRef': _stadiumRef,
       'userList': userList,
       'reserve_status': 0, // 예약상태를 관리하는 부분 [0 : 모집중 , 1 : 접수중 , 2 접수 완료]
+      'Description' : _gameDescription,
+      'chamyeyul' : (1 / _groupSize).toDouble()
     });
     return docRef;
   }
+
   void _showMaterialDialog() {
     showDialog(
         context: context,
@@ -685,7 +825,13 @@ class _GameCreatePageState extends State<GameCreatePage> {
             title: Text('확인'),
             content: SingleChildScrollView(
                 child: ListBody(
-              children: <Widget>[Text("게임 이름 : " + _textEditingController.text), Text("게임 종목: $_selectedSports"), Text("게임 날짜 : $_dateText"), Text("게임 시간 : $_startTimeText ~ $_endTimeText"), Text("게임을 만드시겠습니까?")],
+              children: <Widget>[
+                Text("게임 이름 : " + _textEditingController.text),
+                Text("게임 종목: $_selectedSports"),
+                Text("게임 날짜 : $_dateText"),
+                Text("게임 시간 : $_startTimeText ~ $_endTimeText"),
+                Text("게임을 만드시겠습니까?")
+              ],
             )),
             actions: <Widget>[
               FlatButton(
@@ -695,6 +841,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
                   color: Color(0xff20253d),
                   child: Text('취소', style: TextStyle(color: Colors.white))),
               FlatButton(
+                  color: Color(0xff20253d),
                   onPressed: () async {
                     if (isAvailable) {
                       isAvailable = false;
@@ -711,7 +858,8 @@ class _GameCreatePageState extends State<GameCreatePage> {
                       int totalPrice;
                       int perPrice;
 
-                      QuerySnapshot document = await crudObj.getDocumentByWhere('stadium', 'stdId', _stdId);
+                      QuerySnapshot document = await crudObj.getDocumentByWhere(
+                          'stadium', 'stdId', _stdId);
                       int stadiumPrice = document.documents[0].data['price'];
 
                       if (endMinute == 00 && startMinute == 30) {
@@ -728,18 +876,25 @@ class _GameCreatePageState extends State<GameCreatePage> {
                       perPrice = totalPrice ~/ _groupSize;
 
                       int fundData = await payObj.getFund();
-                      if(fundData >= perPrice){
+                      if (fundData >= perPrice) {
                         _stadiumRef = document.documents[0].reference;
                         this.userList.add(RootPage.user_email);
                         int newFund = fundData - perPrice;
-                        int usingTime = partTimeToTotalTime(_startTime.hour, _startTime.minute, _endTime.hour, _endTime.minute);
+                        int usingTime = partTimeToTotalTime(_startTime.hour,
+                            _startTime.minute, _endTime.hour, _endTime.minute);
                         DateFormat dateFormat = DateFormat("yy-MM-dd");
                         String pickDate = dateFormat.format(_date);
-                        int weekDay = _date.weekday - 1;        // weekday는 월요일 1 ~ 일요일 7의 값이 나옴
-                        var stdRef = Firestore.instance.collection("stadium").document(_stdId);
-                        var stdDate = await stdRef.collection("date").document(pickDate).get();
+                        int weekDay =
+                            _date.weekday - 1; // weekday는 월요일 1 ~ 일요일 7의 값이 나옴
+                        var stdRef = Firestore.instance
+                            .collection("stadium")
+                            .document(_stdId);
+                        var stdDate = await stdRef
+                            .collection("date")
+                            .document(pickDate)
+                            .get();
                         DocumentReference gameDoc;
-                        if(stdDate.data == null) {
+                        if (stdDate.data == null) {
                           var stdData = await stdRef.get();
                           gameDoc = await updateGame(perPrice, totalPrice);
                           String docId = gameDoc.documentID;
@@ -747,7 +902,10 @@ class _GameCreatePageState extends State<GameCreatePage> {
                           int availTime = stdData["intTimes"][weekDay];
                           int blockTime = 281474976710655 - availTime;
                           int totalTime = blockTime + usingTime;
-                          await stdRef.collection("date").document(pickDate).setData({
+                          await stdRef
+                              .collection("date")
+                              .document(pickDate)
+                              .setData({
                             "totalTime": totalTime,
                             "blockTime": blockTime,
                             "reserveFin": [],
@@ -756,10 +914,8 @@ class _GameCreatePageState extends State<GameCreatePage> {
                             "reserveYetId": [docId],
                             "setTimes": []
                           });
-                        }
-
-                        else{
-                          if(stdDate["totalTime"] & usingTime > 0){
+                        } else {
+                          if (stdDate["totalTime"] & usingTime > 0) {
                             _showAlertDialog("참가 실패", "예약 불가능한 경기장 입니다.");
                             return;
                           }
@@ -767,29 +923,32 @@ class _GameCreatePageState extends State<GameCreatePage> {
                           String docId = gameDoc.documentID;
                           await payObj.updateFund(newFund);
                           int totalTime = stdDate["totalTime"] + usingTime;
-                          List<int> reserveYet = List.from(stdDate["reserveYet"]);
-                          List<String> reserveYetId = List.from(stdDate["reserveYetId"]);
+                          List<int> reserveYet =
+                              List.from(stdDate["reserveYet"]);
+                          List<String> reserveYetId =
+                              List.from(stdDate["reserveYetId"]);
                           reserveYet.add(usingTime);
                           reserveYetId.add(docId);
-                          await stdRef.collection("date").document(pickDate).updateData({
+                          await stdRef
+                              .collection("date")
+                              .document(pickDate)
+                              .updateData({
                             "totalTime": totalTime,
                             "reserveYet": reserveYet,
                             "reserveYetId": reserveYetId
                           });
                         }
 
-                        DocumentSnapshot userDoc = await crudObj.getDocumentById('user', RootPage.userDocID);
+                        DocumentSnapshot userDoc = await crudObj
+                            .getDocumentById('user', RootPage.userDocID);
                         userGameList = List.from(userDoc.data["gameList"]);
                         userGameList.add(gameDoc.documentID);
-                        await crudObj.updateData('user', RootPage.userDocID, {
-                          'gameList': userGameList
-                        });
+                        await crudObj.updateData('user', RootPage.userDocID,
+                            {'gameList': userGameList});
                         isAvailable = true;
                         Navigator.pop(context);
                         Navigator.pop(context);
-                      }
-
-                      else {
+                      } else {
                         _showAlertDialog("참가 실패", "포인트가 부족합니다");
                         isAvailable = true;
                       }
@@ -853,7 +1012,6 @@ class _GameCreatePageState extends State<GameCreatePage> {
                       });*/ // 경기장 정보 들어오면 그거 쓰기
                     }
                   },
-                  color: Color(0xff20253d),
                   child: Text('생성', style: TextStyle(color: Colors.white)))
             ],
           );
@@ -869,7 +1027,9 @@ class _GameCreatePageState extends State<GameCreatePage> {
           borderRadius: BorderRadius.all(Radius.circular(24.0)),
           boxShadow: <BoxShadow>[
             BoxShadow(
-              color: GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.2),
+              color: GameCreateTheme.buildLightTheme()
+                  .primaryColor
+                  .withOpacity(0.2),
               offset: Offset(4, 4),
             ),
           ],
@@ -894,23 +1054,28 @@ class _GameCreatePageState extends State<GameCreatePage> {
                 _showAlertDialog("생성 실패", "종료 시간을 선택해주세요.");
               } else if (_textEditingController_size.text.length == 0) {
                 _showAlertDialog("생성 실패", "총 인원을 입력해주세요.");
-              } else if (int.parse(_textEditingController_size.text) < 2 || int.parse(_textEditingController_size.text) > 30) {
+              } else if (int.parse(_textEditingController_size.text) < 2 ||
+                  int.parse(_textEditingController_size.text) > 30) {
                 _showAlertDialog("생성 실패", "모집 인원: 10 ~ 30 사이의 값을 입력하세요");
               } else if (_textEditingController_level.text.length == 0) {
                 _showAlertDialog("생성 실패", "희망 수준을 선택해주세요.");
-              } else if (int.parse(_textEditingController_level.text) < 1 || int.parse(_textEditingController_level.text) > 10) {
+              } else if (int.parse(_textEditingController_level.text) < 1 ||
+                  int.parse(_textEditingController_level.text) > 10) {
                 _showAlertDialog("생성 실패", "희망 수준: 1 ~ 10 사이의 값을 입력하세요");
-              } else if(_loc_name == "장소 선택"){
+              } else if (_loc_name == "장소 선택") {
                 _showAlertDialog("생성 실패", "장소를 선택해주세요.");
-              }
-              else {
+              } else {
                 _showMaterialDialog();
               }
             },
             child: Center(
               child: Text(
                 "게임 생성 완료",
-                style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w500, fontSize: 18, color: Colors.white),
+                style: TextStyle(
+                    fontFamily: 'Dosis',
+                    fontWeight: FontWeight.w500,
+                    fontSize: 18,
+                    color: Colors.white),
               ),
             ),
           ),

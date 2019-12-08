@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:gteams/services/user_mangement.dart';
 import 'package:gteams/login/loginTheme.dart';
 import 'package:gteams/login/painter.dart';
@@ -350,7 +351,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             padding: EdgeInsets.only(top: 10.0),
             child: FlatButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => StadiumCreatePage()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpWaitingPage()));
                 },
                 child: Text(
                   "Forgot Password?",
@@ -604,7 +605,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                         userId = user.toString();
                         print("Signed Up: $userId");
                         UserManagement().storeNewUser(_signUpEmail, context, _signUpName, true,false);
-                        //Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpWaitingPage()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpWaitingPage()));
                         signUpEmailController.clear();
                         signUpNameController.clear();
                         signUpPasswordController.clear();

@@ -59,8 +59,8 @@ class _ReserveListState extends State<ReserveList> {
     );
   }
 
-  Widget makeCard(String title, String startTime, String endTime, int groupSize,
-      int totalPrice, int index) {
+  Widget makeCard(String title, String Date, String startTime, String endTime, int groupSize,
+                  int totalPrice, int index) {
     return Card(
         elevation: 8.0,
         margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
@@ -95,7 +95,7 @@ class _ReserveListState extends State<ReserveList> {
                   child: Column(
                     children: <Widget>[
                       _showGameInfo(
-                          startTime, endTime, groupSize, totalPrice, index),
+                          Date, startTime, endTime, groupSize, totalPrice, index),
                     ],
                   ),
                 )
@@ -105,13 +105,14 @@ class _ReserveListState extends State<ReserveList> {
         ));
   }
 
-  Widget _showGameInfo(String startTime, String endTime, int groupSize,
-      int totalPrice, int index) {
+  Widget _showGameInfo(String date, String startTime, String endTime, int groupSize,
+                       int totalPrice, int index) {
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          _rowItem("요일", date),
           _rowItem("시작시간", startTime),
           _rowItem("종료시간", endTime),
           _rowItem("총원", groupSize.toString()),
@@ -223,7 +224,7 @@ class _ReserveListState extends State<ReserveList> {
 
   void changeGameInfo(String gameDoc) async {
     DocumentSnapshot gameDocumentary =
-        await crudObj.getDocumentById('game3', gameDoc);
+    await crudObj.getDocumentById('game3', gameDoc);
     var pickDate = gameDocumentary.data['dateText'];
     var dateVal = await widget.stdRef.reference
         .collection("date")
@@ -270,8 +271,8 @@ class _ReserveListState extends State<ReserveList> {
             title: Text('확인'),
             content: SingleChildScrollView(
                 child: ListBody(
-              children: <Widget>[Text("예약 신청을 승인하시겠습니까?")],
-            )),
+                  children: <Widget>[Text("예약 신청을 승인하시겠습니까?")],
+                )),
             actions: <Widget>[
               FlatButton(
                   color: Color(0xff20253d),
@@ -332,18 +333,19 @@ class _ReserveListState extends State<ReserveList> {
           });
 
           return gameDataList.length > index
-              ? ((gameDataList[index] != null &&
-                      gameDataList[index].groupSize ==
-                          gameDataList[index].userList.length)
-                  ? makeCard(
-                      gameDataList[index].gameName,
-                      gameDataList[index].startTime,
-                      gameDataList[index].endTime,
-                      gameDataList[index].groupSize,
-                      gameDataList[index].totalPrice,
-                      index)
-                  : LinearProgressIndicator())
-              : LinearProgressIndicator();
+                 ? ((gameDataList[index] != null &&
+              gameDataList[index].groupSize ==
+                  gameDataList[index].userList.length)
+                    ? makeCard(
+              gameDataList[index].gameName,
+              gameDataList[index].dateText,
+              gameDataList[index].startTime,
+              gameDataList[index].endTime,
+              gameDataList[index].groupSize,
+              gameDataList[index].totalPrice,
+              index)
+                    : LinearProgressIndicator())
+                 : LinearProgressIndicator();
         });
   }
 
@@ -358,7 +360,7 @@ class _ReserveListState extends State<ReserveList> {
                   fontWeight: FontWeight.w600,
                   fontSize: 22,
                   color: Colors.white))),
-      body: Container(child: _buildbody()),
+      body: reserveList.length == 0 ? Center(child: Text("예약 목록이 없습니다.", style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w500, fontSize: 20.0))) : Container(child: _buildbody()),
     );
   }
 }

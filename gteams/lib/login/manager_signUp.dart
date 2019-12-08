@@ -164,7 +164,7 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
                             return value.isEmpty ? "Email can\'t be empty" : null;
                           },
                           onSaved: (value) {
-                            print(value);
+                            //print(value);
                             _managerSignUpEmail = value;
                           },
                         ),
@@ -204,7 +204,7 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
                             return value.isEmpty ? "Password can\'t be empty" : null;
                           },
                           onSaved: (value) {
-                            print(value);
+                            //print(value);
                             _managerSignUpPassword = value;
                           },
                         ),
@@ -236,7 +236,7 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
                             return value.isEmpty ? "Bussiness Number can\'t be empty" : null;
                           },
                           onSaved: (value) {
-                            print(value);
+                            //print(value);
                             _managerSignUpBusinessNum = value;
                           },
                         ),
@@ -293,7 +293,7 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
                       if (_formKey.currentState.validate()) _formKey.currentState.save();
                       widget.auth.signUp(_managerSignUpEmail, _managerSignUpPassword).then((user) {
                         managerId = user.toString();
-                        print("Signed Up: $managerId");
+                        //print("Signed Up: $managerId");
                         ManagerManagement()
                             .storeNewManager(_managerSignUpEmail, context, _managerSignUpName, _managerSignUpBusinessNum, false);
 

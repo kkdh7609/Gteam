@@ -3,6 +3,7 @@ class UserData {
   String email;
   String gender;
   String preferenceLoc;
+  String phoneNumber;
   List<dynamic> preferenceSports;
   String imagePath;
 
@@ -11,6 +12,7 @@ class UserData {
     this.email = "",
     this.gender = "",
     this.preferenceLoc = "",
+    this.phoneNumber = "",
     this.preferenceSports,
     this.imagePath = "",
   });
@@ -20,6 +22,7 @@ class UserData {
       name: json['name'],
       email: json['email'],
       gender: json['gender'],
+      phoneNumber: json['phoneNumber'],
       preferenceLoc: json['prferenceLoc'],
       preferenceSports: json['sportList'],
       imagePath: json['imagePath'],

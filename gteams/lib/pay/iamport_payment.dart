@@ -89,7 +89,7 @@ class _IamPortPaymentState extends State<IamPortPayment> {
       /* [필수입력] 콜백 함수 */
       callback: (Map<String, String> result) {
         PayMethods().getFund().then((data){
-          int fund = data + chargeAmount;
+          int fund = data + (chargeAmount * 0.95).toInt();
 
           PayMethods().updateFund(fund).then((tempData){
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PayResultPage(payResult: chargeAmount)));
