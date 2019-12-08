@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gteams/menu/model/aliment.dart';
 import 'package:gteams/game/game_join/game_join.dart';
 import 'package:gteams/game/game_create/game_create.dart';
+import 'package:gteams/util/alertUtil.dart';
 
 class AlimentWidget extends StatelessWidget {
   final LinearGradient theme;
@@ -73,7 +74,9 @@ class AlimentWidget extends StatelessWidget {
           children: <Widget>[
             InkWell(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => GameCreatePage()));
+                aliment.name == "Futsal" ?
+                Navigator.push(context, MaterialPageRoute(builder: (context) => GameCreatePage())):
+                showAlertDialog("Not permitted yet", '아직 서비스를 하지 않습니다.', context);
               },
               child: Column(
                 children: <Widget>[
@@ -95,7 +98,9 @@ class AlimentWidget extends StatelessWidget {
             ),
             InkWell(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => GameJoinPage()));
+                aliment.name == "Futsal" ?
+                Navigator.push(context, MaterialPageRoute(builder: (context) => GameJoinPage())) :
+                showAlertDialog("Not permitted yet", '아직 서비스를 하지 않습니다.', context);
               },
               child: Column(
                 children: <Widget>[

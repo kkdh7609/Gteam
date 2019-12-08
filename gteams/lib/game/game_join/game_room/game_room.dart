@@ -286,8 +286,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
                                 child: Text(
-                                  widget.gameData.Description.toString() == "" ?
-                                  "초보자분들 환영합니다. 풋살을 즐기시는 누구나 참가 신청 가능합니다." : widget.gameData.Description.toString(),
+                                  widget.gameData.Description.toString() == null ? "No Description" : widget.gameData.Description.toString(),
                                   textAlign: TextAlign.justify,
                                   style: TextStyle(
                                     fontFamily: 'Dosis',
