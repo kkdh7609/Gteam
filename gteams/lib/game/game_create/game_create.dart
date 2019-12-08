@@ -34,6 +34,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
   String _loc_name;
   String _stadium_id;
   String _stdId;
+  String _gameDescription;
   DocumentReference _stadiumRef;
 
   var userList;
@@ -55,6 +56,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
   TextEditingController _textEditingController;
   TextEditingController _textEditingController_size;
   TextEditingController _textEditingController_level;
+  TextEditingController _textEditingController_description;
 
   bool _completeDate;
   bool _completeStartTime;
@@ -92,6 +94,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
     _textEditingController = TextEditingController();
     _textEditingController_size = TextEditingController();
     _textEditingController_level = TextEditingController();
+    _textEditingController_description = TextEditingController();
 
     _completeDate = false;
     _completeStartTime = false;
@@ -282,11 +285,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
           isActive: true,
           state: StepState.indexed,
           content: Column(
-            children: <Widget>[
-              _showGameGender(),
-              _showGameMember(),
-              _showGameLevel()
-            ],
+            children: <Widget>[_showGameGender(), _showGameMember(), _showGameLevel(), _showDescription()],
           ))
     ];
 
@@ -671,11 +670,20 @@ class _GameCreatePageState extends State<GameCreatePage> {
               );
             },
           ),
-          Text("여성",
-              style: TextStyle(
-                  fontFamily: 'Dosis',
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16)),
+          Text("여성", style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w700, fontSize: 16)),
+          Radio(
+            value: Gender.ALL,
+            groupValue: _selectedGender,
+            activeColor: GameCreateTheme.buildLightTheme().primaryColor,
+            onChanged: (Gender value) {
+              setState(
+                    () {
+                  _selectedGender = value;
+                },
+              );
+            },
+          ),
+          Text("모두", style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w700, fontSize: 16)),
         ],
       ),
     );
@@ -726,7 +734,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
             height: 30.0,
             width: 1.0,
             color:
-                GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+            GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           Flexible(
@@ -741,6 +749,40 @@ class _GameCreatePageState extends State<GameCreatePage> {
               ),
               onSaved: (value) {
                 _gameLevel = int.parse(value);
+              },
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _showDescription() {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Icon(Icons.description, color: Colors.black)),
+          Container(
+            height: 30.0,
+            width: 1.0,
+            color:
+            GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+            margin: const EdgeInsets.only(right: 10.0),
+          ),
+          Flexible(
+            child: TextFormField(
+              controller: _textEditingController_description,
+              inputFormatters: [LengthLimitingTextInputFormatter(150)],
+              enableInteractiveSelection: false,
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                hintText: '게임에 대한 간단한 소개(150자 이내)',
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+              onSaved: (value) {
+                _gameDescription = value.toString();
               },
             ),
           )
@@ -769,6 +811,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
       'stadiumRef': _stadiumRef,
       'userList': userList,
       'reserve_status': 0, // 예약상태를 관리하는 부분 [0 : 모집중 , 1 : 접수중 , 2 접수 완료]
+      'Description' : _gameDescription
     });
     return docRef;
   }

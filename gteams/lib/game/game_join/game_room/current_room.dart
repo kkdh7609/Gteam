@@ -38,6 +38,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
   bool isAvailable = true;
   String myName;
   String myImgPath;
+  String myDescription;
   TextEditingController textEditingController;
   ScrollController listScrollController;
 
@@ -50,6 +51,9 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
   @override
   void initState() {
     super.initState();
+
+    print('111111111111111111');
+    print('description : ' + widget.gameData.Description);
     this.textEditingController = TextEditingController();
     this.listScrollController = ScrollController();
     this.flag = false;
@@ -798,14 +802,14 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
             child: Padding(
               padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
               child: Text(
-                "초보자분들 환영합니다. 풋살을 즐기시는 누구나 참가 신청 가능합니다.",
+                widget.gameData.Description.toString() == null ? "No Description" : widget.gameData.Description.toString(),
                 textAlign: TextAlign.justify,
                 style: TextStyle(
                   fontFamily: 'Dosis',
                   fontWeight: FontWeight.w200,
-                  fontSize: 14,
+                  fontSize: 17,
                   letterSpacing: 0.27,
-                  color: GameRoomTheme.grey,
+                  color: Colors.black,
                 ),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,

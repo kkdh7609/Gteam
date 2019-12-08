@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GameListData {
 //  String imagePath;
+  String Description;
   String gameName;
   String creator;
   String selectedSport;
@@ -37,6 +38,7 @@ class GameListData {
     this.stadiumRef,
     this.sort,
     this.reserve_status,
+    this.Description = "",
   });
 
   factory GameListData.fromJson(Map<String, dynamic> json) {
@@ -57,7 +59,8 @@ class GameListData {
       totalPrice: json['totalPrice'],
       perPrice: json['perPrice'],
       sort:json['sort'],
-      reserve_status : json['reserve_status'],
+      reserve_status: json['reserve_status'],
+      Description: json['Description'],
     );
   }
 

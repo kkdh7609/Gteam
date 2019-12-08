@@ -148,7 +148,8 @@ class _MapTestState extends State<MapTest> {
 
   Widget _alertOKButton(address, locId, lat, lng){
     return FlatButton(
-      child: Text("OK"),
+      color: Color(0xff20253d),
+      child: Text("OK", style: TextStyle(color:Colors.white, fontFamily:'Dosis')),
       onPressed: (){
         widget.needData(address, locId, lat, lng);
         Navigator.of(context).pop();
@@ -159,7 +160,8 @@ class _MapTestState extends State<MapTest> {
 
   Widget _alertCancelButton(){
     return FlatButton(
-      child: Text("Cancel"),
+      color: Color(0xff20253d),
+      child: Text("Cancel", style: TextStyle(color:Colors.white, fontFamily:'Dosis')),
       onPressed: (){
         Navigator.of(context).pop();
       },

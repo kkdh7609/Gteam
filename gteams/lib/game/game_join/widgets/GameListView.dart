@@ -166,7 +166,7 @@ class GameListView extends StatelessWidget {
 //                                                                    child: Icon( Icons.clear, size: 70, color: Color(0xFF880E4F))
                                                                   ]
                                                                 ) :
-                                                            Icon(FontAwesomeIcons.tshirt, color: Colors.grey, size: 35),
+                                                            Icon(FontAwesomeIcons.tshirt, color: Colors.grey.withOpacity(0.6), size: 35),
 //                                                            Icon(FontAwesomeIcons.tshirt, color: Colors.grey, size: 28),
                                                             SizedBox(height: 5),
                                                             Text(
@@ -174,7 +174,7 @@ class GameListView extends StatelessWidget {
                                                               style: TextStyle(
                                                                   fontWeight: FontWeight.w700,
                                                                   fontSize: 14,
-                                                                  color: Colors.black.withOpacity(0.7),
+                                                                  color: Colors.black.withOpacity(0.5),
                                                                   fontFamily: 'Dosis'),
                                                             ),
                                                           ],
@@ -191,14 +191,14 @@ class GameListView extends StatelessWidget {
 
                                                             ],):
                                                             //Icon(FontAwesomeIcons.volleyballBall, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35,) :
-                                                            Icon(FontAwesomeIcons.volleyballBall, color: Colors.grey, size: 28,),
+                                                            Icon(FontAwesomeIcons.volleyballBall, color: Colors.grey.withOpacity(0.6), size: 28),
                                                             SizedBox(height: 5),
                                                             Text(
                                                               "공 대여",
                                                               style: TextStyle(
                                                                   fontWeight: FontWeight.w700,
                                                                   fontSize: 14,
-                                                                  color: Colors.black.withOpacity(0.7),
+                                                                  color: Colors.black.withOpacity(0.5),
                                                                   fontFamily: 'Dosis'),
                                                             ),
                                                           ],
@@ -210,13 +210,13 @@ class GameListView extends StatelessWidget {
                                                           children: <Widget>[
                                                             stadiumData.isParking != 0 ?
                                                             Icon(FontAwesomeIcons.parking, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
-                                                            Icon(FontAwesomeIcons.parking, color: Colors.grey, size: 28) ,
+                                                            Icon(FontAwesomeIcons.parking, color: Colors.grey.withOpacity(0.6), size: 28),
                                                             SizedBox(height: 5),
                                                             Text("주차장",
                                                                 style: TextStyle(
                                                                     fontWeight: FontWeight.w700,
                                                                     fontSize: 14,
-                                                                    color: Colors.black.withOpacity(0.7),
+                                                                    color: Colors.black.withOpacity(0.5),
                                                                     fontFamily: 'Dosis')),
                                                           ],
                                                         ),
@@ -227,14 +227,14 @@ class GameListView extends StatelessWidget {
                                                           children: <Widget>[
                                                             stadiumData.isShower != 0 ?
                                                             Icon(FontAwesomeIcons.shower, color: GameJoinTheme.buildLightTheme().primaryColor, size: 35) :
-                                                            Icon(FontAwesomeIcons.shower, color: Colors.grey, size: 28) ,
+                                                            Icon(FontAwesomeIcons.shower, color: Colors.grey.withOpacity(0.6), size: 28),
                                                             SizedBox(height: 5),
                                                             Text(
                                                               "샤워장",
                                                               style: TextStyle(
                                                                   fontWeight: FontWeight.w700,
                                                                   fontSize: 14,
-                                                                  color: Colors.black.withOpacity(0.7),
+                                                                  color: Colors.black.withOpacity(0.5),
                                                                   fontFamily: 'Dosis'),
                                                             ),
                                                           ],
