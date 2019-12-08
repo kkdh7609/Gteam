@@ -75,7 +75,10 @@ class TextWidget extends StatelessWidget{
             hintStyle: TextStyle(
               color: Colors.grey
             ),
-          )
+          ),
+          validator: (value) {
+            return value.isEmpty ? "값을 입력하세요" : null;
+          },
         ),
         Divider(height: 1.0, color: Colors.black)
       ]
@@ -110,56 +113,90 @@ class EditButton extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
+    _showAlertDialog(title, text) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+                title: Text(title),
+                content: Text(text),
+                actions: <Widget>[
+                  FlatButton(
+                    color: Color(0xff20253d),
+                    child: Text("OK", style: TextStyle(color: Colors.white)),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ]);
+          });
+    }
+
     return IconButton(
         icon: Icon(Icons.check),
         onPressed: (() async {
           setAvailable(false);
 
-          if(formKey.currentState.validate()){
-            StorageReference storageReference;
-            if(isPhotoChanged) {
-              if (photo != null) {
-                storageReference = FirebaseStorage.instance.ref().child("stadium/${DateTime
-                    .now()
-                    .millisecondsSinceEpoch
-                    .toString()}.jpg");
-                StorageUploadTask uploadTask = storageReference.putFile(photo);
-                await uploadTask.onComplete;
-              }
-              else {
-                storageReference = FirebaseStorage.instance.ref().child("stadium/camera.png");
-              }
-              // StorageUploadTask uploadTask = storageReference.putFile(photo);
-              await storageReference.getDownloadURL().then((fileURL) {
-                photoURL = fileURL;
-                print("photoURL completed");
-              });
-
-              await Firestore.instance.collection('stadium').document(docId).updateData({
-                'imagePath' : photoURL
-              });
+          bool checkTimes = false;
+          for(var idx=0;idx<strTimes.length;idx++){
+            if(strTimes[idx] !="휴무"){
+              checkTimes = true;
+              break;
             }
-            print(stadiumName);
-            await Firestore.instance.collection('stadium').document(docId).updateData({
-              'stadiumName' : stadiumName,
-              'price' : int.parse(price),
-              'telephone' : telephone,
-              'isParking' : isParking,
-              'isClothes' : isClothes,
-              'isShower' : isShower,
-              'isShoes' : isShoes,
-              'isBall' : isBall,
-              'intTimes' : intTimes,
-              'strTimes' : strTimes,
-              'gameList': [],
-              'notPermitList': []
-            });
-            refreshData();
-            popFunc();
           }
-          else{
+
+          if(checkTimes == false){
+            _showAlertDialog("확인", ("운영 시간을 확인하세요"));
             setAvailable(true);
+          }else{
+            if(formKey.currentState.validate()){
+              StorageReference storageReference;
+              if(isPhotoChanged) {
+                if (photo != null) {
+                  storageReference = FirebaseStorage.instance.ref().child("stadium/${DateTime
+                      .now()
+                      .millisecondsSinceEpoch
+                      .toString()}.jpg");
+                  StorageUploadTask uploadTask = storageReference.putFile(photo);
+                  await uploadTask.onComplete;
+                }
+                else {
+                  storageReference = FirebaseStorage.instance.ref().child("stadium/camera.png");
+                }
+                // StorageUploadTask uploadTask = storageReference.putFile(photo);
+                await storageReference.getDownloadURL().then((fileURL) {
+                  photoURL = fileURL;
+                  print("photoURL completed");
+                });
+
+                await Firestore.instance.collection('stadium').document(docId).updateData({
+                  'imagePath' : photoURL
+                });
+              }
+              print(stadiumName);
+              await Firestore.instance.collection('stadium').document(docId).updateData({
+                'stadiumName' : stadiumName,
+                'price' : int.parse(price),
+                'telephone' : telephone,
+                'isParking' : isParking,
+                'isClothes' : isClothes,
+                'isShower' : isShower,
+                'isShoes' : isShoes,
+                'isBall' : isBall,
+                'intTimes' : intTimes,
+                'strTimes' : strTimes,
+                'gameList': [],
+                'notPermitList': []
+              });
+              refreshData();
+              popFunc();
+            }
+            else{
+              setAvailable(true);
+            }
           }
+
+
         })
     );
   }
@@ -195,57 +232,85 @@ class CheckButton extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
+    _showAlertDialog(title, text) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+                title: Text(title),
+                content: Text(text),
+                actions: <Widget>[
+                  FlatButton(
+                    color: Color(0xff20253d),
+                    child: Text("OK", style: TextStyle(color: Colors.white)),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ]);
+          });
+    }
+
     return IconButton(
         icon: Icon(Icons.check),
         onPressed: (() async {
           setAvailable(false);
 
-          if(formKey.currentState.validate()){
-            StorageReference storageReference;
-            if(photo != null){
-              storageReference = FirebaseStorage.instance.ref().child("stadium/${DateTime.now().millisecondsSinceEpoch.toString()}.jpg");
-              StorageUploadTask uploadTask = storageReference.putFile(photo);
-              await uploadTask.onComplete;
+          if(location == null){
+            _showAlertDialog("확인", "위치를 선택하세요");
+            setAvailable(true);
+          }else if(strTimes == null){
+            _showAlertDialog("확인", "운영 시간을 선택하세요");
+            setAvailable(true);
+          }else{
+            if(formKey.currentState.validate()){
+              StorageReference storageReference;
+              if(photo != null){
+                storageReference = FirebaseStorage.instance.ref().child("stadium/${DateTime.now().millisecondsSinceEpoch.toString()}.jpg");
+                StorageUploadTask uploadTask = storageReference.putFile(photo);
+                await uploadTask.onComplete;
+              }
+              else{
+                storageReference = FirebaseStorage.instance.ref().child("stadium/camera.png");
+              }
+              // StorageUploadTask uploadTask = storageReference.putFile(photo);
+              await storageReference.getDownloadURL().then((fileURL) {
+                photoURL = fileURL;
+                print("photoURL completed");
+              });
+
+              var data = await Firestore.instance.collection('stadium').add({
+                'imagePath' : photoURL,
+                'stadiumName' : stadiumName,
+                'price' : int.parse(price),
+                'location' :location,
+                'lat' : lat,
+                'lng' : lng,
+                'locId' : locId,
+                'telephone' : telephone,
+                'isParking' : isParking,
+                'isClothes' : isClothes,
+                'isShower' : isShower,
+                'isShoes' : isShoes,
+                'isBall' : isBall,
+                'intTimes' : intTimes,
+                'strTimes' : strTimes,
+                'gameList': [],
+                'notPermitList': []
+              });
+              var adminData = await Firestore.instance.collection('user').document(RootPage.userDocID).get();
+              List<String> myStadium = List.from(adminData.data["MyStadium"]);
+              myStadium.add(data.documentID);
+              await Firestore.instance.collection('user').document(RootPage.userDocID).updateData({"MyStadium": myStadium});
+              await Firestore.instance.collection('stadium').document(data.documentID).updateData({"stdId": data.documentID});
+              refreshData();
+              popFunc();
             }
             else{
-              storageReference = FirebaseStorage.instance.ref().child("stadium/camera.png");
+              setAvailable(true);
             }
-            // StorageUploadTask uploadTask = storageReference.putFile(photo);
-            await storageReference.getDownloadURL().then((fileURL) {
-              photoURL = fileURL;
-              print("photoURL completed");
-            });
+          }
 
-            var data = await Firestore.instance.collection('stadium').add({
-              'imagePath' : photoURL,
-              'stadiumName' : stadiumName,
-              'price' : int.parse(price),
-              'location' :location,
-              'lat' : lat,
-              'lng' : lng,
-              'locId' : locId,
-              'telephone' : telephone,
-              'isParking' : isParking,
-              'isClothes' : isClothes,
-              'isShower' : isShower,
-              'isShoes' : isShoes,
-              'isBall' : isBall,
-              'intTimes' : intTimes,
-              'strTimes' : strTimes,
-              'gameList': [],
-              'notPermitList': []
-            });
-            var adminData = await Firestore.instance.collection('user').document(RootPage.userDocID).get();
-            List<String> myStadium = List.from(adminData.data["MyStadium"]);
-            myStadium.add(data.documentID);
-            await Firestore.instance.collection('user').document(RootPage.userDocID).updateData({"MyStadium": myStadium});
-            await Firestore.instance.collection('stadium').document(data.documentID).updateData({"stdId": data.documentID});
-            refreshData();
-            popFunc();
-          }
-          else{
-            setAvailable(true);
-          }
         })
     );
   }
