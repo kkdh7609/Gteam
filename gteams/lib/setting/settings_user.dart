@@ -72,6 +72,7 @@ class _SettingUserState extends State<SettingUser> {
       _userDocID,
       {
         'name': _userData.name,
+        'fund': 10000,
         'info_status': true,
         'gender': _selectedGender.toString(),
         'prferenceLoc': _userData.preferenceLoc,
@@ -79,7 +80,6 @@ class _SettingUserState extends State<SettingUser> {
         'phoneNumber': _userData.phoneNumber,
       },
     );
-
   }
 
   Widget _my_gender() {
