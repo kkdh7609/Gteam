@@ -3,7 +3,7 @@ SLACK_TEXT="New APK"
 
 curl \
   -F "token=$SLACK_KEY" \
-  -F "channel=capstone-project" \
+  -F "channels=capstone-project" \
   -F "initial_comment=$SLACK_TEXT" \
   -F "file=@build/app/outputs/apk/app.apk" \
   https://slack.com/api/files.upload
