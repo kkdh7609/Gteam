@@ -362,7 +362,7 @@ class _MapTestState extends State<MapTest> {
         SizedBox(height:5.0),
         Container(
             child: Text(
-              "시간당 "+widget.stadiumList[index].price.toString()+" 원",
+              "30분 당 "+widget.stadiumList[index].price.toString()+" 원",
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 18.0,
@@ -535,6 +535,7 @@ class _MapTestState extends State<MapTest> {
       body: Stack(
         children: <Widget>[
           GoogleMap(
+              padding: EdgeInsets.only(bottom:MediaQuery.of(context).size.height * 0.27),
               onMapCreated: _onMapCreated,
               initialCameraPosition: CameraPosition(
                 target: _center,

@@ -41,7 +41,7 @@ class _ContactPageState extends State<ContactPage> {
                       Text("2019 Ajou Software Capstone",
                           style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w600, color: Colors.white, fontSize: 25)),
                       Text("Made by BAAM-DDOKKAEBI",
-                          style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w400, color: Colors.white, fontSize: 25)),
+                          style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w400, color: Colors.white, fontSize: 20)),
                     ],
                   ),
                 ),
