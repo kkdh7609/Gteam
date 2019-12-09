@@ -118,7 +118,7 @@ class _MainManagerPageScreenState extends State<MainManagerPageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return staRefList.length == 0 ? Center(child: CircularProgressIndicator()) : Scaffold(
+    return facilities.length == 0 ? Center(child: CircularProgressIndicator()) : Scaffold(
       body: Stack(
           children: <Widget>[
             Container(

@@ -72,7 +72,7 @@ class _SettingUserState extends State<SettingUser> {
       _userDocID,
       {
         'name': _userData.name,
-        'fund': 10000,
+        'fund': 0,
         'info_status': true,
         'gender': _selectedGender.toString(),
         'prferenceLoc': _userData.preferenceLoc,

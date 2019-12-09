@@ -32,11 +32,11 @@ class _IamPortPaymentState extends State<IamPortPayment> {
     super.initState();
     setState(() {
       if(widget.chargeType == Cost.ONE_THOUSANDS)
-        chargeAmount = 1000;
-      else if(widget.chargeType == Cost.FIVE_THOUSANDS)
-        chargeAmount = 5000;
-      else if(widget.chargeType == Cost.TEN_THOUSANDS)
         chargeAmount = 10000;
+      else if(widget.chargeType == Cost.FIVE_THOUSANDS)
+        chargeAmount = 50000;
+      else if(widget.chargeType == Cost.TEN_THOUSANDS)
+        chargeAmount = 100000;
 
       if(widget.PayMethodType == PayMethod.CARD)
         payMethod = 'card';
@@ -77,7 +77,7 @@ class _IamPortPaymentState extends State<IamPortPayment> {
         'payMethod': payMethod,                                            // 결제수단
         'name': '아임포트 결제데이터 분석',                                  // 주문명
         'merchantUid': 'mid_${DateTime.now().millisecondsSinceEpoch}', // 주문번호
-        'amount': chargeAmount,                                             // 결제금액
+        'amount': (chargeAmount * 0.01).toInt(),                        // 결제금액
         'buyerName': '홍길동',                                           // 구매자 이름
         'buyerTel': '01012345678',                                     // 구매자 연락처
         'buyerEmail': 'example@naver.com',                             // 구매자 이메일
@@ -89,7 +89,7 @@ class _IamPortPaymentState extends State<IamPortPayment> {
       /* [필수입력] 콜백 함수 */
       callback: (Map<String, String> result) {
         PayMethods().getFund().then((data){
-          int fund = data + (chargeAmount * 0.95).toInt();
+          int fund = data + chargeAmount;
 
           PayMethods().updateFund(fund).then((tempData){
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PayResultPage(payResult: chargeAmount)));

@@ -322,7 +322,7 @@ class _StadiumEditPageState extends State<StadiumEditPage>{
                                               SizedBox(height: 4.0),
                                               TextWidget(controller: _descriptionController, header: "경기장 소개", hint: "간단한 경기장 소개를 입력하시오", type: 0),
                                               SizedBox(height: 4.0),
-                                              TextWidget(controller: _priceController, header: "요  금 (단위: 원)", hint: "30분당 사용 요금을 입력하시오", type: 1),
+                                              TextWidget(controller: _priceController, header: "30분당 사용 요금 (단위: 원)", hint: "30분당 사용 요금을 입력하시오", type: 1),
                                               SizedBox(height: 4.0),
                                               LocationWidget(location: _locName, onPressed: locationPress,),
                                               SizedBox(height: 4.0),
