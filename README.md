@@ -6,7 +6,7 @@
 ## Authors & Role (가나다 순)
 - 김도현: Overall Project Management
 - 김영운: Database Management (Backend)
-- 김학준: Application UI & Integrate Frontend & Backend
+- 김학준: Application UI & Integrate Frontend and Backend
 - 안우일: Application UI & Web(in Server)
 ---------------------------------------
 ## Function of G-TEAM
@@ -46,7 +46,7 @@
   - IamPort API
 ---------------------------------------
 ## To-Do List 
-# DUE DATE : 2019-12-10 
+### DUE DATE : 2019-12-10 
 - ALL : 예약시간 관리(type : 4) / 풋살장 & 프로필 사진 DB 구축 </br>
 - 김도현: </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 - 김영운: </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
