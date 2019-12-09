@@ -10,7 +10,7 @@
 - 안우일: Application UI & Web(in Server)
 ---------------------------------------
 ## Function of G-TEAM
-### 1. User (in Android Application)
+#### 1. User (in Android Application)
 - 로그인 및 회원가입 기능 (Google 로그인 포함)
 - 게임 생성 및 참여 기능 (지도를 이용한 경기장 선택 기능 포함)
 - 필터링(참여율, 참여가격)과 검색을 통한 게임 검색 기능
@@ -19,17 +19,15 @@
 - 푸시 알람을 이용하여 게임 상태 알림 기능
 - 현재 참여 게임 모아보기 기능
 - 경기장 평가 기능
-</br>
 
-### 2. Facility Manager (in Android Application)
+#### 2. Facility Manager (in Android Application)
 - 관리하는 경기장 추가 기능
 - 경기장 예약 승인 기능  
 - 경기장 예약 보기 및 관리 기능
 - 경기장 정보 수정 기능
 - 푸시 알람을 이용한 예약 알림 기능
-</br>
 
-### 3. System Manager (in Web)
+#### 3. System Manager (in Web)
 - 유저 리스트 보기 기능
 - 경기장 목록 보기 기능
 - 경기장 관리자 계정 권한 부여 기능
