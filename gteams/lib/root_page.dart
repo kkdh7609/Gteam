@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gteams/services/crud.dart';
 import 'package:gteams/menu/main_menu.dart';
 import 'package:gteams/login/login_auth.dart';

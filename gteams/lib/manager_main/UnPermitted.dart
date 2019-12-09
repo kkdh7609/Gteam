@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gteams/manager_main/ManagerMenuScreen.dart';
 
 class UnPermitPage extends StatefulWidget {
   UnPermitPage({Key key, this.onSignedOut}) : super(key: key);

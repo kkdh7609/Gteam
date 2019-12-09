@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gteams/game/game_join/model/GameListData.dart';
 import 'package:gteams/manager/calendar/calendarView.dart';
 import "package:intl/intl.dart";
 import 'package:gteams/util/timeUtil.dart';
 import 'package:gteams/services/crud.dart';
-import 'package:gteams/root_page.dart';
 
 class CalendarViewApp extends StatefulWidget {
   CalendarViewApp({this.stdRef});
