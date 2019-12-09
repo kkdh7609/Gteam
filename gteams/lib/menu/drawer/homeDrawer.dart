@@ -5,7 +5,6 @@ import 'package:gteams/setting/profile/myProfile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gteams/root_page.dart';
 import 'package:gteams/menu/drawer/UserData.dart';
-import 'package:gteams/main.dart';
 
 class HomeDrawer extends StatefulWidget {
   final AnimationController iconAnimationController;
@@ -48,7 +47,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
       ),
       DrawerList(
         index: DrawerIndex.CONTACT,
-        labelName: 'Contact G-TEAMs',
+        labelName: 'About G-TEAM',
         icon: new Icon(Icons.info),
       ),
     ];
