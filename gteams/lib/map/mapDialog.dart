@@ -43,6 +43,12 @@ class CustomDialog extends StatelessWidget{
     2: Text('유료 제공')
   };
 
+  final Map<int, Widget> ballSeg = const <int, Widget>{
+    0: Text('제공 안함'),
+    1: Text('무료 제공'),
+    2: Text('유료 제공')
+  };
+
   final Map<int, Widget> showerSeg = const <int, Widget>{
     0: Text('제공 안함'),
     1: Text('무료 제공'),
@@ -93,6 +99,8 @@ class CustomDialog extends StatelessWidget{
                           SegmentedControl(header: "축구화 제공 여부", value: stadiumData.isShoes, children: shoesSeg),
                           SizedBox(height: 4.0),
                           SegmentedControl(header: "주차장 제공 여부", value: stadiumData.isParking, children: parkSeg),
+                          SizedBox(height: 4.0),
+                          SegmentedControl(header: "축구공 제공 여부", value: stadiumData.isBall, children: ballSeg),
                           SizedBox(height: 4.0),
                           SegmentedControl(header: "샤워 시설 제공 여부", value: stadiumData.isShower, children: showerSeg),
                           SizedBox(height: 48.0)

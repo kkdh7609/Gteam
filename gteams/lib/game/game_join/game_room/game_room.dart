@@ -101,16 +101,21 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
       isAvailable = false;
       // 여기에 한번 다시 받아야 함( 방 들어와 있는 동안 새로운 인원 들어갔을 때 문제 )
       if (widget.gameData.groupSize >= currentUserList.length) {
+
         int newFund = fundData - price;
         //reserve_status = widget.gameData.groupSize == currentUserList.length ? 1 : 0; // 1 => 방이 가득찼을때 0 방 가득 안찼을때
+
         await payObj.updateFund(newFund);
-        await crudObj.updateDataThen('game3', widget.docId, { 'userList': currentUserList, 'reserve_status': widget.gameData.groupSize == currentUserList.length ? 1 : 0,});
+        await crudObj.updateDataThen('game3', widget.docId, { 'userList': currentUserList, 'reserve_status': widget.gameData.groupSize == currentUserList.length ? 1 : 0, 'chamyeyul' : (currentUserList.length / widget.gameData.groupSize).toDouble()});
+
         DocumentSnapshot gameDocumentary = await crudObj.getDocumentById('game3', widget.docId);
         reserve_status = gameDocumentary.data['reserve_status'];
         DocumentSnapshot userDoc = await crudObj.getDocumentById('user', RootPage.userDocID);
+
         userGameList = List.from(userDoc.data['gameList']);
         userGameList.add(widget.docId);
         await crudObj.updateDataThen('user', RootPage.userDocID, {'gameList': userGameList});
+
         Navigator.push(context, MaterialPageRoute(builder: (context) =>
             currentRoomPage(currentUserList: currentUserList, gameData: widget.gameData, stadiumData: widget.stadiumData, reserve_status: reserve_status, docId: widget.docId),
             fullscreenDialog: true)).then((data) {});
@@ -320,7 +325,7 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                     borderRadius: new BorderRadius.circular(AppBar().preferredSize.height),
                     child: Icon(
                       Icons.arrow_back,
-                      color: GameRoomTheme.nearlyBlack,
+                      color: Colors.white,
                     ),
                     onTap: () {
                       Navigator.pop(context);

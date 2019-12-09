@@ -12,10 +12,16 @@ import 'package:gteams/game/game_join/widgets/GameFilterScreen.dart';
 import 'package:gteams/game/game_join/widgets/CalendarPopUpView.dart';
 import 'package:gteams/map/StadiumListData.dart';
 import 'package:gteams/root_page.dart';
+import 'package:gteams/game/game_join/model/StreamList.dart';
 
 class GameJoinPage extends StatefulWidget {
   @override
   _GameJoinPageState createState() => _GameJoinPageState();
+}
+
+enum Filter {
+  DATE,
+  SEARCH,
 }
 
 class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMixin {
@@ -36,6 +42,14 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
   String _nowLocation;
   String _nowAddr;
 
+  //필터링에 사용되는것
+  int _selectStream;
+  Query basicStream; // stream을 사용하기 위한 기본 쿼리
+  String _searchTxt="";
+  String _tmpTxt="";
+  Filter filter;
+  Iterable<DocumentSnapshot> filterSnapshot;
+
 
   Future<bool> getData() async {
     await Future.delayed(const Duration(milliseconds: 200));
@@ -47,13 +61,14 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
     this.gameList = GameListData.gameList;
     this.stadiumList =StadiumListData.stadiumList;
     this.stadiumListForMap =StadiumListData.stadiumList;
-
     this.flag =false;
+    this._selectStream=0;
+    this.filter=Filter.DATE;
     animationController = AnimationController(duration: Duration(milliseconds: 1000), vsync: this);
+    basicStream = Firestore.instance.collection('game3').where('reserve_status',isEqualTo: 0);
+
     super.initState();
   }
-
-
 
   @override
   void dispose() {
@@ -63,10 +78,12 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+
     return Theme(
         data: GameJoinTheme.buildLightTheme(),
         child: Container(
             child: Scaffold(
+                resizeToAvoidBottomPadding: false,
                 body: Stack(
                   children: <Widget>[
                     InkWell(
@@ -117,27 +134,63 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
     );
   }
 
+  // 달력에서 선택한 날짜 범위 안에 있는 데이터만 가져오기 위한 함수
+  bool dateCheck(DocumentSnapshot document){
+    return document.data['dateNumber'] >= startDate.millisecondsSinceEpoch
+        && document.data['dateNumber'] <= endDate.millisecondsSinceEpoch ? true : false;
+  }
+  bool search(DocumentSnapshot document){
+    return document.data['gameName'].toString().contains(new RegExp(r'^.*'+_searchTxt+'.*'));
+  }
+
   ///YeongUn modify
   ///By using Stream Builder, Firestroe game2 collection and App can update real time
   Widget _buildBody(bool check) {
     return StreamBuilder<QuerySnapshot>(
-      //stream : Firestore.instance.collection('game3').where('dateNumber',isGreaterThanOrEqualTo: startDate.millisecondsSinceEpoch,isLessThanOrEqualTo: endDate.millisecondsSinceEpoch).snapshots():
-        stream : Firestore.instance.collection("game3").snapshots(),
-        builder: (context, snapshot){
-          if(!snapshot.hasData) return LinearProgressIndicator();
-          gameList = snapshot.data.documents.map((data) => GameListData.fromJson(data.data)).toList();
-          //gameReference 저장
-          for(int i = 0; i < gameList.length ; i++){
-            gameRef.add(snapshot.data.documents[i].reference);
-          }
-          if(flag && snapshot.data.documents.length != stadiumList.length){
+        stream : StreamList.streamQuery(basicStream, _selectStream).snapshots(),
+        builder: (context, snapshot) {
+            if(!snapshot.hasData) return LinearProgressIndicator();
+            filterSnapshot = snapshot.data.documents.where(dateCheck);
+            switch(filter){
+              case Filter.DATE:
+                break;
+              case Filter.SEARCH:
+                filterSnapshot = filterSnapshot.where(search);
+                break;
+            }
+
+            if(filterSnapshot.length == 0) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(FontAwesomeIcons.minusCircle, color: GameJoinTheme.buildLightTheme().primaryColor, size: 100),
+                  SizedBox(height: 30),
+                  Text("No Data Founded.." ,
+                      style: TextStyle(
+                          fontFamily: 'Dosis',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 30,
+                          color: GameJoinTheme.buildLightTheme().primaryColor)
+                  ),
+                ],
+              ),
+              );
+            }
+            gameList = filterSnapshot.map((data) => GameListData.fromJson(data.data)).toList();
+            //gameReference 저장
+            for(int i = 0; i < gameList.length ; i++){
+              gameRef.add(filterSnapshot.elementAt(i).reference);
+            }
+
+            if(flag && filterSnapshot.length != stadiumList.length){
             flag = false;
-          }
-          if(!flag) {
-            flag = true;
-            stadiumList = new List(snapshot.data.documents.length);
-          }
-          return _showGamelist(context,snapshot.data.documents);
+             }
+            if(!flag) {
+              flag = true;
+              stadiumList = new List(filterSnapshot.length);
+            }
+            return _showGamelist(context,filterSnapshot.toList());
         }
     );
   }
@@ -296,7 +349,9 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                 child: Padding(
                   padding: const EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 4),
                   child: TextField(
-                    onChanged: (String txt) {},
+                    onChanged: (String txt) {
+                      _tmpTxt=txt;
+                    },
                     style: TextStyle(fontSize: 18, fontFamily : 'Dosis'),
                     cursorColor: GameJoinTheme.buildLightTheme().primaryColor,
                     decoration: new InputDecoration(
@@ -329,6 +384,8 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                   Radius.circular(32.0),
                 ),
                 onTap: () {
+                  _searchTxt=_tmpTxt;
+                  filter=Filter.SEARCH;
                   FocusScope.of(context).requestFocus(FocusNode());
                 },
                 child: Padding(
@@ -514,7 +571,15 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => GameFilterScreen(), fullscreenDialog: true),
-                      );
+                      ).then((data){
+                        if(data != null){
+                          print(11111111);
+                          print(data);
+                          setState(() {
+                            this._selectStream=data;
+                          });
+                        }
+                      });
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8),
@@ -567,6 +632,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
             if (startData != null && endData != null) {
               startDate = startData;
               endDate = endData;
+              filter=Filter.DATE;
             }
           });
         },

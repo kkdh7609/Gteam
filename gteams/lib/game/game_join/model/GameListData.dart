@@ -19,6 +19,7 @@ class GameListData {
   DocumentReference stadiumRef;
   Timestamp sort;
   int reserve_status;
+  double chamyeyul;
 
   GameListData({
 //    this.imagePath = '',
@@ -39,6 +40,7 @@ class GameListData {
     this.sort,
     this.reserve_status,
     this.Description = "",
+    this.chamyeyul = 0.0
   });
 
   factory GameListData.fromJson(Map<String, dynamic> json) {
@@ -61,6 +63,7 @@ class GameListData {
       sort:json['sort'],
       reserve_status: json['reserve_status'],
       Description: json['Description'],
+      chamyeyul: json['chamyeyul'] is int ? json['chamyeyul'].toDouble() : json['chamyeyul'],
     );
   }
 
