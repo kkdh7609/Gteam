@@ -535,6 +535,7 @@ class _MapTestState extends State<MapTest> {
       body: Stack(
         children: <Widget>[
           GoogleMap(
+              padding: EdgeInsets.only(bottom:MediaQuery.of(context).size.height * 0.27),
               onMapCreated: _onMapCreated,
               initialCameraPosition: CameraPosition(
                 target: _center,
