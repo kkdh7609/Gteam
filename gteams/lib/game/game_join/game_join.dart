@@ -11,7 +11,6 @@ import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 import 'package:gteams/game/game_join/widgets/GameFilterScreen.dart';
 import 'package:gteams/game/game_join/widgets/CalendarPopUpView.dart';
 import 'package:gteams/map/StadiumListData.dart';
-import 'package:gteams/root_page.dart';
 import 'package:gteams/game/game_join/model/StreamList.dart';
 
 class GameJoinPage extends StatefulWidget {

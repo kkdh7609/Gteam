@@ -247,7 +247,7 @@ class _ReserveListState extends State<ReserveList> {
     );
   }
 
-  Future<void> changeGameInfo(String gameDoc) async {
+  void changeGameInfo(String gameDoc) async {
     DocumentSnapshot gameDocumentary =
     await crudObj.getDocumentById('game3', gameDoc);
     var pickDate = gameDocumentary.data['dateText'];
@@ -312,24 +312,22 @@ class _ReserveListState extends State<ReserveList> {
               FlatButton(
                 color: Color(0xff20253d),
                 onPressed: () {
+                  changeGameInfo(this.reserveList[index]);
                   if (isAvailable) {
                     isAvailable = false;
                     payObj.getFund().then((fund) {
                       int newFund = this.gameDataList[index].totalPrice + fund;
-                      changeGameInfo(this.reserveList[index]).then((tempData){
-                        payObj.updateFund(newFund).then((tempVal) {
-                          crudObj.updateDataThen('game3', this.reserveList[index], {"reserve_status": 2}).then((tempVal){
-                            setState((){
-                              this.reserveList.removeAt(index);
-                              this.gameDataList = List<GameListData>(this.reserveList.length);
-                              _nowStdRef.data["notPermitList"] = List<dynamic>.of(this.reserveList);
-                            });
-                            crudObj.updateDataThen('stadium', widget.stdRef.documentID, {"notPermitList": this.reserveList}).then((tempval2){
-                              Navigator.pop(context);
-                              isAvailable = true;
-                              pushPost("3", this.reserveList[index]);
-                              _showAlertDialog("성공", "승인에 성공하였습니다.");
-                            });
+                      payObj.updateFund(newFund).then((tempVal) {
+                        crudObj.updateDataThen('game3', this.reserveList[index], {"reserve_status": 2}).then((tempVal){
+                          setState((){
+                            this.reserveList.removeAt(index);
+                            this.gameDataList = List<GameListData>(this.reserveList.length);
+                            _nowStdRef.data["notPermitList"] = List<dynamic>.of(this.reserveList);
+                          });
+                          crudObj.updateDataThen('stadium', _nowStdRef.documentID, {"notPermitList": this.reserveList}).then((tempval2){
+                            Navigator.pop(context);
+                            isAvailable = true;
+                            _showAlertDialog("성공", "승인에 성공하였습니다.");
                           });
                         });
                       });

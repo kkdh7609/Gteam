@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gteams/manager/calendar/calendarView.dart';
-import 'package:gteams/manager/managerSetTime.dart';
 import 'package:gteams/manager/manageReserveList.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gteams/manager/calendar/managerCalendar.dart';
