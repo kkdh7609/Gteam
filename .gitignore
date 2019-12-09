@@ -8,8 +8,8 @@
 .buildlog/
 .history
 .svn/
-*/upload.keystore
-*/secrets.tar
+*.keystore
+**/secrets.tar
 
 # IntelliJ related
 *.iml
