@@ -284,7 +284,7 @@ class CheckButton extends StatelessWidget{
                 'stadiumName' : stadiumName,
                 'stadiumDescription': stadiumDescription,
                 'rating' : 0.0,
-                'rator' : 0,
+                'rater' : 0,
                 'price' : int.parse(price),
                 'location' :location,
                 'lat' : lat,
