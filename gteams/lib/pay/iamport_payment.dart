@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gteams/services/crud.dart' as prefix0;
 
 /* 아임포트 결제 모듈을 불러옵니다. */
 import 'package:iamport_flutter/iamport_payment.dart';
@@ -7,8 +6,6 @@ import 'package:iamport_flutter/iamport_payment.dart';
 import 'package:iamport_flutter/model/payment_data.dart';
 import 'package:gteams/pay/pay.dart';
 import 'package:gteams/pay/result.dart';
-import 'package:gteams/root_page.dart';
-import 'package:gteams/services/crud.dart';
 import 'package:gteams/pay/payMethod.dart';
 
 class IamPortPayment extends StatefulWidget {

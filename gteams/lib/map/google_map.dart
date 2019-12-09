@@ -7,7 +7,6 @@ import 'package:geocoder/geocoder.dart';
 import 'package:gteams/util/customGeocoder.dart';
 import 'package:gteams/map/mapDialog.dart';
 import 'package:gteams/map/forSecure.dart';
-
 import 'package:gteams/map/StadiumListData.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';

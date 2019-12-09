@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gteams/root_page.dart';
-import 'package:gteams/login/login_auth.dart';
 import 'package:gteams/manager/AdminData.dart';
 import 'package:gteams/services/crud.dart';
 import 'package:gteams/manager_main/ManagerMainMenu.dart';
