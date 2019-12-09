@@ -36,11 +36,15 @@ class PhotoWidget extends StatelessWidget{
 class TextWidget extends StatelessWidget{
   TextWidget({this.text, this.header});
 
-  final String text;
+  String text;
   final String header;
 
   @override
   Widget build(BuildContext context){
+    if(text == null){
+      text = "작성된 내용이 없습니다.";
+    }
+
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
         child: Row(

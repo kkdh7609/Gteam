@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class StadiumListData {
   String imagePath;
   String stadiumName;
+  String stadiumDescription;
   String location;
   int fieldNumber;
   String telephone;
@@ -28,6 +29,7 @@ class StadiumListData {
   StadiumListData({
     this.imagePath = '',
     this.stadiumName = '',
+    this.stadiumDescription = '',
     this.location = "",
     this.webSite = "",
     this.telephone = "",
@@ -53,6 +55,7 @@ class StadiumListData {
     return StadiumListData(
       imagePath: json['imagePath'],
       stadiumName: json['stadiumName'],
+      stadiumDescription: json['stadiumDescription'],
       location: json['location'],
       telephone: json['telephone'],
       webSite: json['webSite'],
