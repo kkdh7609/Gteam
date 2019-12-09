@@ -1,11 +1,14 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gteams/services/crud.dart';
 import 'package:gteams/menu/main_menu.dart';
 import 'package:gteams/login/login_auth.dart';
 import 'package:gteams/setting/settings_user.dart';
 import 'package:gteams/login/login.dart';
 import 'package:gteams/manager/AdminData.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:gteams/manager_main/ManagerMainMenu.dart';
 import 'package:gteams/manager_main/UnPermitted.dart';
@@ -43,6 +46,60 @@ class _RootPageState extends State<RootPage> {
   String _userMail = "";
   String _userDocID = "";
   bool _infoStatus = false;
+  
+  final Firestore _db = Firestore.instance;
+  final FirebaseMessaging _fcm = FirebaseMessaging();
+  
+  _getDeviceToken() async{
+    String fcmToken = await _fcm.getToken();
+    if(fcmToken != null){
+      DocumentReference token = _db.collection('token').document(_userDocID);
+
+      await token.setData({
+        'token': fcmToken,
+        'createTime': FieldValue.serverTimestamp(),
+        'platform': Platform.operatingSystem
+      });
+    }
+    _fcm.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: ListTile(
+              title: Text(message['notification']['title']),
+              subtitle: Text(message['notification']['body']),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                color: Color(0xff20253d),
+                child: Text('Ok', style: TextStyle(color: Colors.white)),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+        /*Fluttertoast.showToast(
+            msg: message['notification']['title'],
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.TOP,
+          timeInSecForIos: 1,
+          backgroundColor: Color(0xff20253d),
+          textColor: Colors.white,
+        );*/
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+        // TODO optional
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: hello my friends");
+        // TODO optional
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -199,6 +256,7 @@ class _RootPageState extends State<RootPage> {
                     _infoStatus = data.documents[0].data['info_status'];
                     _userDocID = data.documents[0].documentID;
                     RootPage.userDocID = _userDocID;
+                    _getDeviceToken();
                   }
                 },
               );

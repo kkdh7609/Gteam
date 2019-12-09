@@ -22,6 +22,7 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
   ImageProvider _image;
 
   String _stadiumName;
+  String _stadiumDescription;
   String _selectedSports = null;
   String _locName = null;
   String _call;
@@ -43,6 +44,7 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
   List<String> _sports = ["Football", "Table Tennis", "Bowling", "Basketball", "Baseball"];
 
   TextEditingController _nameController;
+  TextEditingController _descriptionController;
   TextEditingController _priceController;
   TextEditingController _callController;
 
@@ -160,9 +162,11 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
     _shower = 0;
     _ball = 0;
     _nameController = TextEditingController();
+    _descriptionController = TextEditingController();
     _priceController = TextEditingController();
     _callController = TextEditingController();
     _nameController.text = _stadiumName;
+    _descriptionController.text = _stadiumDescription;
     _priceController.text = _price != null ? _price.toString() : null;
     _callController.text = _call;
 
@@ -170,10 +174,15 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
 
     _locName = null;
 
-
     _nameController.addListener((){
       setState(() {
         _stadiumName = _nameController.text;
+      });
+    });
+
+    _descriptionController.addListener((){
+      setState(() {
+        _stadiumDescription = _descriptionController.text;
       });
     });
 
@@ -245,7 +254,7 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
 
   List<Widget> actWidget(){
     if(_isAvailable){
-      return [CheckButton(formKey: _formKey, photo: _photo, stadiumName: _stadiumName,
+      return [CheckButton(formKey: _formKey, photo: _photo, stadiumName: _stadiumName, stadiumDescription: _stadiumDescription,
           price : _price.toString(), location : _locName, lat : _lat,lng : _lng,
           locId : _locId,telephone : _call, isParking : _parking, isClothes :_clothes, isShower :_shower,isShoes : _shoes,isBall : _ball,
           refreshData: widget.refreshData, intTimes: _times, strTimes: _strTimes, setAvailable: setAvailable, popFunc: _popThisContext
@@ -298,6 +307,8 @@ class _StadiumCreatePageState extends State<StadiumCreatePage>{
                                               PhotoWidget(image: _image, onPressed: onPhotoPressed,),
                                               SizedBox(height: 4.0),
                                               TextWidget(controller: _nameController, header: "경기장 이름", hint: "경기장 이름을 입력하시오", type: 0),
+                                              SizedBox(height: 4.0),
+                                              TextWidget(controller: _descriptionController, header: "경기장 소개", hint: "경기장에 대한 간단한 소개를 입력하시오", type: 0),
                                               SizedBox(height: 4.0),
                                               TextWidget(controller: _priceController, header: "요  금 (단위: 원)", hint: "30분당 사용 요금을 입력하시오", type: 1),
                                               SizedBox(height: 4.0),
