@@ -169,31 +169,31 @@ class EditButton extends StatelessWidget{
                   print("photoURL completed");
                 });
 
-                await Firestore.instance.collection('stadium').document(docId).updateData({
-                  'imagePath' : photoURL
-                });
-              }
-              print(stadiumName);
               await Firestore.instance.collection('stadium').document(docId).updateData({
-                'stadiumName' : stadiumName,
-                'price' : int.parse(price),
-                'telephone' : telephone,
-                'isParking' : isParking,
-                'isClothes' : isClothes,
-                'isShower' : isShower,
-                'isShoes' : isShoes,
-                'isBall' : isBall,
-                'intTimes' : intTimes,
-                'strTimes' : strTimes,
-                'gameList': [],
-                'notPermitList': []
+                'imagePath' : photoURL
               });
-              refreshData();
-              popFunc();
             }
-            else{
-              setAvailable(true);
-            }
+            print(stadiumName);
+            await Firestore.instance.collection('stadium').document(docId).updateData({
+              'stadiumName' : stadiumName,
+              'price' : int.parse(price),
+              'telephone' : telephone,
+              'isParking' : isParking,
+              'isClothes' : isClothes,
+              'isShower' : isShower,
+              'isShoes' : isShoes,
+              'isBall' : isBall,
+              'intTimes' : intTimes,
+              'strTimes' : strTimes,
+              'gameList': [],
+              'notPermitList': [],
+              'ownerId': RootPage.userDocID
+            });
+            refreshData();
+            popFunc();
+          }
+          else{
+            setAvailable(true);
           }
 
 
