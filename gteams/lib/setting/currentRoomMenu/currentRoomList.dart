@@ -4,7 +4,9 @@ import 'package:gteams/game/game_join/model/GameListData.dart';
 import 'package:gteams/map/StadiumListData.dart';
 import 'package:gteams/root_page.dart';
 import 'package:gteams/services/crud.dart';
-
+import 'package:intl/intl.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 
 class CurrentRoomListPage extends StatefulWidget {
   @override
@@ -21,6 +23,7 @@ class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
   bool isAvailable =true ;
   var flag = 0;
   int reserve_status ;
+
 
   @override
   void initState(){
@@ -61,9 +64,23 @@ class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontFamily: 'Dosis'),
               ),
-              subtitle: Row(
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text("detail", style: TextStyle(color: Colors.black))
+                  SizedBox(height: 5,),
+                  Text(DateFormat('MM월-dd일(EE)').format(DateTime.fromMillisecondsSinceEpoch(gameData.dateNumber))+" : 시작 "+gameData.startTime+" ~ " + " 종료 "+ gameData.endTime, style: TextStyle(color: Colors.black)),
+                  SizedBox(height: 5,),
+                  new LinearPercentIndicator(
+                    width: MediaQuery.of(context).size.width - 170,
+                    animation: true,
+                    lineHeight: 20.0,
+                    animationDuration: 2000,
+                    percent: gameData.chamyeyul,
+                    center: Text("현재 참여율"+(gameData.chamyeyul*100).toStringAsFixed(0)+"%" ,style: TextStyle(color: Colors.white),),
+                    linearStrokeCap: LinearStrokeCap.roundAll,
+                    progressColor: GameJoinTheme.buildLightTheme().accentColor,
+                  ),
+                  gameData.reserve_status == 4 ? Text("게임을 잘 즐기셨나요? 게임 평가 부탁드립니다", style: TextStyle(color : Colors.redAccent ,fontSize: 13, fontWeight: FontWeight.bold),) : SizedBox(),
                 ],
               ),
               trailing: Icon(Icons.keyboard_arrow_right, color: Colors.black, size: 30.0),

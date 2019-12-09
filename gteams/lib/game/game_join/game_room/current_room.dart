@@ -50,6 +50,8 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
   List<dynamic> notPermitList = [];
   bool flag = false;
 
+
+
   @override
   void initState() {
     super.initState();
@@ -509,10 +511,18 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                   color: Color(0xff20253d),
                   child: Text("확인", style: TextStyle(color: Colors.white)),
                   onPressed: () {
-
-
-
                     Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                    crudObj.getDocumentById('user',RootPage.userDocID).then((document){
+                      gameDocIdList2 = List<dynamic>.from(document.data['gameList']);
+                      crudObj.getDocumentByWhere('game3', 'sort', widget.gameData.sort).then((gameDoc){
+                        gameDocIdList2.removeAt(gameDocIdList2.lastIndexOf(gameDoc.documents[0].documentID)); // 유저의 게임리스트에 있는 게임 docID를 찾아서 제거해주는 부분
+                        gameDocIdList2 != null ?
+                          crudObj.updateData('user', RootPage.userDocID, {'gameList' : gameDocIdList2}) :
+                          crudObj.updateData('user', RootPage.userDocID, {'gameList' : []}) ;
+                      });
+                    });
                   },
                 ),
               ]);
