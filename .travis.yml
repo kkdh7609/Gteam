@@ -72,7 +72,7 @@ before_script:
   # Add Flutter to the PATH environment variable.
   - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
   
- script:
+script:
   # Prints the flutter version
   # (allows you to ensure, for each build, that Flutter is set up correctly.)
   - flutter doctor -v
