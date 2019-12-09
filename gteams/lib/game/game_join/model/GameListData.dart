@@ -17,6 +17,7 @@ class GameListData {
   int dateNumber;
   List<dynamic> userList;
   DocumentReference stadiumRef;
+  String stadiumId;
   Timestamp sort;
   int reserve_status;
   double chamyeyul;
@@ -37,6 +38,7 @@ class GameListData {
     this.dateNumber=1,
     this.userList,
     this.stadiumRef,
+    this.stadiumId,
     this.sort,
     this.reserve_status,
     this.Description = "",
@@ -58,6 +60,7 @@ class GameListData {
       dateNumber: json['dateNumber'],
       userList: json['userList'],
       stadiumRef: json['stadiumRef'],
+      stadiumId: json['stadiumId'],
       totalPrice: json['totalPrice'],
       perPrice: json['perPrice'],
       sort:json['sort'],
