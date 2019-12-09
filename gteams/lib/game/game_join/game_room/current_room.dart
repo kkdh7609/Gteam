@@ -621,7 +621,7 @@ class _currentRoomPageState extends State<currentRoomPage>
                       )),
                   Expanded(
                       flex: 3,
-                      child: RaisedButton(
+                      child: widget.reserve_status == 4 ? RaisedButton(
                         shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(18.0),
                             side: BorderSide(color: Colors.red)),
@@ -633,7 +633,7 @@ class _currentRoomPageState extends State<currentRoomPage>
                         child: Text("게임 평가".toUpperCase(),
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.w900)),
-                      ))
+                      ) : SizedBox())
                 ],
               ),
             ),
