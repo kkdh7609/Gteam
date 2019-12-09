@@ -6,6 +6,8 @@ class StadiumListData {
   String stadiumDescription;
   String location;
   int fieldNumber;
+  double rating;
+  int rater;
   String telephone;
   String webSite;
   List<dynamic> intTimes;
@@ -33,6 +35,8 @@ class StadiumListData {
     this.webSite = "",
     this.telephone = "",
     this.fieldNumber=1,
+    this.rating = 0.0,
+    this.rater = 0,
     this.isShower=0,
     this.isClothes=0,
     this.isParking=0,
@@ -59,6 +63,8 @@ class StadiumListData {
       telephone: json['telephone'],
       webSite: json['webSite'],
       fieldNumber: json['fieldNumber'],
+      rating: json['rating'] is int ? json['rating'].toDouble() : json['rating'],
+      rater: json['rater'],
       isShower: json['isShower'],
       isClothes:json['isClothes'],
       isParking:json['isParking'],
