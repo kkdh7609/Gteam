@@ -315,7 +315,7 @@ class _ReserveListState extends State<ReserveList> {
                   if (isAvailable) {
                     isAvailable = false;
                     payObj.getFund().then((fund) {
-                      int newFund = this.gameDataList[index].totalPrice + fund;
+                      int newFund = this.gameDataList[index].totalPrice + (fund * 0.95).toInt();
                       changeGameInfo(this.reserveList[index]).then((tempData){
                         payObj.updateFund(newFund).then((tempVal) {
                           crudObj.updateDataThen('game3', this.reserveList[index], {"reserve_status": 2}).then((tempVal){

@@ -157,7 +157,7 @@ class _PayPageState extends State<PayPage> {
                             });
                           },
                         ),
-                        Text("1,000원", style: TextStyle(fontSize: 20, fontFamily: 'Dosis', fontWeight: FontWeight.w500)),
+                        Text("10,000원", style: TextStyle(fontSize: 20, fontFamily: 'Dosis', fontWeight: FontWeight.w500)),
                         Radio(
                           activeColor: Colors.black,
                           value: Cost.FIVE_THOUSANDS,
@@ -168,7 +168,7 @@ class _PayPageState extends State<PayPage> {
                             });
                           },
                         ),
-                        Text("5,000원", style: TextStyle(fontSize: 20, fontFamily: 'Dosis', fontWeight: FontWeight.w500)),
+                        Text("50,000원", style: TextStyle(fontSize: 20, fontFamily: 'Dosis', fontWeight: FontWeight.w500)),
                         Radio(
                           activeColor: Colors.black,
                           value: Cost.TEN_THOUSANDS,
@@ -179,7 +179,7 @@ class _PayPageState extends State<PayPage> {
                             });
                           },
                         ),
-                        Text("10,000원", style: TextStyle(fontSize: 20, fontFamily: 'Dosis', fontWeight: FontWeight.w500)),
+                        Text("100,000원", style: TextStyle(fontSize: 20, fontFamily: 'Dosis', fontWeight: FontWeight.w500)),
                       ],
                     ),
                   )),
