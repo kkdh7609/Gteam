@@ -6,7 +6,6 @@ import 'package:gteams/root_page.dart';
 import 'package:gteams/services/crud.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 
 class CurrentRoomListPage extends StatefulWidget {
   @override
@@ -76,9 +75,10 @@ class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
                     lineHeight: 20.0,
                     animationDuration: 2000,
                     percent: gameData.chamyeyul,
+                    linearGradient: LinearGradient(colors: [Colors.indigo, const Color(0xFF083663)]),
                     center: Text("현재 참여율"+(gameData.chamyeyul*100).toStringAsFixed(0)+"%" ,style: TextStyle(color: Colors.white),),
                     linearStrokeCap: LinearStrokeCap.roundAll,
-                    progressColor: GameJoinTheme.buildLightTheme().accentColor,
+                    //progressColor: GameJoinTheme.buildLightTheme().accentColor,
                   ),
                   gameData.reserve_status == 4 ? Text("게임을 잘 즐기셨나요? 게임 평가 부탁드립니다", style: TextStyle(color : Colors.redAccent ,fontSize: 13, fontWeight: FontWeight.bold),) : SizedBox(),
                 ],
