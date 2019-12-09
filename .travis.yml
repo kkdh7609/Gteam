@@ -31,7 +31,11 @@ matrix:
         - unzip -qq gradle-3.5-bin.zip
         - export GRADLE_HOME=$PWD/gradle-3.5
         - export PATH=$GRADLE_HOME/bin:$PATH
-        - git clone https://github.com/flutter/flutter.git -b alpha --depth 1
+        - git clone https://github.com/flutter/flutter.git
+      before_install:
+        - cd gteams/
+        - openssl aes-256-cbc -K $encrypted_129441c5ec96_key -iv $encrypted_129441c5ec96_iv -in secrets.tar.enc -out secrets.tar -d
+        - tar -xvf secrets.tar
       script:
         - ./flutter/bin/flutter -v build apk
 

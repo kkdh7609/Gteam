@@ -351,7 +351,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
               ),
             ],
           ),
-          Padding(
+          /*Padding(
             padding: EdgeInsets.only(top: 10.0),
             child: FlatButton(
                 onPressed: () async {
@@ -364,7 +364,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                   style:
                       TextStyle(decoration: TextDecoration.underline, color: Colors.white, fontSize: 16.0, fontFamily: "Dosis"),
                 )),
-          ),
+          ),*/
           Padding(
             padding: EdgeInsets.only(top: 2.0),
             child: Row(
