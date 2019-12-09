@@ -170,7 +170,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   }
 
   Future<Response> postTest() async{
-    Map<String, String> body = {"type" : '1', "target" : "fNycl8GHUaqMlccoR8t8"};
+    Map<String, String> body = {"type" : '3', "target" : "fNycl8GHUaqMlccoR8t8"};
     Response response = await post('http://45.119.145.96/api/push/', body: body);
     return response;
   }

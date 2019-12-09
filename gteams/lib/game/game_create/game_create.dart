@@ -33,6 +33,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
   String _endTimeText;
   String _loc_name;
   String _stadium_id;
+  String _stadiumId;
   String _stdId;
   String _gameDescription;
   DocumentReference _stadiumRef;
@@ -71,6 +72,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
     payObj = PayMethods();
     stadiumList = StadiumListData.stadiumList;
 
+    _stadiumId = null;
     _gameName = null;
     _selectedSports = null;
     _groupSize = null;
@@ -878,6 +880,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
                       int fundData = await payObj.getFund();
                       if (fundData >= perPrice) {
                         _stadiumRef = document.documents[0].reference;
+                        _stadiumId = document.documents[0].documentID;
                         this.userList.add(RootPage.user_email);
                         int newFund = fundData - perPrice;
                         int usingTime = partTimeToTotalTime(_startTime.hour,
