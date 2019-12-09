@@ -111,9 +111,9 @@ class _GameCreatePageState extends State<GameCreatePage> {
     _sportsList = [];
     _sportsList = _sports
         .map((val) => DropdownMenuItem<String>(
-              child: Text(val),
-              value: val,
-            ))
+      child: Text(val),
+      value: val,
+    ))
         .toList();
   }
 
@@ -175,7 +175,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
 
   Future<Null> _selectStart(BuildContext context) async {
     final TimeOfDay _pickedStart =
-        await showCustomTimePicker(context: context, initialTime: _startTime);
+    await showCustomTimePicker(context: context, initialTime: _startTime);
 
     if (_pickedStart != null &&
         (_pickedStart != _startTime || !_completeStartTime)) {
@@ -202,7 +202,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
 
   Future<Null> _selectEnd(BuildContext context) async {
     TimeOfDay _pickedEnd =
-        await showCustomTimePicker(context: context, initialTime: _endTime);
+    await showCustomTimePicker(context: context, initialTime: _endTime);
 
     if (_pickedEnd != null && (_pickedEnd != _endTime || !_completeEndTime)) {
       setState(() {
@@ -313,7 +313,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
                   data: ThemeData(
                       fontFamily: 'Dosis',
                       primaryColor:
-                          GameCreateTheme.buildLightTheme().primaryColor),
+                      GameCreateTheme.buildLightTheme().primaryColor),
                   child: Stepper(
                     steps: steps,
                     type: StepperType.vertical,
@@ -422,7 +422,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
             height: 30.0,
             width: 1.0,
             color:
-                GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+            GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           DropdownButtonHideUnderline(
@@ -453,7 +453,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
             height: 30.0,
             width: 1.0,
             color:
-                GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+            GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           SizedBox(
@@ -490,7 +490,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
             height: 30.0,
             width: 1.0,
             color:
-                GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.2),
+            GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.2),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           SizedBox(
@@ -508,8 +508,8 @@ class _GameCreatePageState extends State<GameCreatePage> {
               onPressed: !_completeDate
                   ? () {}
                   : () {
-                      _selectStart(context);
-                    },
+                _selectStart(context);
+              },
             ),
           ),
           SizedBox(width: 5),
@@ -534,8 +534,8 @@ class _GameCreatePageState extends State<GameCreatePage> {
               onPressed: !_completeDate
                   ? () {}
                   : () {
-                      _selectEnd(context);
-                    },
+                _selectEnd(context);
+              },
             ),
           )
         ],
@@ -547,9 +547,9 @@ class _GameCreatePageState extends State<GameCreatePage> {
     return StreamBuilder<QuerySnapshot>(
         stream: Firestore.instance.collection("stadium").snapshots(),
         builder: (
-          context,
-          snapshot,
-        ) {
+            context,
+            snapshot,
+            ) {
           if (!snapshot.hasData) return LinearProgressIndicator();
           return Container(
             child: Row(
@@ -587,8 +587,8 @@ class _GameCreatePageState extends State<GameCreatePage> {
                               _endTime.hour,
                               _endTime.minute);
                           for (int index = 0;
-                              index < this.stadiumList.length;
-                              index++) {
+                          index < this.stadiumList.length;
+                          index++) {
                             var dateRef = await snapshot
                                 .data.documents[index].reference
                                 .collection("date")
@@ -616,7 +616,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
                                       onSelected: _change_loc_name,
                                       nowReq: mapReq.findLocation,
                                       stadiumList: usingList //stadiumList,
-                                      )));
+                                  )));
                           isAvailable = true;
                         }
                       }
@@ -640,7 +640,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
             height: 30.0,
             width: 1.0,
             color:
-                GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+            GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           Radio(
@@ -649,7 +649,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
             activeColor: GameCreateTheme.buildLightTheme().primaryColor,
             onChanged: (Gender value) {
               setState(
-                () {
+                    () {
                   _selectedGender = value;
                 },
               );
@@ -666,7 +666,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
             activeColor: GameCreateTheme.buildLightTheme().primaryColor,
             onChanged: (Gender value) {
               setState(
-                () {
+                    () {
                   _selectedGender = value;
                 },
               );
@@ -702,7 +702,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
             height: 30.0,
             width: 1.0,
             color:
-                GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
+            GameCreateTheme.buildLightTheme().primaryColor.withOpacity(0.5),
             margin: const EdgeInsets.only(right: 10.0),
           ),
           Flexible(
@@ -795,7 +795,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
 
   Future<DocumentReference> updateGame(int perPrice, int totalPrice) async {
     DocumentReference docRef =
-        await Firestore.instance.collection('game3').add({
+    await Firestore.instance.collection('game3').add({
       'creator': RootPage.user_email,
       'gameName': _gameName,
       'selectedSport': _selectedSports,
@@ -815,7 +815,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
       'reserve_status': 0, // 예약상태를 관리하는 부분 [0 : 모집중 , 1 : 접수중 , 2 접수 완료]
       'Description' : _gameDescription,
       'chamyeyul' : (1 / _groupSize).toDouble(),
-          'stadiumId': _stadiumId
+      'stadiumId': _stadiumId
     });
     return docRef;
   }
@@ -828,14 +828,14 @@ class _GameCreatePageState extends State<GameCreatePage> {
             title: Text('확인'),
             content: SingleChildScrollView(
                 child: ListBody(
-              children: <Widget>[
-                Text("게임 이름 : " + _textEditingController.text),
-                Text("게임 종목: $_selectedSports"),
-                Text("게임 날짜 : $_dateText"),
-                Text("게임 시간 : $_startTimeText ~ $_endTimeText"),
-                Text("게임을 만드시겠습니까?")
-              ],
-            )),
+                  children: <Widget>[
+                    Text("게임 이름 : " + _textEditingController.text),
+                    Text("게임 종목: $_selectedSports"),
+                    Text("게임 날짜 : $_dateText"),
+                    Text("게임 시간 : $_startTimeText ~ $_endTimeText"),
+                    Text("게임을 만드시겠습니까?")
+                  ],
+                )),
             actions: <Widget>[
               FlatButton(
                   onPressed: () {
@@ -928,9 +928,9 @@ class _GameCreatePageState extends State<GameCreatePage> {
                           await payObj.updateFund(newFund);
                           int totalTime = stdDate["totalTime"] + usingTime;
                           List<int> reserveYet =
-                              List.from(stdDate["reserveYet"]);
+                          List.from(stdDate["reserveYet"]);
                           List<String> reserveYetId =
-                              List.from(stdDate["reserveYetId"]);
+                          List.from(stdDate["reserveYetId"]);
                           reserveYet.add(usingTime);
                           reserveYetId.add(docId);
                           await stdRef
@@ -958,20 +958,16 @@ class _GameCreatePageState extends State<GameCreatePage> {
                       }
                       /*crudObj.getDocumentByWhere('stadium', 'stdId', _stdId).then((document) {
                         int stadiumPrice = document.documents[0].data['price'];
-
                         if (endMinute == 00 && startMinute == 30) {
                           endHour -= 1;
                           usingMinute = 30;
                         } else {
                           usingMinute = endMinute - startMinute;
                         }
-
                         usingHour = endHour - startHour;
                         timeBlock = usingHour * 2 + (usingMinute == 30 ? 1 : 0);
-
                         totalPrice = stadiumPrice * timeBlock; // 경기장 정보 들어오면 그거 쓰기
                         perPrice = totalPrice ~/ _groupSize;
-
                         payObj.getFund().then((fundData) {
                           if (fundData >= perPrice) {
                             _stadiumRef = document.documents[0].reference;
