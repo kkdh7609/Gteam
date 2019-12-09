@@ -319,6 +319,7 @@ class _ReserveListState extends State<ReserveList> {
                       changeGameInfo(this.reserveList[index]).then((tempData){
                         payObj.updateFund(newFund).then((tempVal) {
                           crudObj.updateDataThen('game3', this.reserveList[index], {"reserve_status": 2}).then((tempVal){
+                            var tempKey = this.reserveList[index];
                             setState((){
                               this.reserveList.removeAt(index);
                               this.gameDataList = List<GameListData>(this.reserveList.length);
@@ -327,7 +328,7 @@ class _ReserveListState extends State<ReserveList> {
                             crudObj.updateDataThen('stadium', widget.stdRef.documentID, {"notPermitList": this.reserveList}).then((tempval2){
                               Navigator.pop(context);
                               isAvailable = true;
-                              pushPost("3", this.reserveList[index]);
+                              pushPost("3", tempKey);
                               _showAlertDialog("성공", "승인에 성공하였습니다.");
                             });
                           });

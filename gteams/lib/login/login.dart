@@ -15,11 +15,7 @@ import 'package:gteams/login/login_auth.dart';
 import 'package:gteams/login/manager_signUp.dart';
 import 'package:gteams/login/signUpWaitingPage.dart';
 import 'package:gteams/validator/login_validator.dart';
-import 'package:gteams/manager/usePhoto.dart';
-import 'package:gteams/manager/addStadium.dart';
-import 'package:gteams/manager/managerSetTime.dart';
-import 'package:gteams/manager_main/ManagerMainMenu.dart';
-import 'package:gteams/setting/settings_user.dart';
+import 'package:gteams/util/pushPostUtil.dart';
 import 'package:gteams/util/alertUtil.dart';
 import 'package:http/http.dart';
 

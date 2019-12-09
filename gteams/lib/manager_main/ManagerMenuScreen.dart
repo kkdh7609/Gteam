@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gteams/manager_main/page.dart';
 import 'package:gteams/manager_main/pager.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:gteams/manager_main/model/FacilityTmpData.dart';
 import 'package:gteams/manager_main/aliment.dart';
 import 'package:gteams/manager_main/model/FacilitySchema.dart';
 import 'package:gteams/manager_main/facility_content.dart';
