@@ -162,8 +162,7 @@ class _currentRoomPageState extends State<currentRoomPage>
             crudObj.updateDataThen('stadium', document.documentID,
                 {'gameList': gameDocIdList2, 'notPermitList': notPermitList});
             pushPost("1", gameDocId);
-            print(document.data['stadiumId']);
-            pushPost("2", document.data['stadiumId']);
+            pushPost("2", document.data['stdId']);
           }
         }
       });

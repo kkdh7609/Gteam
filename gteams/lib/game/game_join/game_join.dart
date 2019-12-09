@@ -545,7 +545,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: gameListLength != null ? Text(
-                      gameListLength.toString()+" games found",
+                      filterSnapshot.length.toString()+" games found",
                       style: TextStyle(
                           fontFamily: 'Dosis', fontWeight: FontWeight.w600, fontSize: 16, color: Colors.black.withOpacity(0.5)),
                     ) : Text(
