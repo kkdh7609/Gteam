@@ -34,6 +34,8 @@ class _UserProfileState extends State<UserProfile> {
   bool _checkedImage = false;
 
   bool _checkedGender = false;
+  bool _editClicked = false;
+
   Gender _selectedGender;
 
   List<SettingListData> sportListData = SettingListData.sportList;
@@ -72,6 +74,12 @@ class _UserProfileState extends State<UserProfile> {
         'phoneNumber': _userData.phoneNumber,
       },
     );
+
+    setState(() {
+      _editClicked = false;
+      print("edit clicked: "+ _editClicked.toString());
+    });
+
     Navigator.pop(context);
   }
 
@@ -333,7 +341,7 @@ class _UserProfileState extends State<UserProfile> {
                 onPressed: () => Navigator.of(context).pop()),
           ),
         ),
-        body: StreamBuilder<QuerySnapshot>(
+        body: _editClicked == false ? StreamBuilder<QuerySnapshot>(
             stream: Firestore.instance.collection('user').where('email', isEqualTo: RootPage.user_email).snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) return LinearProgressIndicator();
@@ -481,7 +489,13 @@ class _UserProfileState extends State<UserProfile> {
                                   onPressed: () {
                                     if (_formKey.currentState.validate()) {
                                       _formKey.currentState.save();
+                                      setState(() {
+                                        _editClicked = true;
+                                        print("edit clicked: "+ _editClicked.toString());
+                                      });
+
                                       uploadData();
+
                                     }
                                   },
                                 ),
@@ -489,6 +503,6 @@ class _UserProfileState extends State<UserProfile> {
                             ],
                           ))));
             }
-        ));
+        ): Center(child: CircularProgressIndicator()));
   }
 }

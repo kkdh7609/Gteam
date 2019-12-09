@@ -255,6 +255,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                           focusNode: myFocusNodeEmailLogin,
                           controller: loginEmailController,
                           keyboardType: TextInputType.emailAddress,
+                          inputFormatters: [LengthLimitingTextInputFormatter(30)],
                           style: TextStyle(fontFamily: "Dosis", fontSize: 16.0, color: Colors.black),
                           decoration: InputDecoration(
                             border: InputBorder.none,
@@ -481,6 +482,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                               hintText: "Name",
                               hintStyle: TextStyle(fontFamily: "Dosis", fontSize: 16.0),
                             ),
+                            inputFormatters: [LengthLimitingTextInputFormatter(10)],
                             validator: (value) {
                               return value.isEmpty ? "Name can\'t be empty" : null;
                             },

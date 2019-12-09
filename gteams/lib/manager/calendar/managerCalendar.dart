@@ -111,10 +111,10 @@ class _CalendarViewAppState extends State<CalendarViewApp> {
     if (dateVal.data == null) {
       int blockTime =
           281474976710655 - widget.stdRef["intTimes"][_selectedDay.weekday - 1];
-      changeState(newState, blockTime, 1, newName, "Block", newGame, null);
+      changeState(newState, blockTime, 1, newName, "정기 휴무일", newGame, null);
     } else {
       int blockTime = dateVal.data["blockTime"];
-      changeState(newState, blockTime, 1, newName, "Block", newGame, null);
+      changeState(newState, blockTime, 1, newName, "정기 휴무일", newGame, null);
 
       List<dynamic> reserveFin = dateVal.data["reserveFin"];
       for (int idx = 0; idx < reserveFin.length; idx++) {
