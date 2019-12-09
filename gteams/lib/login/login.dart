@@ -20,6 +20,7 @@ import 'package:gteams/manager/addStadium.dart';
 import 'package:gteams/manager/managerSetTime.dart';
 import 'package:gteams/manager_main/ManagerMainMenu.dart';
 import 'package:gteams/setting/settings_user.dart';
+import 'package:gteams/util/pushPostUtil.dart';
 import 'package:gteams/util/alertUtil.dart';
 import 'package:http/http.dart';
 
@@ -177,7 +178,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   }
 
   Future<Response> postTest() async{
-    Map<String, String> body = {"type" : '3', "target" : "fNycl8GHUaqMlccoR8t8"};
+    Map<String, String> body = {"type" : '2', "target" : "k6B5rDa2LLSkXR56fhf7"};
     Response response = await post('http://45.119.145.96/api/push/', body: body);
     return response;
   }
@@ -357,9 +358,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
           Padding(
             padding: EdgeInsets.only(top: 10.0),
             child: FlatButton(
-                onPressed: () async {
-                  var t = await postTest();
-                  print(t.body);
+                onPressed: (){
+                  var t = pushPost("2", "k6B5rDa2LLSkXR56fhf7");
                   // Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpWaitingPage()));
                 },
                 child: Text(
