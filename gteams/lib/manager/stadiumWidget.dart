@@ -89,12 +89,13 @@ class TextWidget extends StatelessWidget{
 
 
 class EditButton extends StatelessWidget{
-  EditButton({this.formKey,this.photo, this.stadiumName,this.price, this.telephone,this.isParking,this.isClothes,this.isShower,this.isBall,this.isShoes, this.intTimes, this.strTimes, this.setAvailable, this.isPhotoChanged, this.docId, @required this.refreshData, @required this.popFunc});
+  EditButton({this.formKey,this.photo, this.stadiumName,this.stadiumDescription, this.price, this.telephone,this.isParking,this.isClothes,this.isShower,this.isBall,this.isShoes, this.intTimes, this.strTimes, this.setAvailable, this.isPhotoChanged, this.docId, @required this.refreshData, @required this.popFunc});
 
   final GlobalKey<FormState> formKey;
   final List<int> intTimes;
   final File photo;
   final String stadiumName;
+  final String stadiumDescription;
   final String price;
   final String telephone;
   final String docId;
@@ -176,6 +177,7 @@ class EditButton extends StatelessWidget{
               print(stadiumName);
               await Firestore.instance.collection('stadium').document(docId).updateData({
                 'stadiumName' : stadiumName,
+                'stadiumDescription': stadiumDescription,
                 'price' : int.parse(price),
                 'telephone' : telephone,
                 'isParking' : isParking,
@@ -205,12 +207,13 @@ class EditButton extends StatelessWidget{
 
 class CheckButton extends StatelessWidget{
 
-  CheckButton({this.formKey,this.photo, this.stadiumName,this.price,this.location,this.lat,this.lng,this.locId,this.telephone,this.isParking,this.isClothes,this.isShower,this.isBall,this.isShoes, this.intTimes, this.strTimes, this.setAvailable, @required this.refreshData, @required this.popFunc});
+  CheckButton({this.formKey,this.photo, this.stadiumName,this.stadiumDescription, this.price,this.location,this.lat,this.lng,this.locId,this.telephone,this.isParking,this.isClothes,this.isShower,this.isBall,this.isShoes, this.intTimes, this.strTimes, this.setAvailable, @required this.refreshData, @required this.popFunc});
 
   final GlobalKey<FormState> formKey;
   final List<int> intTimes;
   final File photo;
   final String stadiumName;
+  final String stadiumDescription;
   final String price;
   final String location;
   final double lat;
@@ -282,6 +285,7 @@ class CheckButton extends StatelessWidget{
               var data = await Firestore.instance.collection('stadium').add({
                 'imagePath' : photoURL,
                 'stadiumName' : stadiumName,
+                'stadiumDescription': stadiumDescription,
                 'price' : int.parse(price),
                 'location' :location,
                 'lat' : lat,

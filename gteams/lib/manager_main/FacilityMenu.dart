@@ -24,21 +24,37 @@ class _FacilityMenuPageState extends State<FacilityMenuPage> {
   bool isAvailable = true;
   @override
   void initState(){
+    isAvailable = true;
     title = widget.staRef.data["stadiumName"];
     nowStaRef = widget.staRef;
     super.initState();
   }
 
-  void newRefreshData() async {
-    isAvailable = false;
-    await widget.refreshData();
-    setState(() {
-      this.nowStaRef = RootPage.facilityData[widget.index];
-      title = nowStaRef.data["stadiumName"];
-    });
-    isAvailable = true;
+  Future<void> newRefreshData() async {
+    if(isAvailable) {
+      setState((){
+      nowStaRef = null;
+      });
+      isAvailable = false;
+      await widget.refreshData();
+      if(this.mounted) {
+        setState(() {
+          this.nowStaRef = RootPage.facilityData[widget.index];
+          title = nowStaRef.data["stadiumName"];
+        });
+      }
+      isAvailable = true;
+    }
   }
 
+  Widget refreshWidget(){
+    return IconButton(
+      icon: Icon(Icons.refresh),
+      onPressed: (){
+        newRefreshData();
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -47,13 +63,16 @@ class _FacilityMenuPageState extends State<FacilityMenuPage> {
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
-            title: Text(title, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white)),
+            title: Text(this.nowStaRef != null ? title : "", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22, color: Colors.white)),
             centerTitle: true,
-            backgroundColor: Color(0xff20253d)
+            backgroundColor: Color(0xff20253d),
+          actions: <Widget>[
+            refreshWidget()
+          ]
         ),
         body: SafeArea(
           child: Center(
-            child: Container(
+            child: this.nowStaRef != null ? Container(
               height: size.height,
               width: size.width,
               child: Center(
@@ -214,7 +233,7 @@ class _FacilityMenuPageState extends State<FacilityMenuPage> {
                                           onTap: (){
                                             if(isAvailable) {
                                               Navigator.push(context,
-                                                  MaterialPageRoute(builder: (context) => ReserveList(stdRef: this.nowStaRef)));
+                                                  MaterialPageRoute(builder: (context) => ReserveList(stdRef: this.nowStaRef, refreshData: newRefreshData, index: widget.index,)));
                                             }
                                           }
                                       ),
@@ -230,7 +249,7 @@ class _FacilityMenuPageState extends State<FacilityMenuPage> {
                   ],
                 ),
               ),
-            ),
+            ) : CircularProgressIndicator(),
           ),
         )
     );

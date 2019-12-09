@@ -74,7 +74,6 @@ class CustomDialog extends StatelessWidget{
             Card(
                 elevation: 4.0,
                 child: Container(
-
                     decoration: BoxDecoration(
                       color: Colors.white,
                     ),
@@ -85,6 +84,8 @@ class CustomDialog extends StatelessWidget{
                           PhotoWidget(photo: NetworkImage(this.stadiumData.imagePath)),
                           SizedBox(height: 4.0),
                           TextWidget(header: "경기장 이름", text: stadiumData.stadiumName),
+                          SizedBox(height: 7.0),
+                          TextWidget(header: "경기장 소개", text: stadiumData.stadiumDescription),
                           SizedBox(height: 7.0),
                           TextWidget(header: "30분당 이용 요금(단위: 원)", text: stadiumData.price.toString()),
                           SizedBox(height: 7.0),
