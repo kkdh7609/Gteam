@@ -247,7 +247,7 @@ class _ReserveListState extends State<ReserveList> {
     );
   }
 
-  void changeGameInfo(String gameDoc) async {
+  Future<void> changeGameInfo(String gameDoc) async {
     DocumentSnapshot gameDocumentary =
     await crudObj.getDocumentById('game3', gameDoc);
     var pickDate = gameDocumentary.data['dateText'];
