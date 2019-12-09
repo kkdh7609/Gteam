@@ -72,7 +72,7 @@ before_script:
   # Add Flutter to the PATH environment variable.
   - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
   
-  script:
+ script:
   # Prints the flutter version
   # (allows you to ensure, for each build, that Flutter is set up correctly.)
   - flutter doctor -v
@@ -89,14 +89,12 @@ after_success:
   # Upload to WeTransfer
   - npm install --save @wetransfer/js-sdk
   - export BUILD_OUTPUT_URL=`node ./.travis/utils/runUpload.js`
+  - ./.travis/40_postbuild.sh success $WEBHOOK_URL $BUILD_OUTPUT_URL
+    # Execute success procedure of postbuild webhook script.
 
 before_install:
   # Execute Travis prebuild webhook.
   - ./.travis/10_prebuild.sh $WEBHOOK_URL
-
-after_success:
-  # Execute success procedure of postbuild webhook script.
-  - ./.travis/40_postbuild.sh success $WEBHOOK_URL $BUILD_OUTPUT_URL
 
 after_failure:
   # Execute failure procedure of postbuild webhook script.
