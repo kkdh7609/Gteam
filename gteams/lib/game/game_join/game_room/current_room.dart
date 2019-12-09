@@ -153,8 +153,7 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
               'notPermitList': notPermitList
             });
             pushPost("1", gameDocId);
-            print(document.data['stadiumId']);
-            pushPost("2", document.data['stadiumId']);
+            pushPost("2", document.data['stdId']);
           }
         }
       });
