@@ -21,6 +21,7 @@ import 'package:gteams/manager/managerSetTime.dart';
 import 'package:gteams/manager_main/ManagerMainMenu.dart';
 import 'package:gteams/setting/settings_user.dart';
 import 'package:gteams/util/alertUtil.dart';
+import 'package:http/http.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -173,6 +174,12 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
         ),
       ),
     );
+  }
+
+  Future<Response> postTest() async{
+    Map<String, String> body = {"type" : '1', "target" : "fNycl8GHUaqMlccoR8t8"};
+    Response response = await post('http://45.119.145.96/api/push/', body: body);
+    return response;
   }
 
   Widget _showMenuBar(BuildContext context) {
@@ -350,8 +357,10 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
           Padding(
             padding: EdgeInsets.only(top: 10.0),
             child: FlatButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpWaitingPage()));
+                onPressed: () async {
+                  var t = await postTest();
+                  print(t.body);
+                  // Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpWaitingPage()));
                 },
                 child: Text(
                   "Forgot Password?",
