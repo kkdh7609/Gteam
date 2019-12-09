@@ -37,6 +37,10 @@ matrix:
         provider: script
         skip_cleanup: true
         script: "sh deploy.sh"
+        on:
+          branch:
+            - kim
+            - master
 
 cache:
   directories:
