@@ -33,6 +33,10 @@ matrix:
       script:
         - ./flutter/bin/flutter version v1.12.13+hotfix.3
         - ./flutter/bin/flutter -v build apk
+      deploy:
+        provider: script
+        skip_cleanup: true
+        script: "sh deploy.sh"
 
 cache:
   directories:
