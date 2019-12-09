@@ -71,8 +71,8 @@ before_script:
   
   # Add Flutter to the PATH environment variable.
   - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
-  - chmod +x /.travis/10_prebuild.sh
-  - chmod +x /.travis/40_postbuild.sh
+  - chmod +x ./.travis/10_prebuild.sh
+  - chmod +x ./.travis/40_postbuild.sh
   
 script:
   # Prints the flutter version
