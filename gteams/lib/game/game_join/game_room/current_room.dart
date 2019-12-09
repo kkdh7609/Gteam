@@ -12,6 +12,7 @@ import 'package:gteams/root_page.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:gteams/util/pushPostUtil.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class currentRoomPage extends StatefulWidget {
   currentRoomPage({Key key, this.currentUserList, this.gameData, this.stadiumData, this.reserve_status, this.docId}) : super(key: key);
@@ -487,6 +488,37 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
     );
   }
 
+  _showAlertDialog(String title, String text) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: Center(child: Text(title)),
+              content: FlutterRatingBar(
+                initialRating: 3,
+                fillColor: Color(0xff20253d),
+                borderColor: Color(0xff20253d),
+                allowHalfRating: true,
+                onRatingUpdate: (rating) {
+                  print(rating);
+                },
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  color: Color(0xff20253d),
+                  child: Text("확인", style: TextStyle(color: Colors.white)),
+                  onPressed: () {
+
+
+
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ]);
+          ;
+        });
+  }
+
   Widget _main_info() {
     return Container(
         child: Stack(
@@ -531,10 +563,30 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
           children: <Widget>[
             Expanded(
               flex: 1,
-              child: Text(
-                widget.gameData.gameName,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: Colors.white, fontSize: 25.0, fontWeight: FontWeight.w600),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                      flex: 7,
+                      child: Text(
+                    widget.gameData.gameName,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: Colors.white, fontSize: 25.0, fontWeight: FontWeight.w600),
+                  )),
+                  Expanded(
+                    flex:3,
+                    child: RaisedButton(
+                      shape: new RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(18.0),
+                          side: BorderSide(color: Colors.red)),
+                      onPressed: () {
+                        _showAlertDialog("평점 주기", "확인");
+                      },
+                      color: Colors.red,
+                      textColor: Colors.white,
+                      child: Text("게임 평가".toUpperCase(),
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900)),
+                    ))
+                ],
               ),
             ),
             Expanded(
@@ -592,15 +644,17 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                           ))),
                   Expanded(
                     flex: 3,
-                    child: widget.reserve_status >= 1
+                    child: widget.reserve_status != 0
                         ? Container(
                       padding: const EdgeInsets.all(7.0),
                       decoration: new BoxDecoration(border: new Border.all(color: Colors.white), borderRadius: BorderRadius.circular(5.0)),
-                      child: widget.reserve_status == 2 ?
-                      Text("예약 완료", style: TextStyle(color: Colors.amberAccent, fontSize: 15.0, fontWeight: FontWeight.w600)) :
-                      Text("예약 접수중", style: TextStyle(color: Colors.amberAccent, fontSize: 15.0, fontWeight: FontWeight.w600)),
-                    )
-                        : Container(
+                      child: widget.reserve_status == 5 ? Text("예약 실패", style: TextStyle(color: Colors.amberAccent, fontSize: 12.0, fontWeight: FontWeight.w600)) :
+                      widget.reserve_status == 4 ? FlatButton(
+                        child: Text("게임 완료", style: TextStyle(color: Colors.amberAccent, fontSize: 12.0, fontWeight: FontWeight.w600)),) : // 4일떄
+                      widget.reserve_status == 3 ? Text("게임 중", style: TextStyle(color: Colors.amberAccent, fontSize: 12.0, fontWeight: FontWeight.w600)) : // 3일때
+                      widget.reserve_status == 2 ? Text("예약 대기", style: TextStyle(color: Colors.amberAccent, fontSize: 12.0, fontWeight: FontWeight.w600)) : //2일때
+                      Text("예약 접수중", style: TextStyle(color: Colors.amberAccent, fontSize: 12.0, fontWeight: FontWeight.w600)) ,
+                    ) : Container(
                         padding: const EdgeInsets.all(4.0),
                         decoration: new BoxDecoration(border: new Border.all(color: Colors.white), borderRadius: BorderRadius.circular(5.0)),
                         child: Center(

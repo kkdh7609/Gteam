@@ -24,9 +24,8 @@
 ---------------------------------------
 ## To-Do List 
 # DUE DATE : 2019-12-10 
-- ALL : 게임 종료 방 처리 / 시설에 대한 평가 / 예약시간 관리(type : 4) / 푸시 알림 ownerID</br>
-        구글로그인 & 이메일 인증 /  풋살장 & 프로필 사진 DB 구축  </br>
-        게임목록 삭제시 Current Room에서도 삭제 필요 / 가입할 때 text 글자 수 제한 / 방목록에서 게임생성 수 바꾸기 (1games founded) </br>
+- ALL : 게임 종료 방 처리 / 시설에 대한 평가 / 예약시간 관리(type : 4) </br>
+        풋살장 & 프로필 사진 DB 구축 / 게임목록 삭제시 Current Room에서도 삭제 필요 </br>
         
 - 김도현: </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 - 김영운: </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
