@@ -33,6 +33,7 @@ matrix:
         - export PATH=$GRADLE_HOME/bin:$PATH
         - git clone https://github.com/flutter/flutter.git
       script:
+        - ls
         - ./flutter/bin/flutter -v build apk
 
 cache:
