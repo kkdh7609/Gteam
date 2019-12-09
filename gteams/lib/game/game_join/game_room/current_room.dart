@@ -538,6 +538,20 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
                   Padding(
                       padding: EdgeInsets.only(left: 10.0),
                       child: Text(
+                        "날짜: " + widget.gameData.dateText,
+                        style: TextStyle(color: Colors.white, fontSize: 15),
+                      )),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                      padding: EdgeInsets.only(left: 10.0),
+                      child: Text(
                         "시작: " + widget.gameData.startTime,
                         style: TextStyle(color: Colors.white, fontSize: 15),
                       )),

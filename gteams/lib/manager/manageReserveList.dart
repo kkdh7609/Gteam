@@ -9,10 +9,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:gteams/util/pushPostUtil.dart';
 
+typedef newFunc = Future<void> Function();
+
 class ReserveList extends StatefulWidget {
-  ReserveList({Key key, this.stdRef}) : super(key: key);
+  ReserveList({Key key, this.stdRef, this.refreshData, this.index}) : super(key: key);
 
   final DocumentSnapshot stdRef;
+  final newFunc refreshData;
+  final int index;
 
   @override
   _ReserveListState createState() => _ReserveListState();
@@ -27,6 +31,8 @@ class _ReserveListState extends State<ReserveList> {
   bool isAvailable = true;
   bool isDialogAvailable = true;
 
+  DocumentSnapshot _nowStdRef;
+
   List<dynamic> stadiumList;
   List<dynamic> gameList;
   List<dynamic> reserveList;
@@ -36,6 +42,10 @@ class _ReserveListState extends State<ReserveList> {
   @override
   void initState() {
     super.initState();
+    flag = false;
+    isDialogAvailable = true;
+    isAvailable = true;
+    _nowStdRef = widget.stdRef;
     this.gameDataList = [];
     this.gameList = widget.stdRef.data["gameList"];
     this.reserveList = List<dynamic>.of(widget.stdRef.data["notPermitList"]);
@@ -45,6 +55,20 @@ class _ReserveListState extends State<ReserveList> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void newRefreshData() async {
+    if(isAvailable) {
+      isAvailable = false;
+      await widget.refreshData();
+      if(this.mounted) {
+        setState(() {
+          this._nowStdRef = RootPage.facilityData[widget.index];
+        });
+      }
+      print("Refresh");
+      isAvailable = true;
+    }
   }
 
   Widget _alertButton() {
@@ -227,7 +251,7 @@ class _ReserveListState extends State<ReserveList> {
     DocumentSnapshot gameDocumentary =
     await crudObj.getDocumentById('game3', gameDoc);
     var pickDate = gameDocumentary.data['dateText'];
-    var dateVal = await widget.stdRef.reference
+    var dateVal = await this._nowStdRef.reference
         .collection("date")
         .document(pickDate)
         .get();
@@ -248,7 +272,7 @@ class _ReserveListState extends State<ReserveList> {
 
         await Firestore.instance
             .collection("stadium")
-            .document(widget.stdRef.documentID)
+            .document(_nowStdRef.documentID)
             .collection("date")
             .document(pickDate)
             .updateData(
@@ -298,7 +322,7 @@ class _ReserveListState extends State<ReserveList> {
                             setState((){
                               this.reserveList.removeAt(index);
                               this.gameDataList = List<GameListData>(this.reserveList.length);
-                              widget.stdRef.data["notPermitList"] = List<dynamic>.of(this.reserveList);
+                              _nowStdRef.data["notPermitList"] = List<dynamic>.of(this.reserveList);
                             });
                             crudObj.updateDataThen('stadium', widget.stdRef.documentID, {"notPermitList": this.reserveList}).then((tempval2){
                               Navigator.pop(context);
@@ -317,6 +341,15 @@ class _ReserveListState extends State<ReserveList> {
             ],
           );
         });
+  }
+
+  Widget refreshWidget(){
+    return IconButton(
+      icon: Icon(Icons.refresh),
+      onPressed: (){
+        newRefreshData();
+      },
+    );
   }
 
   Widget _buildbody() {
@@ -362,7 +395,11 @@ class _ReserveListState extends State<ReserveList> {
               style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 22,
-                  color: Colors.white))),
+                  color: Colors.white)),
+          actions: <Widget>[
+            refreshWidget()
+          ]
+      ),
       body: reserveList.length == 0 ? Center(child: Text("예약 목록이 없습니다.", style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w500, fontSize: 20.0))) : Container(child: _buildbody()),
     );
   }

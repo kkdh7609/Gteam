@@ -397,7 +397,7 @@ class _UserProfileState extends State<UserProfile> {
                                             alignment: Alignment.center,
                                             child: TextFormField(
                                               initialValue: _userData.name,
-                                              inputFormatters: [LengthLimitingTextInputFormatter(15)],
+                                              inputFormatters: [LengthLimitingTextInputFormatter(10)],
                                               textAlign: TextAlign.center,
                                               keyboardType: TextInputType.text,
                                               decoration: InputDecoration(

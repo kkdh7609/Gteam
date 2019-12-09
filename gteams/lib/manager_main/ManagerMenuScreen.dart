@@ -52,6 +52,10 @@ class _MainManagerPageScreenState extends State<MainManagerPageScreen> {
   }
 
   Future<void> refreshFacilities() async {
+    setState((){
+      facilities = [];
+      staRefList = [];
+    });
     List<Facility> tempfacilities = [
         Facility(
           name: "Plus",
@@ -115,7 +119,9 @@ class _MainManagerPageScreenState extends State<MainManagerPageScreen> {
   @override
   Widget build(BuildContext context) {
     return staRefList.length == 0 ? Center(child: CircularProgressIndicator()) : Scaffold(
-      body: Container(
+      body: Stack(
+          children: <Widget>[
+            Container(
         child: MenuPager(
           children: mapIndexed(
             facilities, (index, facility) => Page(
@@ -135,6 +141,12 @@ class _MainManagerPageScreenState extends State<MainManagerPageScreen> {
           ).toList(),
         ),
       ),
+            Align(
+                child: InkWell(child: Icon(Icons.refresh, size: 40, color: Colors.white),
+                onTap:(){refreshFacilities();}),
+              alignment: const Alignment(0.0, 0.9),
+            )
+          ]),
 
         bottomNavigationBar: FancyBottomNavigation(
           activeIconColor: Colors.white,
