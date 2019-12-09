@@ -189,7 +189,6 @@ class EditButton extends StatelessWidget{
                 'strTimes' : strTimes,
                 'gameList': [],
                 'notPermitList': [],
-                'ownerId': RootPage.userDocID
               });
               refreshData();
               popFunc();
@@ -298,7 +297,8 @@ class CheckButton extends StatelessWidget{
                 'intTimes' : intTimes,
                 'strTimes' : strTimes,
                 'gameList': [],
-                'notPermitList': []
+                'notPermitList': [],
+                'ownerId': RootPage.userDocID
               });
               var adminData = await Firestore.instance.collection('user').document(RootPage.userDocID).get();
               List<String> myStadium = List.from(adminData.data["MyStadium"]);

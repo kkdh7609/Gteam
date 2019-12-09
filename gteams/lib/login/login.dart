@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:gteams/services/user_mangement.dart';
 import 'package:gteams/login/loginTheme.dart';
 import 'package:gteams/login/painter.dart';
@@ -13,6 +15,7 @@ import 'package:gteams/login/login_auth.dart';
 import 'package:gteams/login/manager_signUp.dart';
 import 'package:gteams/login/signUpWaitingPage.dart';
 import 'package:gteams/validator/login_validator.dart';
+import 'package:gteams/util/pushPostUtil.dart';
 import 'package:gteams/util/alertUtil.dart';
 import 'package:http/http.dart';
 
@@ -248,6 +251,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                           focusNode: myFocusNodeEmailLogin,
                           controller: loginEmailController,
                           keyboardType: TextInputType.emailAddress,
+                          inputFormatters: [LengthLimitingTextInputFormatter(30)],
                           style: TextStyle(fontFamily: "Dosis", fontSize: 16.0, color: Colors.black),
                           decoration: InputDecoration(
                             border: InputBorder.none,
@@ -474,6 +478,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                               hintText: "Name",
                               hintStyle: TextStyle(fontFamily: "Dosis", fontSize: 16.0),
                             ),
+                            inputFormatters: [LengthLimitingTextInputFormatter(10)],
                             validator: (value) {
                               return value.isEmpty ? "Name can\'t be empty" : null;
                             },
