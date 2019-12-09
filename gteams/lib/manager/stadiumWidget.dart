@@ -195,10 +195,8 @@ class EditButton extends StatelessWidget{
           else{
             setAvailable(true);
           }
-
-
-        })
-    );
+        }}
+    ));
   }
 }
 
@@ -310,7 +308,6 @@ class CheckButton extends StatelessWidget{
               setAvailable(true);
             }
           }
-
         })
     );
   }

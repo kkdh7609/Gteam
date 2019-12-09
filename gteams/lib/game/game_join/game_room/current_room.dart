@@ -11,6 +11,7 @@ import 'package:gteams/game/game_join/model/GameListData.dart';
 import 'package:gteams/root_page.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:gteams/util/pushPostUtil.dart';
 
 class currentRoomPage extends StatefulWidget {
   currentRoomPage({Key key, this.currentUserList, this.gameData, this.stadiumData, this.reserve_status, this.docId}) : super(key: key);
@@ -52,8 +53,6 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
   void initState() {
     super.initState();
 
-    print('111111111111111111');
-    print('description : ' + widget.gameData.Description);
     this.textEditingController = TextEditingController();
     this.listScrollController = ScrollController();
     this.flag = false;
@@ -93,6 +92,8 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
             'gameList': gameDocIdList,
             'notPermitList': gameDocIdList
           });
+          pushPost("1", gameDocId);
+          pushPost("2", document.data['stadiumId']);
         }
         else if(!flag && document.data['gameList'] == null){
           flag = true;
@@ -123,6 +124,8 @@ class _currentRoomPageState extends State<currentRoomPage> with SingleTickerProv
             'gameList': gameDocIdList2,
             'notPermitList': notPermitList
           });
+          pushPost("1", gameDocId);
+          pushPost("2", document.data['stadiumId']);
         }
         else if(!flag){             // flag 왜 있는지 몰라서 일단 넣어둔거, 이상하면 이 부분 확인 필요
           flag = true;
