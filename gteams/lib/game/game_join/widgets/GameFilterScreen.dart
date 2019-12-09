@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gteams/services/crud.dart';
-import 'package:gteams/menu/main_menu.dart';
 import 'package:gteams/setting/popularFilterList.dart';
 import 'package:gteams/game/game_join/widgets/SliderView.dart';
 import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
@@ -10,9 +8,17 @@ import 'package:gteams/game/game_join/widgets/GameJoinTheme.dart';
 class GameFilterScreen extends StatefulWidget {
   @override
   _GameFilterScreenState createState() => _GameFilterScreenState();
+
+  DateTime startDate;
+  DateTime endDate;
+
+  GameFilterScreen({Key key,this.startDate,this.endDate}) : super(key: key);
+
 }
 
-enum Gender { MALE, FEMALE }
+enum Gender { MALE, FEMALE, ALL }
+typedef selectFunc = void Function(int);
+
 
 class _GameFilterScreenState extends State<GameFilterScreen> {
   List<SettingListData> sportListData = SettingListData.sportList;
@@ -23,6 +29,53 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
   List<int> checNum;
 
   crudMedthods crudObj = new crudMedthods();
+
+  int _clothes;
+  int _price;
+  int _chamyeyul;
+
+  void onClothesChanged(int val){
+    setState((){
+      _clothes = val;
+    });
+  }
+
+  void onPriceChanged(int val){
+    setState((){
+      _price = val;
+    });
+  }
+
+  void onChamyeyulChanged(int val){
+    setState((){
+      _chamyeyul = val;
+    });
+  }
+
+  int streamNum(){
+    if(_price == 1){ // 가격 낮은순
+      if(_chamyeyul == 0) return 1; // 참여율 상관없음
+      else if(_chamyeyul == 1) return 5;//참여율 낮은순
+      else return 6; // 참여율 높은순
+
+    }else if(_price == 2){ // 가격 높은순
+      if(_chamyeyul == 0) return 2; // 참여율 상관없음
+      else if(_chamyeyul == 1) return 7;//참여율 낮은순
+      else return 8; // 참여율 높은순
+
+    }else{ // 가격 상관없음
+      if(_chamyeyul == 0) return 0; // 참여율 상관없음
+      else if(_chamyeyul == 1) return 3;//참여율 낮은순
+      else return 4; // 참여율 높은순
+    }
+  }
+
+  @override
+  void initState(){
+    this._price=0;
+    this._chamyeyul=0;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,11 +98,15 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
                     Divider(
                       height: 1,
                     ),
-                    distanceViewUI(),
+                    _game_gender(),
                     Divider(
                       height: 1,
                     ),
-                    _game_gender()
+                    SegmentedControl(header: "가격순 정렬", value: _price, children: priceSeg, onValueChanged: onPriceChanged),
+                    Divider(
+                      height: 1,
+                    ),
+                    SegmentedControl(header: "참여율 정렬", value: _chamyeyul, children: chamyeyulSeg, onValueChanged: onChamyeyulChanged),
                   ],
                 ),
               ),
@@ -78,7 +135,7 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
                     borderRadius: BorderRadius.all(Radius.circular(24.0)),
                     highlightColor: Colors.transparent,
                     onTap: () {
-                      Navigator.pop(context);
+                      Navigator.pop(context,streamNum());
                     },
                     child: Center(
                       child: Text(
@@ -131,6 +188,18 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
             },
           ),
           Text("Female", style: TextStyle(color: Colors.grey, fontSize: 16)),
+          Radio(
+            value: Gender.ALL,
+            groupValue: _selectedGender,
+            onChanged: (Gender value) {
+              setState(
+                    () {
+                  _selectedGender = value;
+                },
+              );
+            },
+          ),
+          Text("All", style: TextStyle(color: Colors.grey, fontSize: 16)),
         ],
       ),
     );
@@ -306,6 +375,62 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+
+
+final Map<int, Widget> clothesSeg = const <int, Widget>{
+  0: Text('제공 안함'),
+  1: Text('무료 제공'),
+  2: Text('유료 제공')
+};
+
+final Map<int, Widget> priceSeg = const <int, Widget>{
+  0: Text('상관 없음'),
+  1: Text('가격 낮은순'),
+  2: Text('가격 높은순')
+};
+
+final Map<int, Widget> chamyeyulSeg = const <int, Widget>{
+  0: Text('상관 없음'),
+  1: Text('참여율 낮은순'),
+  2: Text('참여율 높은순')
+};
+
+
+class SegmentedControl extends StatelessWidget{
+  SegmentedControl({this.header, this.value, this.children, this.onValueChanged});
+
+  final String header;
+  final int value;
+  final Map<int, Widget> children;
+  final selectFunc onValueChanged;
+
+  @override
+  Widget build(BuildContext context){
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: Text(header, style:TextStyle(
+                  color: Colors.blueGrey, fontWeight: FontWeight.bold, fontSize: 13
+              ))
+          ),
+          SizedBox(
+              width: double.infinity,
+              child: CupertinoSegmentedControl<int>(
+                children: children,
+                groupValue: value,
+                borderColor: Color(0xff20253d),
+                selectedColor: Color(0xff20253d),
+                pressedColor: Color(0x0000253d),
+                onValueChanged: onValueChanged,
+              )
+          )
+        ]
     );
   }
 }
