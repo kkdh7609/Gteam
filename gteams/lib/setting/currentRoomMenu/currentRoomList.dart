@@ -63,6 +63,7 @@ class _CurrentRoomListPageState extends State<CurrentRoomListPage> {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontFamily: 'Dosis'),
               ),
+
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
