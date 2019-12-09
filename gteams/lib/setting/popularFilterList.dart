@@ -9,7 +9,7 @@ class SettingListData {
 
   static List<SettingListData> sportList = [
     SettingListData(
-      titleTxt: '풋살',
+      titleTxt: '볼링',
       isSelected: false,
     ),
     SettingListData(
@@ -17,7 +17,7 @@ class SettingListData {
       isSelected: false,
     ),
     SettingListData(
-      titleTxt: '볼링',
+      titleTxt: '풋살',
       isSelected: true,
     ),
     SettingListData(

@@ -55,8 +55,8 @@ class AlimentWidget extends StatelessWidget {
                   width: 80.0,
                   height: 45.0,
                   child: Center(
-                      child: Text("Let's" + " Play",
-                          style: TextStyle(color: theme.colors[0], fontSize: 14.0, fontWeight: FontWeight.w400, fontFamily: 'Dosis'),
+                      child: Text('Let\'s play',
+                          style: TextStyle(color: theme.colors[0], fontSize: 14.0, fontWeight: FontWeight.w400),
                           textAlign: TextAlign.center)),
                 ),
               ),

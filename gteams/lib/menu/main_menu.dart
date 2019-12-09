@@ -5,6 +5,7 @@ import 'package:gteams/menu/drawer/DrawerTheme.dart';
 import 'package:gteams/setting/currentRoomMenu/currentRoomList.dart';
 import 'package:gteams/menu/drawer/drawerUserController.dart';
 import 'package:gteams/pay/pay.dart';
+import 'package:gteams/contact_page.dart';
 
 class MainMenuPage extends StatefulWidget {
   MainMenuPage({
@@ -84,6 +85,8 @@ class _MainMenuPageState extends State<MainMenuPage> {
       } else if (drawerIndex == DrawerIndex.CONTACT) {
         setState(
           () {
+            drawerIndex = DrawerIndex.HOME;
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ContactPage()));
             screenView = MainHomePageScreen();
           },
         );

@@ -188,7 +188,8 @@ class EditButton extends StatelessWidget{
                 'intTimes' : intTimes,
                 'strTimes' : strTimes,
                 'gameList': [],
-                'notPermitList': []
+                'notPermitList': [],
+                'ownerId': RootPage.userDocID
               });
               refreshData();
               popFunc();
