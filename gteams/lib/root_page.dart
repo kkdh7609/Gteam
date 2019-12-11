@@ -11,6 +11,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:gteams/manager_main/ManagerMainMenu.dart';
 import 'package:gteams/manager_main/UnPermitted.dart';
+import 'package:gteams/util/alertUtil.dart';
 
 class RootPage extends StatefulWidget {
   RootPage({this.auth});
@@ -45,6 +46,7 @@ class _RootPageState extends State<RootPage> {
   String _userMail = "";
   String _userDocID = "";
   bool _infoStatus = false;
+  var user;
   
   final Firestore _db = Firestore.instance;
   final FirebaseMessaging _fcm = FirebaseMessaging();
@@ -187,19 +189,26 @@ class _RootPageState extends State<RootPage> {
   void onLoggedIn() {
     //print("ON_LOGGED_IN");
     widget.auth.getCurrentUser().then(
-          (user) {
-            RootPage.user_email = user?.email;
+          (users) {
+            RootPage.user_email = users?.email;
         setState(
               () {
-            _userId = user.uid.toString();
-            _userMail = user.email.toString();
+                this.user = users;
           },
         );
+        if(this.user.isEmailVerified) {
+          setState(() {
+            _userId = users.uid.toString();
+            _userMail = users.email.toString();
+            authStatus = AuthStatus.LOGGED_IN_CHECK;
+          });
+        }
+        else{
+          this.user.sendEmailVerification();
+          showAlertDialog("이메일 인증", "이메일 인증 메일을 보냈습니다. 확인해주시기 바랍니다.", context);
+        }
       },
     );
-    setState(() {
-      authStatus = AuthStatus.LOGGED_IN_CHECK;
-    });
   }
 
   void _onSignedOut() {

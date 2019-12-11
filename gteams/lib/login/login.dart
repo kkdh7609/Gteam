@@ -509,9 +509,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                             hintText: "Email Address",
                             hintStyle: TextStyle(fontFamily: "Dosis", fontSize: 16.0),
                           ),
-                          validator: (value) {
-                            return value.isEmpty ? "Email can\'t be empty" : null;
-                          },
+                          validator: ValidationMixin.validateEmail,
                           onSaved: (value) {
                             print(value);
                             _signUpEmail = value;
