@@ -88,7 +88,7 @@ class _GameCreatePageState extends State<GameCreatePage> {
     _curStep = 0;
     _selectedGender = null;
     _sportsList = [];
-    _sports = ["풋살", "탁구", "볼링", "농구", "야구"];
+    _sports = ["풋살"];
     _date = DateTime.now();
     _startTime = TimeOfDay.now();
     _endTime = TimeOfDay.now();

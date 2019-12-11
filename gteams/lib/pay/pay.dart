@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:gteams/pay/iamport_payment.dart';
 import 'package:gteams/pay/payMethod.dart';
+import 'package:gteams/util/alertUtil.dart';
 
 enum Cost { ONE_THOUSANDS, FIVE_THOUSANDS, TEN_THOUSANDS }
 enum PayMethod {
@@ -337,6 +338,8 @@ class _PayPageState extends State<PayPage> {
                         )),
                     InkWell(
                         onTap: () async {
+                          _selectedCost == null || _selectedPayMethod == null ?
+                          await showAlertDialog("오류 발생", "결제 금액이나 방법을 모두 선택해주세요.", context) :
                           await Navigator.push(
                               context, MaterialPageRoute(builder: (context) => IamPortPayment(chargeType: _selectedCost, PayMethodType: _selectedPayMethod)));
                           setState(() {
