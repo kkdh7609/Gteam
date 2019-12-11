@@ -42,6 +42,8 @@ matrix:
           branch:
             - kim
             - master
+      notifications:
+        slack: baam-dokkaebi:UsG7noWVKwXwQNqobEYveaCG
 
 cache:
   directories:
