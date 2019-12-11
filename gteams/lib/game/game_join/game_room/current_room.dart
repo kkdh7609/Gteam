@@ -721,7 +721,7 @@ class _currentRoomPageState extends State<currentRoomPage>
                                                 fontWeight: FontWeight.w600))
                                         : // 3일때
                                         widget.reserve_status == 2
-                                            ? Text("예약 대기",
+                                            ? Text("예약 완료",
                                                 style: TextStyle(
                                                     color: Colors.amberAccent,
                                                     fontSize: 12.0,
