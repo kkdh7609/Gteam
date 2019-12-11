@@ -58,7 +58,7 @@ class _ImageCaptureState extends State<ImageCapture>{
     setState((){
       isFirst = false;
       _imageFile = cropped ?? _imageFile;
-      _image = cropped ?? FileImage(_imageFile);
+      _image = FileImage(_imageFile);
     });
   }
 

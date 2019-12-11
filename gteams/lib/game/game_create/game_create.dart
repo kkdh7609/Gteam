@@ -189,11 +189,13 @@ class _GameCreatePageState extends State<GameCreatePage> {
           } else {
             _completeStartTime = true;
             _startTime = _pickedStart;
+            _dateNumber = DateTime(_date.year, _date.month, _date.day, _startTime.hour, _startTime.minute).millisecondsSinceEpoch;
             _startTimeText = _startTime.toString().split("(")[1].split(")")[0];
           }
         } else {
           _completeStartTime = true;
           _startTime = _pickedStart;
+          _dateNumber = DateTime(_date.year, _date.month, _date.day, _startTime.hour, _startTime.minute).millisecondsSinceEpoch;
           _startTimeText = _startTime.toString().split("(")[1].split(")")[0];
         }
       });
