@@ -210,20 +210,38 @@ class _GameRoomPageState extends State<GameRoomPage> with TickerProviderStateMix
                                 Container(
                                   child: Row(
                                     children: <Widget>[
-                                      Text(
-                                        "4.3",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w200,
-                                          fontSize: 22,
-                                          letterSpacing: 0.27,
-                                          color: GameRoomTheme.grey,
-                                        ),
-                                      ),
-                                      Icon(
-                                        Icons.star,
-                                        color: GameRoomTheme.nearlyBlue,
-                                        size: 24,
+                                      Column(
+                                        children: <Widget>[
+                                          Row(
+                                            children: <Widget>[
+                                              Text(
+                                                widget.stadiumData.rating.toString(),
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w200,
+                                                  fontSize: 20,
+                                                  letterSpacing: 0.5,
+                                                  color: GameRoomTheme.grey,
+                                                ),
+                                              ),
+                                              Icon(
+                                                Icons.star,
+                                                color: GameRoomTheme.nearlyBlue,
+                                                size: 24,
+                                              ),
+                                            ],
+                                          ),
+                                          Text(
+                                            "/" + widget.stadiumData.rater.toString() + "명",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w200,
+                                              fontSize: 15,
+                                              letterSpacing: 0.27,
+                                              color: GameRoomTheme.grey,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
