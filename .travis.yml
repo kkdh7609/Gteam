@@ -42,6 +42,8 @@ matrix:
             - kim
             - master
             - kim2
+      notifications:
+        slack: baam-dokkaebi:UsG7noWVKwXwQNqobEYveaCG
 
 cache:
   directories:
