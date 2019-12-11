@@ -36,11 +36,12 @@ matrix:
       deploy:
         provider: script
         skip_cleanup: true
-        script: "sh deploy.sh"
+        script: "sh deploy2.sh"
         on:
           branch:
             - kim
             - master
+            - kim2
 
 cache:
   directories:
