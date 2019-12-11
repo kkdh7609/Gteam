@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gteams/login/loginTheme.dart';
 import 'package:gteams/login/login_auth.dart';
 import 'package:gteams/services/manager_management.dart';
+import 'package:gteams/validator/login_validator.dart';
 
 class ManagerSignUpPage extends StatefulWidget {
   ManagerSignUpPage({this.auth});
@@ -160,9 +161,7 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
                             hintText: "Email Address",
                             hintStyle: TextStyle(fontFamily: "Dosis", fontSize: 16.0),
                           ),
-                          validator: (value) {
-                            return value.isEmpty ? "Email can\'t be empty" : null;
-                          },
+                          validator: ValidationMixin.validateEmail,
                           onSaved: (value) {
                             //print(value);
                             _managerSignUpEmail = value;
