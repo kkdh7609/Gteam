@@ -469,6 +469,8 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
           ),
           Expanded(
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Material(
                   color: Colors.transparent,
@@ -487,21 +489,15 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
                       padding: const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Text(
-                            "Number of Members",
-                            style: TextStyle(
-                                fontFamily: 'Dosis',
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                                color: Colors.black.withOpacity(0.5)),
-                          ),
+                           Icon(Icons.refresh)
+                          ,
                           SizedBox(
                             height: 8,
                           ),
                           Text(
-                            "10 Members",
+                            "Refresh",
                             style: TextStyle(
                                 fontFamily: 'Dosis',
                                 fontWeight: FontWeight.w600,
