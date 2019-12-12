@@ -397,9 +397,6 @@ class _ReserveListState extends State<ReserveList> {
                   fontWeight: FontWeight.w600,
                   fontSize: 22,
                   color: Colors.white)),
-          actions: <Widget>[
-            refreshWidget()
-          ]
       ),
       body: reserveList.length == 0 ? Center(child: Text("예약 목록이 없습니다.", style: TextStyle(fontFamily: 'Dosis', fontWeight: FontWeight.w500, fontSize: 20.0))) : Container(child: _buildbody()),
     );
