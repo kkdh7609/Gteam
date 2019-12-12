@@ -36,8 +36,8 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
   AnimationController animationController;
   ScrollController _scrollController = new ScrollController();
 
-  DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now().add(Duration(days: 5));
+  DateTime startDate;
+  DateTime endDate;
   String _nowLocation;
   String _nowAddr;
 
@@ -57,6 +57,9 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
 
   @override
   void initState() {
+    this.startDate = DateTime.now();
+    this.endDate = DateTime.now().add(Duration(days: 5));
+    this.endDate = DateTime(this.endDate.year, this.endDate.month, this.endDate.day, 23, 59);
     this.gameList = GameListData.gameList;
     this.stadiumList =StadiumListData.stadiumList;
     this.stadiumListForMap =StadiumListData.stadiumList;
@@ -630,7 +633,7 @@ class _GameJoinPageState extends State<GameJoinPage> with TickerProviderStateMix
           setState(() {
             if (startData != null && endData != null) {
               startDate = startData;
-              endDate = endData;
+              endDate = DateTime(endData.year, endData.month, endData.day, 23, 59);
               filter=Filter.DATE;
             }
           });
