@@ -49,6 +49,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   bool isAdmin = false;
   bool _isLoading;
   bool _isIos = Platform.isIOS;
+  bool _isAvalialbe;
   String _success = "";
 
   final FocusNode myFocusNodeEmailLogin = FocusNode();
@@ -81,6 +82,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    _isAvalialbe = true;
 
     _pageController = PageController();
   }
@@ -607,18 +609,23 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                     ),
                     onPressed: () {
                       if (_formKey.currentState.validate()) _formKey.currentState.save();
-                      widget.auth.signUp(_signUpEmail, _signUpPassword).then((user) {
-                        userId = user.toString();
-                        print("Signed Up: $userId");
-                        UserManagement().storeNewUser(_signUpEmail, context, _signUpName, true,false);
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpWaitingPage()));
-                        signUpEmailController.clear();
-                        signUpNameController.clear();
-                        signUpPasswordController.clear();
-                      }).catchError((e) {
-                        showAlertDialog("가입 실패", "문제가 발생해서 가입에 실패했습니다. \n계속해서 실패하는 경우 관리자에게 문의해주세요.", context);
-                        print(e);
-                      });
+                      if(_isAvalialbe) {
+                        _isAvalialbe = false;
+                        widget.auth.signUp(_signUpEmail, _signUpPassword).then((user) {
+                          userId = user.toString();
+                          print("Signed Up: $userId");
+                          UserManagement().storeNewUser(_signUpEmail, context, _signUpName, true, false);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpWaitingPage()));
+                          signUpEmailController.clear();
+                          signUpNameController.clear();
+                          signUpPasswordController.clear();
+                          _isAvalialbe = true;
+                        }).catchError((e) {
+                          showAlertDialog("가입 실패", "문제가 발생해서 가입에 실패했습니다. \n계속해서 실패하는 경우 관리자에게 문의해주세요.", context);
+                          _isAvalialbe = true;
+                          print(e);
+                        });
+                      }
                     }),
               ),
             ],

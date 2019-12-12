@@ -37,9 +37,11 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
   TextEditingController signUpBusinessNumController = new TextEditingController();
 
   bool _obscureTextSignUp = true;
+  bool _isAvailable;
 
   @override
   void initState() {
+    _isAvailable = true;
     _obscureTextSignUp = true;
   }
 
@@ -291,20 +293,25 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
                     ),
                     onPressed: () {
                       if (_formKey.currentState.validate()) _formKey.currentState.save();
-                      widget.auth.signUp(_managerSignUpEmail, _managerSignUpPassword).then((user) {
-                        managerId = user.toString();
-                        //print("Signed Up: $managerId");
-                        ManagerManagement()
-                            .storeNewManager(_managerSignUpEmail, context, _managerSignUpName, _managerSignUpBusinessNum, false);
+                      if(_isAvailable) {
+                        _isAvailable = false;
+                        widget.auth.signUp(_managerSignUpEmail, _managerSignUpPassword).then((user) {
+                          managerId = user.toString();
+                          //print("Signed Up: $managerId");
+                          ManagerManagement()
+                              .storeNewManager(_managerSignUpEmail, context, _managerSignUpName, _managerSignUpBusinessNum, false);
 
-                        signUpEmailController.clear();
-                        signUpNameController.clear();
-                        signUpPasswordController.clear();
-                        signUpBusinessNumController.clear();
-                      }).catchError((e) {
-                        showAlertDialog("가입 실패", "문제가 발생해서 가입에 실패했습니다. \n계속해서 실패하는 경우 관리자에게 문의해주세요.", context);
-                        print(e);
-                      });
+                          signUpEmailController.clear();
+                          signUpNameController.clear();
+                          signUpPasswordController.clear();
+                          signUpBusinessNumController.clear();
+                          _isAvailable = true;
+                        }).catchError((e) {
+                          showAlertDialog("가입 실패", "문제가 발생해서 가입에 실패했습니다. \n계속해서 실패하는 경우 관리자에게 문의해주세요.", context);
+                          _isAvailable = true;
+                          print(e);
+                        });
+                      }
                     }),
               ),
             ],
