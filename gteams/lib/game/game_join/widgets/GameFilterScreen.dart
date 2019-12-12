@@ -91,14 +91,14 @@ class _GameFilterScreenState extends State<GameFilterScreen> {
                 child: Column(
                   children: <Widget>[
                     //timeRangeBar(),
-                    Divider(
+                    /*Divider(
                       height: 1,
                     ),
                     preferenceSport(),
                     Divider(
                       height: 1,
                     ),
-                    _game_gender(),
+                    _game_gender(),*/
                     Divider(
                       height: 1,
                     ),
