@@ -6,6 +6,7 @@ import 'package:gteams/login/loginTheme.dart';
 import 'package:gteams/login/login_auth.dart';
 import 'package:gteams/services/manager_management.dart';
 import 'package:gteams/validator/login_validator.dart';
+import 'package:gteams/util/alertUtil.dart';
 
 class ManagerSignUpPage extends StatefulWidget {
   ManagerSignUpPage({this.auth});
@@ -301,6 +302,7 @@ class _ManagerSignUpPageState extends State<ManagerSignUpPage> {
                         signUpPasswordController.clear();
                         signUpBusinessNumController.clear();
                       }).catchError((e) {
+                        showAlertDialog("가입 실패", "문제가 발생해서 가입에 실패했습니다. \n계속해서 실패하는 경우 관리자에게 문의해주세요.", context);
                         print(e);
                       });
                     }),

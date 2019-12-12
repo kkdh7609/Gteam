@@ -18,6 +18,7 @@ import 'package:gteams/validator/login_validator.dart';
 import 'package:gteams/util/pushPostUtil.dart';
 import 'package:gteams/util/alertUtil.dart';
 import 'package:http/http.dart';
+import 'package:gteams/util/alertUtil.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -615,6 +616,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                         signUpNameController.clear();
                         signUpPasswordController.clear();
                       }).catchError((e) {
+                        showAlertDialog("가입 실패", "문제가 발생해서 가입에 실패했습니다. \n계속해서 실패하는 경우 관리자에게 문의해주세요.", context);
                         print(e);
                       });
                     }),
