@@ -136,8 +136,9 @@ class _currentRoomPageState extends State<currentRoomPage>
           }
           crudObj.updateDataThen('stadium', document.documentID,
               {'gameList': gameDocIdList2, 'notPermitList': notPermitList});
-          pushPost("1", gameDocId);
-          pushPost("2", document.data['stadiumId']);
+          pushPost("1", gameDocId).then((respons){
+            pushPost("2", document.data['stdId']);
+          });
         } else if (!flag) {
           // flag 왜 있는지 몰라서 일단 넣어둔거, 이상하면 이 부분 확인 필요
           flag = true;
@@ -161,8 +162,9 @@ class _currentRoomPageState extends State<currentRoomPage>
           if (isChanged) {
             crudObj.updateDataThen('stadium', document.documentID,
                 {'gameList': gameDocIdList2, 'notPermitList': notPermitList});
-            pushPost("1", gameDocId);
-            pushPost("2", document.data['stdId']);
+            pushPost("1", gameDocId).then((respons){
+              pushPost("2", document.data['stdId']);
+            });
           }
         }
       });
